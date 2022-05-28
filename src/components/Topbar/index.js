@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Divider,
@@ -24,7 +25,7 @@ import {
   AccountCircle,
   Mail,
   Notifications,
-  More,
+  MoreVert,
 } from '@mui/icons-material';
 
 const Search = styled('div')(({ theme }) => ({
@@ -73,6 +74,7 @@ function HideOnScroll(props) {
 }
 
 function Topbar(props) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
@@ -201,9 +203,9 @@ function Topbar(props) {
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
               />
-              <IconButton aria-label="delete" size="small" sx={{ mr: 0.5 }}>
-                <SearchIcon fontSize="inherit" />
-              </IconButton>
+              <Button variant="contained" aria-label="delete" size="small" sx={{ m: 0.5 }}>
+                <SearchIcon fontSize="medium" />
+              </Button>
             </Search>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
               <IconButton aria-label="delete" onClick={handleClickCart}>
@@ -238,8 +240,8 @@ function Topbar(props) {
                 </Box>
               </Popover>
               <Divider sx={{ height: 42 }} orientation="vertical" />
-              <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>Masuk</Button>
-              <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>Daftar</Button>
+              <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('login')}>Masuk</Button>
+              <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
             </Box>
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
               <IconButton
@@ -250,7 +252,7 @@ function Topbar(props) {
                 onClick={handleMobileMenuOpen}
                 color="inherit"
               >
-                <More />
+                <MoreVert />
               </IconButton>
             </Box>
           </Toolbar>

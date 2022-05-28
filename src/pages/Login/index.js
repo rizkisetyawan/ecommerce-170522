@@ -4,6 +4,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import React from 'react';
 
 function Login() {
@@ -29,7 +30,9 @@ function Login() {
       >
         <Box mt={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography fontSize={20} fontWeight={600}>Masuk</Typography>
-          <Typography fontSize={13} color="primary.main">Daftar</Typography>
+          <Link to="/register">
+            <Typography fontSize={13} color="primary.main">Daftar</Typography>
+          </Link>
         </Box>
         <TextField label="Email" variant="outlined" fullWidth sx={{ mt: 5, mb: 2 }} />
         <TextField label="Password" variant="outlined" fullWidth />
