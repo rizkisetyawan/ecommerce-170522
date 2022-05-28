@@ -1,22 +1,31 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/prop-types */
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { Button, Divider } from '@mui/material';
-import { ShoppingCart, Search as SearchIcon } from '@mui/icons-material';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-// import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
+import {
+  Button,
+  Divider,
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Badge,
+  MenuItem,
+  Menu,
+  useScrollTrigger,
+  Slide,
+  Popover,
+} from '@mui/material';
+import {
+  ShoppingCart,
+  Search as SearchIcon,
+  AccountCircle,
+  Mail,
+  Notifications,
+  More,
+} from '@mui/icons-material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -30,7 +39,11 @@ const Search = styled('div')(({ theme }) => ({
   width: '100%',
   [theme.breakpoints.up('sm')]: {
     width: 'auto',
+    marginLeft: 64,
+    marginRight: 32,
   },
+  display: 'flex',
+  flex: 1,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -39,27 +52,43 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     padding: theme.spacing(1, 1, 1, 2),
     transition: theme.transitions.create('width'),
     fontSize: 13,
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
   },
+  flex: 1,
 }));
 
-function Topbar() {
+function HideOnScroll(props) {
+  const { children, window } = props;
+  // Note that you normally won't need to set the window ref as useScrollTrigger
+  // will default to window.
+  // This is only being set here because the demo is in an iframe.
+  const trigger = useScrollTrigger({
+    target: window ? window() : undefined,
+  });
+
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children}
+    </Slide>
+  );
+}
+
+function Topbar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [categoryAnchorEl, setCategoryAnchorEl] = React.useState(null);
+  const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
 
-  const openCategory = Boolean(categoryAnchorEl);
+  const openCart = Boolean(cartAnchorEl);
+  const idCart = openCart ? 'simple-popover' : undefined;
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleClickCategory = (event) => {
-    setCategoryAnchorEl(event.currentTarget);
+  const handleClickCart = (event) => {
+    setCartAnchorEl(event.currentTarget);
   };
-  const handleCloseCategory = () => {
-    setCategoryAnchorEl(null);
+
+  const handleCloseCart = () => {
+    setCartAnchorEl(null);
   };
 
   const handleProfileMenuOpen = (event) => {
@@ -121,7 +150,7 @@ function Topbar() {
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
-            <MailIcon />
+            <Mail />
           </Badge>
         </IconButton>
         <p>Messages</p>
@@ -133,7 +162,7 @@ function Topbar() {
           color="inherit"
         >
           <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
+            <Notifications />
           </Badge>
         </IconButton>
         <p>Notifications</p>
@@ -155,83 +184,78 @@ function Topbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="default">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            color="primary"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' }, mr: 2, fontWeight: 600 }}
-          >
-            MUI-Commerce
-          </Typography>
-          <Search>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-            <IconButton aria-label="delete" size="small" sx={{ mr: 0.5 }}>
-              <SearchIcon fontSize="inherit" />
-            </IconButton>
-          </Search>
-          <Button
-            size="small"
-            sx={{ textTransform: 'capitalize', fontWeight: 600, mr: 2 }}
-            color="inherit"
-            id="basic-button"
-            aria-controls={openCategory ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={openCategory ? 'true' : undefined}
-            onClick={handleClickCategory}
-          >
-            Kategori
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={categoryAnchorEl}
-            open={openCategory}
-            onClose={handleCloseCategory}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
-          >
-            <MenuItem onClick={handleCloseCategory}><Typography variant="subtitle2">Kategori 1</Typography></MenuItem>
-            <MenuItem onClick={handleCloseCategory}><Typography variant="subtitle2">Kategori 2</Typography></MenuItem>
-            <MenuItem onClick={handleCloseCategory}><Typography variant="subtitle2">Kategori 3</Typography></MenuItem>
-          </Menu>
-          <Box sx={{ flex: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
-            <IconButton aria-label="delete">
-              <ShoppingCart />
-            </IconButton>
-            <Divider sx={{ height: 42 }} orientation="vertical" />
-            <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>Masuk</Button>
-            <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>Daftar</Button>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
+      <HideOnScroll {...props}>
+        <AppBar color="default">
+          <Toolbar>
+            <Typography
+              variant="h6"
+              color="primary"
+              noWrap
+              component="div"
+              sx={{ display: { xs: 'none', sm: 'block' }, mr: 2, fontWeight: 600 }}
             >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+              MUI-Commerce
+            </Typography>
+            <Search>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+              <IconButton aria-label="delete" size="small" sx={{ mr: 0.5 }}>
+                <SearchIcon fontSize="inherit" />
+              </IconButton>
+            </Search>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
+              <IconButton aria-label="delete" onClick={handleClickCart}>
+                <Badge badgeContent={100} color="error">
+                  <ShoppingCart />
+                </Badge>
+              </IconButton>
+              <Popover
+                id={idCart}
+                open={openCart}
+                anchorEl={cartAnchorEl}
+                onClose={handleCloseCart}
+                anchorOrigin={{
+                  vertical: 53,
+                  horizontal: 'left',
+                }}
+              >
+                <Box sx={{ p: 2 }}>
+                  { [1, 2, 3].map((row) => (
+                    <React.Fragment key={row}>
+                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                        <img src="https://source.unsplash.com/random" alt="testing" height={50} width={50} style={{ objectFit: 'cover' }} />
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight={600} noWrap sx={{ maxWidth: 250 }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum doloremque nesciunt consequatur repellendus eveniet minima nulla cumque tempore, nihil tempora? Quidem facilis dolorem porro tempore perferendis sed reiciendis quasi optio voluptates obcaecati dolorum quisquam corporis tenetur non voluptatum, unde eius. Eligendi, illo aliquid. Quisquam deleniti quos, blanditiis cum nemo ad.</Typography>
+                          <Typography variant="subtitle2" color="text.secondary">3 Barang</Typography>
+                        </Box>
+                        <Typography sx={{ color: 'error.main' }} fontWeight={600}>Rp705.000</Typography>
+                      </Box>
+                      <Divider sx={{ width: '100%', my: 1 }} />
+                    </React.Fragment>
+                  ))}
+                </Box>
+              </Popover>
+              <Divider sx={{ height: 42 }} orientation="vertical" />
+              <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>Masuk</Button>
+              <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>Daftar</Button>
+            </Box>
+            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <More />
+              </IconButton>
+            </Box>
+          </Toolbar>
+        </AppBar>
+      </HideOnScroll>
       {renderMobileMenu}
       {renderMenu}
     </Box>
