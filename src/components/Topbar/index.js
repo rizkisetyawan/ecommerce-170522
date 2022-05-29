@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 import {
   Button,
   Divider,
@@ -185,82 +185,86 @@ function Topbar(props) {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <HideOnScroll {...props}>
-        <AppBar color="default">
-          <Toolbar>
-            <Typography
-              variant="h6"
-              color="primary"
-              noWrap
-              component="div"
-              sx={{ display: { xs: 'none', sm: 'block' }, mr: 2, fontWeight: 600 }}
-            >
-              MUI-Commerce
-            </Typography>
-            <Search>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-              <Button variant="contained" aria-label="delete" size="small" sx={{ m: 0.5 }}>
-                <SearchIcon fontSize="medium" />
-              </Button>
-            </Search>
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
-              <IconButton aria-label="delete" onClick={handleClickCart}>
-                <Badge badgeContent={100} color="error">
-                  <ShoppingCart />
-                </Badge>
-              </IconButton>
-              <Popover
-                id={idCart}
-                open={openCart}
-                anchorEl={cartAnchorEl}
-                onClose={handleCloseCart}
-                anchorOrigin={{
-                  vertical: 53,
-                  horizontal: 'left',
-                }}
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <HideOnScroll {...props}>
+          <AppBar color="default">
+            <Toolbar>
+              <Typography
+                variant="h6"
+                color="primary"
+                noWrap
+                component="div"
+                sx={{ display: { xs: 'none', sm: 'block' }, mr: 2, fontWeight: 600 }}
               >
-                <Box sx={{ p: 2 }}>
-                  { [1, 2, 3].map((row) => (
-                    <React.Fragment key={row}>
-                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                        <img src="https://source.unsplash.com/random" alt="testing" height={50} width={50} style={{ objectFit: 'cover' }} />
-                        <Box>
-                          <Typography variant="subtitle1" fontWeight={600} noWrap sx={{ maxWidth: 250 }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum doloremque nesciunt consequatur repellendus eveniet minima nulla cumque tempore, nihil tempora? Quidem facilis dolorem porro tempore perferendis sed reiciendis quasi optio voluptates obcaecati dolorum quisquam corporis tenetur non voluptatum, unde eius. Eligendi, illo aliquid. Quisquam deleniti quos, blanditiis cum nemo ad.</Typography>
-                          <Typography variant="subtitle2" color="text.secondary">3 Barang</Typography>
+                MUI-Commerce
+              </Typography>
+              <Search>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+                <Button variant="contained" aria-label="delete" size="small" sx={{ m: 0.5 }}>
+                  <SearchIcon fontSize="medium" />
+                </Button>
+              </Search>
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
+                <IconButton aria-label="delete" onClick={handleClickCart}>
+                  <Badge badgeContent={100} color="error">
+                    <ShoppingCart />
+                  </Badge>
+                </IconButton>
+                <Popover
+                  id={idCart}
+                  open={openCart}
+                  anchorEl={cartAnchorEl}
+                  onClose={handleCloseCart}
+                  anchorOrigin={{
+                    vertical: 53,
+                    horizontal: 'left',
+                  }}
+                >
+                  <Box sx={{ p: 2 }}>
+                    { [1, 2, 3].map((row) => (
+                      <React.Fragment key={row}>
+                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                          <img src="https://source.unsplash.com/random" alt="testing" height={50} width={50} style={{ objectFit: 'cover' }} />
+                          <Box>
+                            <Typography variant="subtitle1" fontWeight={600} noWrap sx={{ maxWidth: 250 }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum doloremque nesciunt consequatur repellendus eveniet minima nulla cumque tempore, nihil tempora? Quidem facilis dolorem porro tempore perferendis sed reiciendis quasi optio voluptates obcaecati dolorum quisquam corporis tenetur non voluptatum, unde eius. Eligendi, illo aliquid. Quisquam deleniti quos, blanditiis cum nemo ad.</Typography>
+                            <Typography variant="subtitle2" color="text.secondary">3 Barang</Typography>
+                          </Box>
+                          <Typography sx={{ color: 'error.main' }} fontWeight={600}>Rp705.000</Typography>
                         </Box>
-                        <Typography sx={{ color: 'error.main' }} fontWeight={600}>Rp705.000</Typography>
-                      </Box>
-                      <Divider sx={{ width: '100%', my: 1 }} />
-                    </React.Fragment>
-                  ))}
-                </Box>
-              </Popover>
-              <Divider sx={{ height: 42 }} orientation="vertical" />
-              <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('login')}>Masuk</Button>
-              <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
-            </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreVert />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-      </HideOnScroll>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+                        <Divider sx={{ width: '100%', my: 1 }} />
+                      </React.Fragment>
+                    ))}
+                  </Box>
+                </Popover>
+                <Divider sx={{ height: 42 }} orientation="vertical" />
+                <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('login')}>Masuk</Button>
+                <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
+              </Box>
+              <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show more"
+                  aria-controls={mobileMenuId}
+                  aria-haspopup="true"
+                  onClick={handleMobileMenuOpen}
+                  color="inherit"
+                >
+                  <MoreVert />
+                </IconButton>
+              </Box>
+            </Toolbar>
+          </AppBar>
+        </HideOnScroll>
+        {renderMobileMenu}
+        {renderMenu}
+      </Box>
+      <Box sx={{ mt: { xs: 9, sm: 10, md: 12 } }} />
+      <Outlet />
+    </>
   );
 }
 

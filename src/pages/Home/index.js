@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { Container, Typography, Box } from '@mui/material';
 import Slider from 'react-slick';
-import { Item, Topbar } from '../../components';
+import { Item } from '../../components';
 
 function SimpleSlider() {
   const settings = {
@@ -20,7 +20,7 @@ function SimpleSlider() {
     { image: 'https://cf.shopee.co.id/file/57d18ed289a17ea995e762511d801b5d_xxhdpi' },
   ];
   return (
-    <Container sx={{ mt: { xs: 9, sm: 10, md: 12 } }}>
+    <Container>
       <Slider {...settings}>
         { listSlide.map((slide) => (
           <div key={slide.image}>
@@ -117,7 +117,6 @@ function Products({ title, data }) {
 function App() {
   return (
     <>
-      <Topbar />
       <SimpleSlider />
       <Categories />
       <Products title="Produk Terlaris" data={[1, 2, 3, 4]} />
