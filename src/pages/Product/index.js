@@ -73,24 +73,30 @@ function Product() {
               <Typography>Subtotal</Typography>
               <Typography fontSize={20} fontWeight={800}>Rp203.000</Typography>
             </Box>
-            <Box display="flex" gap={1}>
-              <Button
-                variant="outlined"
-                sx={{
-                  fontSize: 14, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize',
-                }}
-              >
-                Beli Langsung
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  fontSize: 14, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize',
-                }}
-              >
-                + Keranjang
-              </Button>
-            </Box>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    fontSize: 14, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize',
+                  }}
+                >
+                  Beli Langsung
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    fontSize: 14, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize',
+                  }}
+                >
+                  + Keranjang
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
         </Grid>
         <Grid item xs={12} lg={5}>
