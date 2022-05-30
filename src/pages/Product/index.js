@@ -51,7 +51,7 @@ function Product() {
           </Box>
         </Grid>
         <Grid item xs={12} lg={3}>
-          <Box border="1px solid #e5e7e9" borderRadius={2} p={2} pb={4}>
+          <Box border="1px solid #e5e7e9" borderRadius={2} p={2} py={4}>
             <Typography fontWeight={600} mb={2}>Atur jumlah</Typography>
             <Box display="flex" gap={1.5} alignItems="center">
               <Box borderRadius={0.5} border="1px solid #bfc9d9" display="flex" alignItems="center">

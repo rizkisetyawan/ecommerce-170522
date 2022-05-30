@@ -59,9 +59,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function HideOnScroll(props) {
   const { children, window } = props;
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
   const trigger = useScrollTrigger({
     target: window ? window() : undefined,
   });
@@ -228,15 +225,40 @@ function Topbar(props) {
                   }}
                 >
                   <Box sx={{ p: 2 }}>
+                    <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
+                      <Typography fontWeight={600} fontSize={14} color="text.secondary">Keranjang (4)</Typography>
+                      <Typography
+                        fontWeight={600}
+                        fontSize={14}
+                        color="primary.main"
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          handleCloseCart();
+                          navigate('cart');
+                        }}
+                      >
+                        Lihat Semua
+                      </Typography>
+                    </Box>
                     { [1, 2, 3].map((row) => (
                       <React.Fragment key={row}>
                         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                           <img src="https://source.unsplash.com/random" alt="testing" height={50} width={50} style={{ objectFit: 'cover' }} />
                           <Box>
-                            <Typography variant="subtitle1" fontWeight={600} noWrap sx={{ maxWidth: 250 }}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum doloremque nesciunt consequatur repellendus eveniet minima nulla cumque tempore, nihil tempora? Quidem facilis dolorem porro tempore perferendis sed reiciendis quasi optio voluptates obcaecati dolorum quisquam corporis tenetur non voluptatum, unde eius. Eligendi, illo aliquid. Quisquam deleniti quos, blanditiis cum nemo ad.</Typography>
-                            <Typography variant="subtitle2" color="text.secondary">3 Barang</Typography>
+                            <Typography
+                              fontSize={14}
+                              fontWeight={600}
+                              noWrap
+                              sx={{ maxWidth: 250 }}
+                            >
+                              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                              Nostrum doloremque nesciunt consequatur repellendus eveniet
+                              minima nulla cumque tempore,nihil tempora? Quidem facilis
+                              dolorem porro tempore perferendis sed reiciendis quasi
+                            </Typography>
+                            <Typography fontSize={12} color="text.secondary">3 Barang</Typography>
                           </Box>
-                          <Typography sx={{ color: 'error.main' }} fontWeight={600}>Rp705.000</Typography>
+                          <Typography fontSize={14} sx={{ color: 'error.main' }} fontWeight={600}>Rp705.000</Typography>
                         </Box>
                         <Divider sx={{ width: '100%', my: 1 }} />
                       </React.Fragment>

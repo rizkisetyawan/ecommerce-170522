@@ -119,7 +119,7 @@ function Products({ title, data }) {
   );
 }
 
-function App() {
+function Home() {
   return (
     <>
       <SimpleSlider />
@@ -130,4 +130,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
