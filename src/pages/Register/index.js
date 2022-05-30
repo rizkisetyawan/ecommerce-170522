@@ -4,10 +4,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
 
 function Register() {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -37,7 +38,7 @@ function Register() {
         <TextField label="Email" variant="outlined" fullWidth sx={{ mt: 5, mb: 2 }} />
         <TextField label="Password" variant="outlined" sx={{ mb: 2 }} fullWidth />
         <TextField label="Konfirmasi Password" variant="outlined" fullWidth />
-        <Button variant="contained" fullWidth sx={{ mt: 3 }}>Register</Button>
+        <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={() => navigate('/')}>Register</Button>
         <Typography fontSize={13} textAlign="center" my={1}>
           Butuh bantuan? Hubungi
           {' '}

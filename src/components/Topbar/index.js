@@ -195,7 +195,10 @@ function Topbar(props) {
                 color="primary"
                 noWrap
                 component="div"
-                sx={{ display: { xs: 'none', sm: 'block' }, mr: 2, fontWeight: 600 }}
+                sx={{
+                  display: { xs: 'none', sm: 'block' }, mr: 2, fontWeight: 600, cursor: 'pointer',
+                }}
+                onClick={() => navigate('/')}
               >
                 MUI-Commerce
               </Typography>

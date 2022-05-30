@@ -4,11 +4,14 @@ import * as React from 'react';
 import {
   Card, CardContent, CardMedia, CardActionArea, Typography, Rating, Box, Divider,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function Item({ imgUrl }) {
+  const navigate = useNavigate();
+
   return (
     <Card sx={{ width: '100%' }}>
-      <CardActionArea>
+      <CardActionArea onClick={() => navigate('product')}>
         <CardMedia
           component="img"
           height="180"

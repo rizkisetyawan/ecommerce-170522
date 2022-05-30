@@ -1,10 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
+import { useEffect } from 'react';
 import { Container, Typography, Box } from '@mui/material';
 import Slider from 'react-slick';
 import { Item } from '../../components';
 
 function SimpleSlider() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,

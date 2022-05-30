@@ -4,10 +4,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
 
 function Login() {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -37,7 +39,7 @@ function Login() {
         <TextField label="Email" variant="outlined" fullWidth sx={{ mt: 5, mb: 2 }} />
         <TextField label="Password" variant="outlined" fullWidth />
         <Typography fontSize={13} color="primary.main" textAlign="right" my={1}>Lupa kata sandi?</Typography>
-        <Button variant="contained" fullWidth>Login</Button>
+        <Button variant="contained" fullWidth onClick={() => navigate('/')}>Login</Button>
         <Typography fontSize={13} textAlign="center" my={1}>
           Butuh bantuan? Hubungi
           {' '}

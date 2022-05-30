@@ -12,24 +12,20 @@ import {
   Button,
   Avatar,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Add, Remove } from '@mui/icons-material';
 
-// function Product() {
-//   return (
-//     <Box bgcolor="red">
-//       1
-//     </Box>
-//   );
-// }
-
 function Product() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Container>
       <Grid container spacing={5}>
         <Grid item xs={12} lg={4}>
           <Box>
-            <img width="100%" src="https://source.unsplash.com/random" alt="gambar produk" />
+            <img width="100%" src="https://source.unsplash.com/random" alt="gambar produk" style={{ maxHeight: 300, objectFit: 'cover' }} />
           </Box>
         </Grid>
         <Grid item xs={12} lg={5}>
@@ -55,7 +51,7 @@ function Product() {
           </Box>
         </Grid>
         <Grid item xs={12} lg={3}>
-          <Box border="1px solid #e5e7e9" borderRadius={2} p={2}>
+          <Box border="1px solid #e5e7e9" borderRadius={2} p={2} pb={4}>
             <Typography fontWeight={600} mb={2}>Atur jumlah</Typography>
             <Box display="flex" gap={1.5} alignItems="center">
               <Box borderRadius={0.5} border="1px solid #bfc9d9" display="flex" alignItems="center">
