@@ -287,7 +287,7 @@ function Topbar(props) {
         {renderMobileMenu}
         {renderMenu}
       </Box>
-      <Box sx={{ mt: { xs: 9, sm: 10, md: 12 } }} />
+      <Box sx={{ mt: { xs: 9, sm: 11, md: 15 } }} />
       <Outlet />
     </>
   );

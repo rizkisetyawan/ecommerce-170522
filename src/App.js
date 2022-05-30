@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {
-  Home, Login, Register, Product, Cart,
+  Home, Login, Register, Product, Cart, Payment,
 } from './pages';
 import { Topbar } from './components';
 
@@ -13,6 +13,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="product" element={<Product />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="payment" element={<Payment />} />
         </Route>
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />

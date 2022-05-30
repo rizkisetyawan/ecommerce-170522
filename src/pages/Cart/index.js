@@ -20,7 +20,7 @@ import {
   AddCircleOutline,
   Delete,
   RemoveCircleOutline,
-  NavigateNext,
+  // NavigateNext,
 } from '@mui/icons-material';
 import React, { useState } from 'react';
 
@@ -39,6 +39,7 @@ function CartModal({ open, onClose }) {
       name: 'cimb',
     },
   ];
+  const [selectBankState, setSelectBankState] = useState(listBank[0].name);
   return (
     <Dialog
       open={open}
@@ -52,17 +53,38 @@ function CartModal({ open, onClose }) {
         <Typography fontWeight={800} color="text.secondary" mb={2}>Transfer Bank (Verifikasi Manual)</Typography>
         <List>
           {listBank.map((row) => (
-            <ListItem disablePadding key={row.name} sx={{ borderBottom: '1px solid #f0f0f0' }}>
-              <ListItemButton disableGutters>
+            <ListItem
+              disablePadding
+              key={row.name}
+              sx={row.name === selectBankState && {
+                border: 1, borderColor: 'error.main', borderRadius: 2, my: 0.5,
+              }}
+            >
+              <ListItemButton onClick={() => setSelectBankState(row.name)} sx={{ py: 0.5 }}>
                 <ListItemAvatar>
                   <Avatar src={`logoBank/${row.name}.png`} variant="square" alt="testing" sx={{ '& img': { objectFit: 'contain' } }} />
                 </ListItemAvatar>
-                <ListItemText primary="Transfer Bank BCA" sx={{ '& span': { fontSize: 14 } }} />
-                <NavigateNext />
+                <ListItemText sx={{ '& span': { fontSize: 14 } }}>
+                  Transfer Bank
+                  {' '}
+                  <span style={{ textTransform: 'uppercase' }}>{row.name}</span>
+                </ListItemText>
               </ListItemButton>
             </ListItem>
           ))}
         </List>
+        <Box mt={2}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" gap={2}>
+            <Typography fontWeight={800} fontSize={14}>
+              Transfer Bank ke
+              {' '}
+              <span style={{ textTransform: 'uppercase' }}>{selectBankState}</span>
+            </Typography>
+            <Avatar src={`logoBank/${selectBankState}.png`} variant="square" alt="testing" sx={{ '& img': { objectFit: 'contain' }, width: 50, height: 50 }} />
+          </Box>
+          <Typography fontSize={12} color="text.secondary">Total Tagihan</Typography>
+          <Typography fontSize={18} color="primary" fontWeight={800}>Rp2.543.000</Typography>
+        </Box>
       </DialogContent>
     </Dialog>
   );

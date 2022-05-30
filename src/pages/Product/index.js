@@ -96,7 +96,7 @@ function Product() {
         <Grid item xs={12} lg={5}>
           <Typography fontWeight={800} gutterBottom>ULASAN (156)</Typography>
           <Typography fontSize={14}>Pintar Facil Smart Paint Roll untuk cat tembok tanpa belepotan</Typography>
-          <Box display="flex" gap={{ xs: 2, sm: 7 }} alignItems="center" my={2}>
+          <Box display="flex" gap={{ xs: 2, sm: 7 }} alignItems="center" my={2} justifyContent={{ xs: 'center', sm: 'flex-start' }}>
             <Box>
               <Typography fontSize={60} textAlign="center">
                 4.6
@@ -113,10 +113,10 @@ function Product() {
                   <Box display="flex" alignItems="center" gap={0.5}>
                     <Rating defaultValue={1} max={1} readOnly size="small" />
                     <Typography fontSize={14} fontWeight={600} color="text.secondary">{index + 1}</Typography>
-                    <Box width={100} mx={2}>
+                    <Box width={100} mx={{ xs: 0, sm: 1 }}>
                       <LinearProgress variant="determinate" value={formula} />
                     </Box>
-                    <Typography fontSize={14} color="text.secondary">{row}</Typography>
+                    <Typography fontSize={14} color="text.secondary" justifySelf="flex-end">{row}</Typography>
                   </Box>
                 );
               })}
