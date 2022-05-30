@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home, Login, Register, Product } from './pages';
+import {
+  Home, Login, Register, Product,
+} from './pages';
 import { Topbar } from './components';
 
 function App() {
