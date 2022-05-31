@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import * as React from 'react';
@@ -25,7 +26,7 @@ import {
   AccountCircle,
   Mail,
   Notifications,
-  MoreVert,
+  Menu as IconMenu,
 } from '@mui/icons-material';
 
 const Search = styled('div')(({ theme }) => ({
@@ -104,7 +105,7 @@ function Topbar(props) {
   };
 
   const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+    // setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = 'primary-search-account-menu';
@@ -210,7 +211,7 @@ function Topbar(props) {
               </Search>
               <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
                 <IconButton aria-label="delete" onClick={handleClickCart}>
-                  <Badge badgeContent={100} color="error">
+                  <Badge badgeContent={3} color="error">
                     <ShoppingCart />
                   </Badge>
                 </IconButton>
@@ -270,15 +271,19 @@ function Topbar(props) {
                 <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
               </Box>
               <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                <IconButton color="inherit">
+                  <Badge badgeContent={3} color="error">
+                    <ShoppingCart />
+                  </Badge>
+                </IconButton>
                 <IconButton
-                  size="large"
                   aria-label="show more"
                   aria-controls={mobileMenuId}
                   aria-haspopup="true"
                   onClick={handleMobileMenuOpen}
                   color="inherit"
                 >
-                  <MoreVert />
+                  <IconMenu />
                 </IconButton>
               </Box>
             </Toolbar>
