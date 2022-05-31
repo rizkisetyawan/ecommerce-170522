@@ -10,7 +10,7 @@ function Item({ imgUrl }) {
   const navigate = useNavigate();
 
   return (
-    <Card sx={{ width: '100%' }}>
+    <Card sx={{ width: '100%', boxShadow: 'rgb(0 0 0 / 12%) 0px 1px 6px 0px' }}>
       <CardActionArea onClick={() => navigate('product')}>
         <CardMedia
           component="img"

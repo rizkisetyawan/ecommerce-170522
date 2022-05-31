@@ -12,10 +12,13 @@ import {
   Button,
   Avatar,
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Add, Remove } from '@mui/icons-material';
+import { PayModal } from '../../components';
 
 function Product() {
+  const [openModalState, setOpenModalState] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -73,14 +76,15 @@ function Product() {
               <Typography>Subtotal</Typography>
               <Typography fontSize={20} fontWeight={800}>Rp203.000</Typography>
             </Box>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
               <Grid item xs={6}>
                 <Button
                   fullWidth
                   variant="outlined"
                   sx={{
-                    fontSize: 14, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize',
+                    fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
                   }}
+                  onClick={() => setOpenModalState(true)}
                 >
                   Beli Langsung
                 </Button>
@@ -90,7 +94,7 @@ function Product() {
                   fullWidth
                   variant="contained"
                   sx={{
-                    fontSize: 14, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize',
+                    fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
                   }}
                 >
                   + Keranjang
@@ -146,6 +150,7 @@ function Product() {
           ))}
         </Grid>
       </Grid>
+      <PayModal open={openModalState} onClose={() => setOpenModalState(false)} />
     </Container>
   );
 }

@@ -1,7 +1,10 @@
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import {
+  Container, Typography, Box, Grid,
+} from '@mui/material';
 import Slider from 'react-slick';
 import { Item } from '../../components';
 
@@ -110,11 +113,15 @@ function Products({ title, data }) {
   return (
     <Container sx={{ my: 4 }}>
       <Typography variant="h5" fontWeight={700} mb={2} gutterBottom>{title}</Typography>
-      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+      <Grid container spacing={{ xs: 1, lg: 1.5 }}>
         {
-          data.map((row) => <Item key={row} imgUrl="https://source.unsplash.com/random" />)
+          data.map((row) => (
+            <Grid item xs={6} sm={3} lg={2}>
+              <Item key={row} imgUrl="https://source.unsplash.com/random" />
+            </Grid>
+          ))
         }
-      </Box>
+      </Grid>
     </Container>
   );
 }
@@ -124,7 +131,7 @@ function Home() {
     <>
       <SimpleSlider />
       <Categories />
-      <Products title="Produk Terlaris" data={[1, 2, 3, 4]} />
+      <Products title="Produk Terlaris" data={[1, 2, 3, 4, 5, 6]} />
       <Products title="Semua Produk" data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
     </>
   );

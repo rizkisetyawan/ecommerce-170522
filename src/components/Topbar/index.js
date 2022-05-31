@@ -185,7 +185,7 @@ function Topbar(props) {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <HideOnScroll {...props}>
-          <AppBar color="default">
+          <AppBar color="default" sx={{ boxShadow: 'rgb(0 0 0 / 7%) 0px 4px 6px -1px', bgcolor: '#fff' }}>
             <Toolbar>
               <Typography
                 variant="h6"
