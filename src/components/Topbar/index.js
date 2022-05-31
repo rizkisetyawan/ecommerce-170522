@@ -19,6 +19,7 @@ import {
   useScrollTrigger,
   Slide,
   Popover,
+  Avatar,
 } from '@mui/material';
 import {
   ShoppingCart,
@@ -210,7 +211,7 @@ function Topbar(props) {
                 </Button>
               </Search>
               <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
-                <IconButton aria-label="delete" onClick={handleClickCart}>
+                <IconButton onClick={handleClickCart}>
                   <Badge badgeContent={3} color="error">
                     <ShoppingCart />
                   </Badge>
@@ -244,18 +245,15 @@ function Topbar(props) {
                     { [1, 2, 3].map((row) => (
                       <React.Fragment key={row}>
                         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                          <img src="https://source.unsplash.com/random" alt="testing" height={50} width={50} style={{ objectFit: 'cover' }} />
+                          <Avatar variant="square" src="https://source.unsplash.com/random" alt="testing" />
                           <Box>
                             <Typography
                               fontSize={14}
                               fontWeight={600}
-                              noWrap
-                              sx={{ maxWidth: 250 }}
+                              // noWrap
+                              // sx={{ maxWidth: 250 }}
                             >
-                              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                              Nostrum doloremque nesciunt consequatur repellendus eveniet
-                              minima nulla cumque tempore,nihil tempora? Quidem facilis
-                              dolorem porro tempore perferendis sed reiciendis quasi
+                              Lorem ipsum dolor sit, amet
                             </Typography>
                             <Typography fontSize={12} color="text.secondary">3 Barang</Typography>
                           </Box>
@@ -271,7 +269,7 @@ function Topbar(props) {
                 <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
               </Box>
               <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                <IconButton color="inherit">
+                <IconButton color="inherit" onClick={handleClickCart}>
                   <Badge badgeContent={3} color="error">
                     <ShoppingCart />
                   </Badge>
@@ -292,7 +290,7 @@ function Topbar(props) {
         {renderMobileMenu}
         {renderMenu}
       </Box>
-      <Box sx={{ mt: { xs: 9, sm: 11, md: 15 } }} />
+      <Box sx={{ mt: { xs: 9, sm: 11, md: 12 } }} />
       <Outlet />
     </>
   );

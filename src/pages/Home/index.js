@@ -28,12 +28,12 @@ function SimpleSlider() {
     { image: 'https://cf.shopee.co.id/file/57d18ed289a17ea995e762511d801b5d_xxhdpi' },
   ];
   return (
-    <Container>
+    <Container sx={{ p: { xs: 0 } }}>
       <Slider {...settings}>
         { listSlide.map((slide) => (
-          <div key={slide.image}>
+          <Box key={slide.image} sx={{ borderRadius: { sm: 0, lg: 2 }, overflow: 'hidden' }}>
             <img src={slide.image} alt="testing" width="100%" style={{ objectFit: 'cover', maxHeight: 250 }} />
-          </div>
+          </Box>
         ))}
       </Slider>
     </Container>
