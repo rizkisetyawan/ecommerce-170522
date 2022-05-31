@@ -78,7 +78,7 @@ function Categories() {
 
   return (
     <Container sx={{ my: 4 }}>
-      <Typography variant="h5" fontWeight={700} mb={2} gutterBottom>Kategori</Typography>
+      <Typography variant="h5" fontWeight={700} mb={2} textAlign={{ xs: 'center', sm: 'left' }} gutterBottom>Kategori</Typography>
       <Box sx={{
         display: 'flex',
         justifyContent: 'center',
@@ -112,7 +112,7 @@ function Categories() {
 function Products({ title, data }) {
   return (
     <Container sx={{ my: 4 }}>
-      <Typography variant="h5" fontWeight={700} mb={2} gutterBottom>{title}</Typography>
+      <Typography variant="h5" fontWeight={700} mb={2} textAlign={{ xs: 'center', sm: 'left' }} gutterBottom>{title}</Typography>
       <Grid container spacing={{ xs: 1, lg: 1.5 }}>
         {
           data.map((row) => (
