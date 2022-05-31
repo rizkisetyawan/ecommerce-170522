@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {
   Home, Login, Register, Product, Cart, Payment,
 } from './pages';
-import { Topbar } from './components';
+import { Topbar, Drawer } from './components';
 
 function App() {
   return (
@@ -17,8 +17,9 @@ function App() {
         </Route>
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
-        <Route>
-          <Route path="/dashboard" element={<Product />} />
+        <Route path="/dashboard" element={<Drawer />}>
+          <Route index element={<Product />} />
+          <Route path="cart" element={<Cart />} />
         </Route>
       </Routes>
     </BrowserRouter>
