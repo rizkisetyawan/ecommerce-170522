@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import * as React from 'react';
@@ -28,7 +28,14 @@ import {
   Mail,
   Notifications,
   Menu as IconMenu,
+  StorefrontTwoTone,
+  ReceiptOutlined,
+  FavoriteBorder,
+  SettingsOutlined,
+  Logout,
 } from '@mui/icons-material';
+import { useSelector, useDispatch } from 'react-redux';
+import { remmoveAuth } from '../../redux/sliceAuth';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -74,12 +81,21 @@ function HideOnScroll(props) {
 
 function Topbar(props) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const token = useSelector(({ auth }) => auth.token);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
+  const [userAnchorEl, setUserAnchorEl] = React.useState(null);
+  const [tokoAnchorEl, setTokoAnchorEl] = React.useState(null);
 
   const openCart = Boolean(cartAnchorEl);
+  const openUser = Boolean(userAnchorEl);
+  const openToko = Boolean(tokoAnchorEl);
+
   const idCart = openCart ? 'simple-popover' : undefined;
+  const idUser = openUser ? 'simple-popover-user' : undefined;
+  const idToko = openToko ? 'simple-popover-toko' : undefined;
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -90,6 +106,22 @@ function Topbar(props) {
 
   const handleCloseCart = () => {
     setCartAnchorEl(null);
+  };
+
+  const handleClickUser = (event) => {
+    setUserAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseUser = () => {
+    setUserAnchorEl(null);
+  };
+
+  const handleClickToko = (event) => {
+    setTokoAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseToko = () => {
+    setTokoAnchorEl(null);
   };
 
   const handleProfileMenuOpen = (event) => {
@@ -106,7 +138,7 @@ function Topbar(props) {
   };
 
   const handleMobileMenuOpen = (event) => {
-    // setMobileMoreAnchorEl(event.currentTarget);
+    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = 'primary-search-account-menu';
@@ -210,7 +242,7 @@ function Topbar(props) {
                   <SearchIcon fontSize="medium" />
                 </Button>
               </Search>
-              <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5 }}>
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>
                 <IconButton onClick={handleClickCart}>
                   <Badge badgeContent={3} color="error">
                     <ShoppingCart />
@@ -265,8 +297,103 @@ function Topbar(props) {
                   </Box>
                 </Popover>
                 <Divider sx={{ height: 42 }} orientation="vertical" />
-                <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('login')}>Masuk</Button>
-                <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
+                {
+                  !token && (
+                    <>
+                      <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('login')}>Masuk</Button>
+                      <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
+                    </>
+                  )
+                }
+                {
+                  token && (
+                    <>
+                      <Box display="flex" alignItems="center" gap={0.5} mr={1} onClick={handleClickToko} sx={{ cursor: 'pointer' }}>
+                        <StorefrontTwoTone sx={({ palette }) => ({ width: 30, height: 30, color: palette.text.secondary })} />
+                        <Typography fontSize={14} color="text.secondary" fontWeight={800}>Toko</Typography>
+                      </Box>
+                      <Popover
+                        id={idToko}
+                        open={openToko}
+                        anchorEl={tokoAnchorEl}
+                        onClose={handleCloseToko}
+                        anchorOrigin={{
+                          vertical: 40,
+                          horizontal: 'left',
+                        }}
+                      >
+                        <Box pt={2} px={4} pb={4} minWidth={250}>
+                          <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
+                          <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }}>Buka Toko Gratis</Button>
+                        </Box>
+                      </Popover>
+                      <Box display="flex" alignItems="center" gap={0.5} onClick={handleClickUser} sx={{ cursor: 'pointer' }}>
+                        <Avatar src="https://source.unsplash.com/random" alt="image profile" sx={{ width: 30, height: 30 }} />
+                        <Typography fontSize={14} color="text.secondary" fontWeight={800}>Rizki</Typography>
+                      </Box>
+                      <Popover
+                        id={idUser}
+                        open={openUser}
+                        anchorEl={userAnchorEl}
+                        onClose={handleCloseUser}
+                        anchorOrigin={{
+                          vertical: 40,
+                          horizontal: 'left',
+                        }}
+                      >
+                        <Box px={4} py={2} display="flex" flexDirection="column" gap={2} minWidth={200}>
+                          <Box display="flex" alignItems="center" gap={1.5}>
+                            <Avatar src="https://source.unsplash.com/random" alt="image profile" />
+                            <Box>
+                              <Typography fontSize={14} fontWeight={800}>Rizki</Typography>
+                              <Typography fontSize={14} color="text.secondary">rizki@gmail.com</Typography>
+                            </Box>
+                          </Box>
+                          {[
+                            {
+                              title: 'Semua Transaksi',
+                              icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                            },
+                            {
+                              title: 'Wishlist',
+                              icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                            },
+                            {
+                              title: 'Pengaturan',
+                              icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                            },
+                          ].map(({ title, icon }) => (
+                            <React.Fragment key="title">
+                              <Divider />
+                              <Box display="flex" alignItems="center" gap={1} sx={{ cursor: 'pointer' }}>
+                                {icon}
+                                <Typography fontSize={14} color="text.secondary">{title}</Typography>
+                              </Box>
+                            </React.Fragment>
+                          ))}
+                          <Divider />
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            my={2}
+                            alignSelf="flex-end"
+                            onClick={() => {
+                              dispatch(remmoveAuth());
+                              navigate('login');
+                            }}
+                            sx={{ cursor: 'pointer' }}
+                          >
+                            <Logout />
+                            <Typography fontSize={14} color="text.secondary">
+                              Keluar
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Popover>
+                    </>
+                  )
+                }
               </Box>
               <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                 <IconButton color="inherit" onClick={handleClickCart}>

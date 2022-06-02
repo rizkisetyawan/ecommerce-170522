@@ -6,9 +6,13 @@ import {
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { updateAuth } from '../../redux/sliceAuth';
 
 function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   return (
     <Box
       sx={{
@@ -38,7 +42,17 @@ function Register() {
         <TextField label="Email" variant="outlined" fullWidth sx={{ mt: 5, mb: 2 }} />
         <TextField label="Password" variant="outlined" sx={{ mb: 2 }} fullWidth />
         <TextField label="Konfirmasi Password" variant="outlined" fullWidth />
-        <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={() => navigate('/')}>Register</Button>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ mt: 3 }}
+          onClick={() => {
+            dispatch(updateAuth('token dummy'));
+            navigate('/');
+          }}
+        >
+          Register
+        </Button>
         <Typography fontSize={13} textAlign="center" my={1}>
           Butuh bantuan? Hubungi
           {' '}
