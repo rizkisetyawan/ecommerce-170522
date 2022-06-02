@@ -8,7 +8,6 @@ export const authSlice = createSlice({
   },
   reducers: {
     updateAuth: (state, action) => {
-      console.log(action);
       localStorage.setItem('token', action.payload);
       state.token = action.payload;
     },
