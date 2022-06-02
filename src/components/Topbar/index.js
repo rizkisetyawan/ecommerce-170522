@@ -14,8 +14,6 @@ import {
   Typography,
   InputBase,
   Badge,
-  MenuItem,
-  Menu,
   useScrollTrigger,
   Slide,
   Popover,
@@ -24,18 +22,17 @@ import {
 import {
   ShoppingCart,
   Search as SearchIcon,
-  AccountCircle,
-  Mail,
-  Notifications,
   Menu as IconMenu,
   StorefrontTwoTone,
   ReceiptOutlined,
   FavoriteBorder,
   SettingsOutlined,
+  StarBorder,
   Logout,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { remmoveAuth } from '../../redux/sliceAuth';
+import Drawer from './Drawer';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -83,12 +80,11 @@ function Topbar(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector(({ auth }) => auth.token);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const [mobileDraweState, setMobileDrawerState] = React.useState(false);
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
   const [userAnchorEl, setUserAnchorEl] = React.useState(null);
   const [tokoAnchorEl, setTokoAnchorEl] = React.useState(null);
-
   const openCart = Boolean(cartAnchorEl);
   const openUser = Boolean(userAnchorEl);
   const openToko = Boolean(tokoAnchorEl);
@@ -96,9 +92,6 @@ function Topbar(props) {
   const idCart = openCart ? 'simple-popover' : undefined;
   const idUser = openUser ? 'simple-popover-user' : undefined;
   const idToko = openToko ? 'simple-popover-toko' : undefined;
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleClickCart = (event) => {
     setCartAnchorEl(event.currentTarget);
@@ -124,96 +117,16 @@ function Topbar(props) {
     setTokoAnchorEl(null);
   };
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleMobileMenuOpen = () => {
+    setMobileDrawerState(true);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+  const handleMobileMenuClose = (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setMobileDrawerState(false);
   };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <Mail />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <Notifications />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <>
@@ -359,6 +272,10 @@ function Topbar(props) {
                               icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
                             },
                             {
+                              title: 'Ulasan',
+                              icon: <StarBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                            },
+                            {
                               title: 'Pengaturan',
                               icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
                             },
@@ -403,19 +320,20 @@ function Topbar(props) {
                 </IconButton>
                 <IconButton
                   aria-label="show more"
-                  aria-controls={mobileMenuId}
                   aria-haspopup="true"
                   onClick={handleMobileMenuOpen}
                   color="inherit"
                 >
                   <IconMenu />
                 </IconButton>
+                <Drawer
+                  open={mobileDraweState}
+                  onClose={handleMobileMenuClose}
+                />
               </Box>
             </Toolbar>
           </AppBar>
         </HideOnScroll>
-        {renderMobileMenu}
-        {renderMenu}
       </Box>
       <Box sx={{ mt: { xs: 9, sm: 11, md: 12 } }} />
       <Outlet />
