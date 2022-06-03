@@ -6,7 +6,8 @@ import {
   Container, Typography, Box, Grid,
 } from '@mui/material';
 import Slider from 'react-slick';
-import { Item } from '../../components';
+import { useNavigate } from 'react-router-dom';
+import { CardProduct } from '../../components';
 
 function SimpleSlider() {
   useEffect(() => {
@@ -41,6 +42,7 @@ function SimpleSlider() {
 }
 
 function Categories() {
+  const navigate = useNavigate();
   const listCategory = [
     {
       name: 'Elektronik',
@@ -81,7 +83,7 @@ function Categories() {
       <Typography variant="h5" fontWeight={700} mb={{ xs: 2, lg: 4 }} gutterBottom>Kategori</Typography>
       <Grid container>
         { listCategory.map((category) => (
-          <Grid item xs={4} sm={3} md={2} lg={1.5} border={1} borderColor="divider">
+          <Grid item xs={4} sm={3} md={2} lg={1.5} border={1} borderColor="divider" onClick={() => navigate(`category/${category.name}`)} sx={{ cursor: 'pointer' }}>
             <Box
               key={category.name}
               sx={{
@@ -111,7 +113,7 @@ function Products({ title, data }) {
         {
           data.map((row) => (
             <Grid item xs={6} sm={3} lg={2}>
-              <Item key={row} imgUrl="https://source.unsplash.com/random" />
+              <CardProduct key={row} imgUrl="https://source.unsplash.com/random" />
             </Grid>
           ))
         }

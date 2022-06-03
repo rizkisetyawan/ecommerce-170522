@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import {
-  Home, Login, Register, Product, Cart, Payment,
+  Home, Login, Register, Product, Cart, Payment, Wishlist, Category,
 } from './pages';
-import { Topbar, Drawer } from './components';
+import { Topbar } from './components';
 
 function App() {
   return (
@@ -17,13 +17,11 @@ function App() {
             <Route path="product" element={<Product />} />
             <Route path="cart" element={<Cart />} />
             <Route path="payment" element={<Payment />} />
+            <Route path="wishlist" element={<Wishlist />} />
+            <Route path="category/:title" element={<Category />} />
           </Route>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
-          <Route path="/dashboard" element={<Drawer />}>
-            <Route index element={<Product />} />
-            <Route path="cart" element={<Cart />} />
-          </Route>
         </Routes>
       </BrowserRouter>
     </Provider>

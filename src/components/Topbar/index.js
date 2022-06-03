@@ -267,23 +267,27 @@ function Topbar(props) {
                             {
                               title: 'Semua Transaksi',
                               icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                              handleClick: () => alert('under development'),
                             },
                             {
                               title: 'Wishlist',
                               icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                              handleClick: () => navigate('wishlist'),
                             },
                             {
                               title: 'Ulasan',
                               icon: <StarBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                              handleClick: () => alert('under development'),
                             },
                             {
                               title: 'Pengaturan',
                               icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
+                              handleClick: () => alert('under development'),
                             },
-                          ].map(({ title, icon }) => (
+                          ].map(({ title, icon, handleClick }) => (
                             <React.Fragment key="title">
                               <Divider />
-                              <Box display="flex" alignItems="center" gap={1} sx={{ cursor: 'pointer' }}>
+                              <Box display="flex" alignItems="center" gap={1} sx={{ cursor: 'pointer' }} onClick={handleClick}>
                                 {icon}
                                 <Typography fontSize={14} color="text.secondary">{title}</Typography>
                               </Box>

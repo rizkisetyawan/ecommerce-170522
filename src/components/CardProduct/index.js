@@ -6,12 +6,12 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-function Item({ imgUrl }) {
+function CardProduct({ imgUrl }) {
   const navigate = useNavigate();
 
   return (
     <Card sx={{ width: '100%', boxShadow: 'rgb(0 0 0 / 12%) 0px 1px 6px 0px' }}>
-      <CardActionArea onClick={() => navigate('product')}>
+      <CardActionArea onClick={() => navigate('/product')}>
         <CardMedia
           component="img"
           height="180"
@@ -48,4 +48,4 @@ function Item({ imgUrl }) {
   );
 }
 
-export default Item;
+export default CardProduct;

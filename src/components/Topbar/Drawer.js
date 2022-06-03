@@ -19,6 +19,9 @@ import {
   Logout,
 } from '@mui/icons-material';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { remmoveAuth } from '../../redux/sliceAuth';
 
 function TabHeadToko() {
   return (
@@ -68,6 +71,8 @@ function a11yProps(index) {
 }
 
 function BasicTabs() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -88,22 +93,30 @@ function BasicTabs() {
           {
             title: 'Semua Transaksi',
             icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
+            handleClick: () => alert('under development'),
           },
           {
             title: 'Wishlist',
             icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
+            handleClick: () => navigate('wishlist'),
           },
           {
             title: 'Ulasan',
             icon: <StarBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
+            handleClick: () => alert('under development'),
           },
           {
             title: 'Pengaturan',
             icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
+            handleClick: () => alert('under development'),
           },
           {
             title: 'Logout',
             icon: <Logout sx={({ palette }) => ({ color: palette.text.secondary })} />,
+            handleClick: () => {
+              dispatch(remmoveAuth());
+              navigate('login');
+            },
           },
         ].map(({ title, icon }) => (
           <React.Fragment key="title">

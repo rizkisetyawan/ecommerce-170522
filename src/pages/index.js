@@ -4,6 +4,8 @@ import Register from './Register';
 import Product from './Product';
 import Cart from './Cart';
 import Payment from './Payment';
+import Wishlist from './Wishlist';
+import Category from './Category';
 
 export {
   Home,
@@ -11,5 +13,7 @@ export {
   Register,
   Product,
   Cart,
+  Wishlist,
   Payment,
+  Category,
 };
