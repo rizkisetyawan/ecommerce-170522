@@ -70,7 +70,7 @@ function a11yProps(index) {
   };
 }
 
-function BasicTabs() {
+function BasicTabs({ onClose }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
@@ -98,7 +98,10 @@ function BasicTabs() {
           {
             title: 'Wishlist',
             icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: () => navigate('wishlist'),
+            handleClick: (e) => {
+              onClose(e);
+              navigate('wishlist');
+            },
           },
           {
             title: 'Ulasan',
@@ -118,9 +121,9 @@ function BasicTabs() {
               navigate('login');
             },
           },
-        ].map(({ title, icon }) => (
+        ].map(({ title, icon, handleClick }) => (
           <React.Fragment key="title">
-            <Box display="flex" alignItems="center" gap={1} sx={{ cursor: 'pointer', m: 2 }}>
+            <Box display="flex" alignItems="center" gap={1} sx={{ cursor: 'pointer', m: 2 }} onClick={handleClick}>
               {icon}
               <Typography fontSize={14} color="text.secondary">{title}</Typography>
             </Box>
@@ -145,7 +148,7 @@ function Drawer({ open, onClose }) {
       onClose={onClose}
     >
       <Box minWidth={250} pt={2} px={1}>
-        <BasicTabs />
+        <BasicTabs onClose={onClose} />
       </Box>
     </MUIdrawer>
   );
