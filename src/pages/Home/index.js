@@ -79,32 +79,26 @@ function Categories() {
   return (
     <Container sx={{ my: 4 }}>
       <Typography variant="h5" fontWeight={700} mb={2} textAlign={{ xs: 'center', sm: 'left' }} gutterBottom>Kategori</Typography>
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-      }}
-      >
+      <Grid container>
         { listCategory.map((category) => (
-          <Box
-            key={category.name}
-            sx={{
-              width: 120,
-              border: 1,
-              borderColor: 'divider',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 0.5,
-              p: 1,
-            }}
-          >
-            <img src={category.image} alt="testing" height={80} width={80} style={{ objectFit: 'contain' }} />
-            <Typography variant="subtitle2" textAlign="center">{category.name}</Typography>
-          </Box>
+          <Grid item xs={4} sm={3} md={2} lg={1.5} border={1} borderColor="divider">
+            <Box
+              key={category.name}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 0.5,
+                p: 1,
+              }}
+            >
+              <img src={category.image} alt="testing" height={80} width={80} style={{ objectFit: 'contain' }} />
+              <Typography variant="subtitle2" textAlign="center">{category.name}</Typography>
+            </Box>
+          </Grid>
         ))}
-      </Box>
+      </Grid>
     </Container>
   );
 }
