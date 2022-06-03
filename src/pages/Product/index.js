@@ -14,9 +14,12 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Add, Remove } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { addCount } from '../../redux/sliceCart';
 import { PayModal } from '../../components';
 
 function Product() {
+  const dispatch = useDispatch();
   const [openModalState, setOpenModalState] = useState(false);
 
   useEffect(() => {
@@ -96,6 +99,7 @@ function Product() {
                   sx={{
                     fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
                   }}
+                  onClick={() => dispatch(addCount())}
                 >
                   + Keranjang
                 </Button>

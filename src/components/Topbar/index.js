@@ -80,6 +80,7 @@ function Topbar(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector(({ auth }) => auth.token);
+  const count = useSelector(({ cart }) => cart.count);
 
   const [mobileDraweState, setMobileDrawerState] = React.useState(false);
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
@@ -157,7 +158,7 @@ function Topbar(props) {
               </Search>
               <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>
                 <IconButton onClick={handleClickCart}>
-                  <Badge badgeContent={3} color="error">
+                  <Badge badgeContent={count} color="error">
                     <ShoppingCart />
                   </Badge>
                 </IconButton>
@@ -314,7 +315,7 @@ function Topbar(props) {
               </Box>
               <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                 <IconButton color="inherit" onClick={handleClickCart}>
-                  <Badge badgeContent={3} color="error">
+                  <Badge badgeContent={count} color="error">
                     <ShoppingCart />
                   </Badge>
                 </IconButton>
