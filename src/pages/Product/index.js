@@ -72,7 +72,7 @@ function Product() {
               <Typography fontSize={14}>
                 Stok
                 {' '}
-                <Typography component="span" fontSize={14} fontWeight={600}>1.925</Typography>
+                <strong>1.925</strong>
               </Typography>
             </Box>
             <Box display="flex" alignItems="center" gap={2} my={2}>

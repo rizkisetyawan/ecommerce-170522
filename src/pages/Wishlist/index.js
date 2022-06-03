@@ -5,7 +5,12 @@ import { CardProduct } from '../../components';
 function Wishlist() {
   return (
     <Container>
-      <Typography variant="h5" fontWeight={700} mb={2}>Wishlist</Typography>
+      <Typography variant="h5" fontWeight={700}>Wishlist</Typography>
+      <Typography color="text.secondary" mb={2}>
+        <strong>43</strong>
+        {' '}
+        barang
+      </Typography>
       <Grid container spacing={{ xs: 1, lg: 1.5 }}>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((row) => (

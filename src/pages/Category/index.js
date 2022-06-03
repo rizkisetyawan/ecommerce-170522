@@ -10,11 +10,11 @@ function Category() {
       <Typography color="text.secondary" mb={2}>
         Menampilkan 79 produk untuk
         {' '}
-        <Typography fontWeight={700} component="span" color="text.secondary">
+        <strong>
           &#34;
           {title}
           &#34;
-        </Typography>
+        </strong>
       </Typography>
       <Grid container spacing={{ xs: 1, lg: 1.5 }}>
         {
