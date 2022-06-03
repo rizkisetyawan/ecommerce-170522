@@ -6,6 +6,7 @@ import Cart from './Cart';
 import Payment from './Payment';
 import Wishlist from './Wishlist';
 import Category from './Category';
+import Order from './Order';
 
 export {
   Home,
@@ -16,4 +17,5 @@ export {
   Wishlist,
   Payment,
   Category,
+  Order,
 };

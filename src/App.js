@@ -3,7 +3,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import {
-  Home, Login, Register, Product, Cart, Payment, Wishlist, Category,
+  Home,
+  Login,
+  Register,
+  Product,
+  Cart,
+  Payment,
+  Wishlist,
+  Category,
+  Order,
 } from './pages';
 import { Topbar } from './components';
 
@@ -18,6 +26,7 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="payment" element={<Payment />} />
             <Route path="wishlist" element={<Wishlist />} />
+            <Route path="order" element={<Order />} />
             <Route path="category/:title" element={<Category />} />
           </Route>
           <Route path="register" element={<Register />} />
