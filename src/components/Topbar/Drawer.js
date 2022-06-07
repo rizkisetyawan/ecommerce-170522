@@ -109,7 +109,10 @@ function BasicTabs({ onClose }) {
           {
             title: 'Ulasan',
             icon: <StarBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: () => alert('under development'),
+            handleClick: (e) => {
+              onClose(e);
+              navigate('/reviews');
+            },
           },
           {
             title: 'Pengaturan',

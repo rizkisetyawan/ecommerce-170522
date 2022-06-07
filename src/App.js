@@ -13,6 +13,7 @@ import {
   Category,
   Order,
   Settings,
+  Reviews,
 } from './pages';
 import { Topbar } from './components';
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="payment" element={<Payment />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="order" element={<Order />} />
+            <Route path="reviews" element={<Reviews />} />
             <Route path="settings" element={<Settings />} />
             <Route path="category/:title" element={<Category />} />
           </Route>

@@ -148,7 +148,7 @@ function Topbar(props) {
                 MUI-Commerce
               </Typography>
               <Box mr={2} onClick={() => navigate('/')} sx={{ display: { xs: 'block', sm: 'none' } }}>
-                <Typography fontSize={14} fontWeight={800} color="primary">Mui-C</Typography>
+                <Typography fontSize={14} fontWeight={800} color="primary">MUI-C</Typography>
               </Box>
               <Search>
                 <StyledInputBase

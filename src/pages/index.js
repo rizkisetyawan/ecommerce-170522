@@ -8,6 +8,7 @@ import Wishlist from './Wishlist';
 import Category from './Category';
 import Order from './Order';
 import Settings from './Settings';
+import Reviews from './Reviews';
 
 export {
   Home,
@@ -20,4 +21,5 @@ export {
   Category,
   Order,
   Settings,
+  Reviews,
 };
