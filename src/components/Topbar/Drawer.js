@@ -93,14 +93,17 @@ function BasicTabs({ onClose }) {
           {
             title: 'Semua Transaksi',
             icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: () => alert('under development'),
+            handleClick: (e) => {
+              onClose(e);
+              navigate('/order');
+            },
           },
           {
             title: 'Wishlist',
             icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
             handleClick: (e) => {
               onClose(e);
-              navigate('wishlist');
+              navigate('/wishlist');
             },
           },
           {
@@ -111,7 +114,10 @@ function BasicTabs({ onClose }) {
           {
             title: 'Pengaturan',
             icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: () => alert('under development'),
+            handleClick: (e) => {
+              onClose(e);
+              navigate('/settings');
+            },
           },
           {
             title: 'Logout',

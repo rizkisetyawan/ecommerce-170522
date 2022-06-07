@@ -7,6 +7,7 @@ import Payment from './Payment';
 import Wishlist from './Wishlist';
 import Category from './Category';
 import Order from './Order';
+import Settings from './Settings';
 
 export {
   Home,
@@ -18,4 +19,5 @@ export {
   Payment,
   Category,
   Order,
+  Settings,
 };

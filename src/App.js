@@ -12,6 +12,7 @@ import {
   Wishlist,
   Category,
   Order,
+  Settings,
 } from './pages';
 import { Topbar } from './components';
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="payment" element={<Payment />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="order" element={<Order />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="category/:title" element={<Category />} />
           </Route>
           <Route path="register" element={<Register />} />

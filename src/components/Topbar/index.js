@@ -147,6 +147,9 @@ function Topbar(props) {
               >
                 MUI-Commerce
               </Typography>
+              <Box mr={2} onClick={() => navigate('/')} sx={{ display: { xs: 'block', sm: 'none' } }}>
+                <Typography fontSize={14} fontWeight={800} color="primary">Mui-C</Typography>
+              </Box>
               <Search>
                 <StyledInputBase
                   placeholder="Search…"
@@ -267,12 +270,12 @@ function Topbar(props) {
                             {
                               title: 'Semua Transaksi',
                               icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-                              handleClick: () => alert('under development'),
+                              handleClick: () => navigate('/order'),
                             },
                             {
                               title: 'Wishlist',
                               icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
-                              handleClick: () => navigate('wishlist'),
+                              handleClick: () => navigate('/wishlist'),
                             },
                             {
                               title: 'Ulasan',
@@ -282,7 +285,7 @@ function Topbar(props) {
                             {
                               title: 'Pengaturan',
                               icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-                              handleClick: () => alert('under development'),
+                              handleClick: () => navigate('/settings'),
                             },
                           ].map(({ title, icon, handleClick }) => (
                             <React.Fragment key="title">
