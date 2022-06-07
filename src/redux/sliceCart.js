@@ -10,9 +10,12 @@ export const cartSlice = createSlice({
     addCount: (state) => {
       state.count += 1;
     },
+    reduceCount: (state) => {
+      state.count -= 1;
+    },
   },
 });
 
-export const { addCount } = cartSlice.actions;
+export const { addCount, reduceCount } = cartSlice.actions;
 
 export default cartSlice.reducer;
