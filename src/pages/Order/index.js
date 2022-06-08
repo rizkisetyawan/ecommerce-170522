@@ -11,7 +11,7 @@ import {
   TextField,
   Grid,
 } from '@mui/material';
-import { ShoppingBag } from '@mui/icons-material';
+import { ShoppingBag, ArrowForwardIos } from '@mui/icons-material';
 import React from 'react';
 
 function ReviewDialog({ open, onClose }) {
@@ -69,7 +69,7 @@ function ReviewDialog({ open, onClose }) {
 function OrderDetailDialog({ open, onClose }) {
   return (
     <Dialog onClose={onClose} open={open}>
-      <Box px={3} pb={2} pt={3}>
+      <Box p={3}>
         <Typography fontWeight={800} mb={2}>Detail Transaksi</Typography>
         <Grid container justifyContent="space-between" spacing={1}>
           <Grid item xs={4}>
@@ -92,6 +92,42 @@ function OrderDetailDialog({ open, onClose }) {
           </Grid>
           <Grid item xs={12} my={2}>
             <Divider />
+          </Grid>
+          <Grid item xs={4}>
+            <Typography fontWeight={800} fontSize={14}>Detail Produk</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={8}
+            sx={{
+              display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end',
+            }}
+          >
+            <Typography fontWeight={800} fontSize={12}>Madame Gie Official</Typography>
+            <ArrowForwardIos sx={{ fontSize: 10 }} />
+          </Grid>
+          <Grid item xs={12}>
+            <Box border={1} borderColor="divider" p={1} mb={1.2}>
+              <Box display="flex" gap={1.2} alignItems="center" mb={1}>
+                <Avatar src="https://source.unsplash.com/random" variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
+                <Box>
+                  <Typography fontSize={12} fontWeight={800} gutterBottom>
+                    Madame Gie Gorgeus Wink Celebs Mascara Eyeliner 2 in 1
+                  </Typography>
+                  <Typography fontSize={12} color="text.secondary" fontWeight={400}>1 x Rp26.000</Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Box
+              display="flex"
+              flexDirection={{ xs: 'column', sm: 'row' }}
+              alignItems={{ xs: 'flex-end', sm: 'center' }}
+              gap={{ xs: 0.5, sm: 2 }}
+              justifyContent="flex-end"
+            >
+              <Typography fontSize={14}>Total Harga</Typography>
+              <Typography fontSize={14} fontWeight={800}>Rp26.000</Typography>
+            </Box>
           </Grid>
         </Grid>
       </Box>
