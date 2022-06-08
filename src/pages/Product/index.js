@@ -13,7 +13,9 @@ import {
   Avatar,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Add, Remove } from '@mui/icons-material';
+import {
+  Add, Favorite, FavoriteBorder, Remove,
+} from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { addCount } from '../../redux/sliceCart';
 import { PayModal } from '../../components';
@@ -39,18 +41,28 @@ function Product() {
             <Typography
               fontSize={18}
               fontWeight={800}
+              gutterBottom
             >
               Pintar Facil Smart Paint Roll untuk cat tembok tanpa belepotan
             </Typography>
             <Box sx={{ display: 'flex', gap: 3 }}>
               <Typography fontSize={14} fontWeight={400} color="text.secondary">Terjual 192</Typography>
               <Box display="flex" alignItems="center" gap={0.5}>
+                <Favorite sx={{ fontSize: 14, color: 'error.main' }} />
+                <Typography fontSize={14} fontWeight={400} color="text.secondary">1145</Typography>
+              </Box>
+              <Box display="flex" alignItems="center" gap={0.5}>
                 <Rating defaultValue={1} max={1} size="small" readOnly />
                 <Typography fontSize={14} fontWeight={400}>4.6</Typography>
                 <Typography fontSize={14} fontWeight={400} color="text.secondary">(156 ulasan)</Typography>
               </Box>
             </Box>
-            <Typography fontSize={28} fontWeight={800} my={2}>Rp155.000</Typography>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Typography fontSize={28} fontWeight={800} my={2}>Rp155.000</Typography>
+              <IconButton>
+                <FavoriteBorder sx={{ fontSize: 28, color: 'error.main' }} />
+              </IconButton>
+            </Box>
             <Divider width="100%" sx={{ mb: 1 }} />
             <Typography color="primary.main" fontWeight={600} gutterBottom>Keterangan</Typography>
             <Typography fontSize={14}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia esse, quaerat tempore rem explicabo nostrum nam officiis aliquid nihil facere.</Typography>

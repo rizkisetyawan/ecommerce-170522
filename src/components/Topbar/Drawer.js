@@ -22,6 +22,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { remmoveAuth } from '../../redux/sliceAuth';
+import DialogCreateToko from '../DialogCreateToko';
 
 function TabHeadToko() {
   return (
@@ -74,9 +75,18 @@ function BasicTabs({ onClose }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
+  const [openDialogToko, setOpenDialogToko] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleOpenDialogToko = () => {
+    setOpenDialogToko(true);
+  };
+
+  const handleCloseDialogToko = () => {
+    setOpenDialogToko(false);
   };
 
   return (
@@ -91,7 +101,7 @@ function BasicTabs({ onClose }) {
         <Typography fontSize={15} fontWeight={800} m={2}>Aktifitas Saya</Typography>
         {[
           {
-            title: 'Semua Transaksi',
+            title: 'Pembelian',
             icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
             handleClick: (e) => {
               onClose(e);
@@ -142,8 +152,9 @@ function BasicTabs({ onClose }) {
       <TabPanel value={value} index={1}>
         <Box m={2} mt="30%">
           <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
-          <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }}>Buka Toko Gratis</Button>
+          <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
         </Box>
+        <DialogCreateToko open={openDialogToko} onClose={handleCloseDialogToko} />
       </TabPanel>
     </Box>
   );

@@ -33,6 +33,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { remmoveAuth } from '../../redux/sliceAuth';
 import Drawer from './Drawer';
+import DialogCreateToko from '../DialogCreateToko';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -86,6 +87,7 @@ function Topbar() {
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
   const [userAnchorEl, setUserAnchorEl] = React.useState(null);
   const [tokoAnchorEl, setTokoAnchorEl] = React.useState(null);
+  const [openDialogToko, setOpenDialogToko] = React.useState(false);
   const openCart = Boolean(cartAnchorEl);
   const openUser = Boolean(userAnchorEl);
   const openToko = Boolean(tokoAnchorEl);
@@ -120,6 +122,14 @@ function Topbar() {
 
   const handleMobileMenuOpen = () => {
     setMobileDrawerState(true);
+  };
+
+  const handleOpenDialogToko = () => {
+    setOpenDialogToko(true);
+  };
+
+  const handleCloseDialogToko = () => {
+    setOpenDialogToko(false);
   };
 
   const handleMobileMenuClose = (event) => {
@@ -241,9 +251,10 @@ function Topbar() {
                     >
                       <Box pt={2} px={4} pb={4} minWidth={250}>
                         <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
-                        <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }}>Buka Toko Gratis</Button>
+                        <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
                       </Box>
                     </Popover>
+                    <DialogCreateToko open={openDialogToko} onClose={handleCloseDialogToko} />
                     <Box display="flex" alignItems="center" gap={0.5} onClick={handleClickUser} sx={{ cursor: 'pointer' }}>
                       <Avatar src="https://source.unsplash.com/random" alt="image profile" sx={{ width: 30, height: 30 }} />
                       <Typography fontSize={14} color="text.secondary" fontWeight={800}>Rizki</Typography>
@@ -268,7 +279,7 @@ function Topbar() {
                         </Box>
                         {[
                           {
-                            title: 'Semua Transaksi',
+                            title: 'Pembelian',
                             icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
                             handleClick: () => navigate('/order'),
                           },
