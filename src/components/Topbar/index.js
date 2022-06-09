@@ -31,9 +31,10 @@ import {
   Logout,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
-import { remmoveAuth } from '../../redux/sliceAuth';
+import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
 import Drawer from './Drawer';
 import DialogCreateToko from '../DialogCreateToko';
+import { getIdentity } from '../../utils';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -95,6 +96,18 @@ function Topbar() {
   const idCart = openCart ? 'simple-popover' : undefined;
   const idUser = openUser ? 'simple-popover-user' : undefined;
   const idToko = openToko ? 'simple-popover-toko' : undefined;
+
+  const checkToken = async () => {
+    const tokenFromStorage = localStorage.getItem('token');
+    if (tokenFromStorage) {
+      const detailUser = await getIdentity();
+      dispatch(updateIdentity(detailUser.data.user));
+    }
+  };
+
+  React.useEffect(() => {
+    checkToken();
+  }, []);
 
   const handleClickCart = (event) => {
     setCartAnchorEl(event.currentTarget);
@@ -315,7 +328,7 @@ function Topbar() {
                           my={2}
                           alignSelf="flex-end"
                           onClick={() => {
-                            dispatch(remmoveAuth());
+                            dispatch(removeAuthIdentity());
                             navigate('login');
                           }}
                           sx={{ cursor: 'pointer' }}

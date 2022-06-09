@@ -7,11 +7,48 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useSnackbar } from 'notistack';
 import { updateAuth } from '../../redux/sliceAuth';
+import { postLogin } from '../../utils';
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const [loginState, setLoginState] = React.useState({
+    email: '',
+    password: '',
+    loading: false,
+  });
+
+  const handleChange = (e) => {
+    setLoginState({ ...loginState, [e.target.name]: e.target.value });
+  };
+
+  const handleLogin = async () => {
+    setLoginState({ ...loginState, loading: true });
+    try {
+      if (!loginState.email) {
+        throw new Error('email tidak boleh kosong');
+      }
+      if (!loginState.password) {
+        throw new Error('password tidak boleh kosong');
+      }
+      const { email, password } = loginState;
+      const user = await postLogin({ email, password });
+      setLoginState({ ...loginState, loading: false });
+      if (user.status === 'success') {
+        enqueueSnackbar('Login Berhasil', { variant: 'success' });
+        dispatch(updateAuth(user.data.token));
+        navigate('/');
+      } else {
+        enqueueSnackbar(user.message, { variant: 'error' });
+      }
+    } catch (err) {
+      setLoginState({ ...loginState, loading: false });
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
 
   return (
     <Box
@@ -39,18 +76,16 @@ function Login() {
             <Typography fontSize={13} color="primary.main">Daftar</Typography>
           </Link>
         </Box>
-        <TextField label="Email" variant="outlined" fullWidth sx={{ mt: 5, mb: 2 }} />
-        <TextField label="Password" variant="outlined" fullWidth />
+        <TextField onChange={handleChange} label="Email" variant="outlined" name="email" fullWidth sx={{ mt: 5, mb: 2 }} type="email" />
+        <TextField onChange={handleChange} label="Password" variant="outlined" name="password" fullWidth type="password" />
         <Typography fontSize={13} color="primary.main" textAlign="right" my={1}>Lupa kata sandi?</Typography>
         <Button
           variant="contained"
           fullWidth
-          onClick={() => {
-            dispatch(updateAuth('token dummy'));
-            navigate('/');
-          }}
+          onClick={handleLogin}
+          disabled={loginState.loading}
         >
-          Login
+          {loginState.loading ? 'Loading ...' : 'Login'}
         </Button>
         <Typography fontSize={13} textAlign="center" my={1}>
           Butuh bantuan? Hubungi

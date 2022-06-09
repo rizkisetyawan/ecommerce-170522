@@ -21,7 +21,7 @@ import {
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { remmoveAuth } from '../../redux/sliceAuth';
+import { removeAuthIdentity } from '../../redux/sliceAuth';
 import DialogCreateToko from '../DialogCreateToko';
 
 function TabHeadToko() {
@@ -136,7 +136,7 @@ function BasicTabs({ onClose }) {
             title: 'Logout',
             icon: <Logout sx={({ palette }) => ({ color: palette.text.secondary })} />,
             handleClick: () => {
-              dispatch(remmoveAuth());
+              dispatch(removeAuthIdentity());
               navigate('login');
             },
           },
