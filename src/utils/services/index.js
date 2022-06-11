@@ -14,11 +14,19 @@ const POST = async (endpoint, options) => {
   let option;
   if (isFormData) {
     const headers = new Headers();
-    headers.append('Authorization', token);
+    const bodyFormData = new FormData();
+    if (requireToken) {
+      headers.append('Authorization', token);
+    }
+    Object.entries(body).forEach(
+      ([key, value]) => {
+        bodyFormData.append(key, value);
+      },
+    );
     option = {
       method: 'POST',
       headers,
-      body,
+      body: bodyFormData,
     };
   } else {
     option = {
@@ -34,7 +42,7 @@ const POST = async (endpoint, options) => {
       option.headers.Authorization = token;
     }
   }
-  const res = await fetch(`${process.env.REACT_APP_URL}${endpoint}`, option);
+  const res = await fetch(`${isFormData ? process.env.REACT_APP_STORAGE : process.env.REACT_APP_URL}${endpoint}`, option);
   return res.json();
 };
 
@@ -42,3 +50,5 @@ export const getIdentity = async () => GET('/api/auth', { requireToken: true });
 
 export const postLogin = async (body) => POST('/api/auth', { body, requireToken: false });
 export const postRegister = async (body) => POST('/api/user', { body, requireToken: false });
+export const postToko = async (body) => POST('/api/umkm', { body });
+export const postFoto = async (body) => POST('/image', { body, requireToken: false, isFormData: true });
