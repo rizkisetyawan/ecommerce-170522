@@ -14,8 +14,6 @@ import {
   Typography,
   InputBase,
   Badge,
-  // useScrollTrigger,
-  // Slide,
   Popover,
   Avatar,
 } from '@mui/material';
@@ -64,19 +62,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
   flex: 1,
 }));
-
-// function HideOnScroll(props) {
-//   const { children, window } = props;
-//   const trigger = useScrollTrigger({
-//     target: window ? window() : undefined,
-//   });
-
-//   return (
-//     <Slide appear={false} direction="down" in={!trigger}>
-//       {children}
-//     </Slide>
-//   );
-// }
 
 function Topbar() {
   const navigate = useNavigate();

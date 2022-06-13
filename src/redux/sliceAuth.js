@@ -16,6 +16,9 @@ export const authSlice = createSlice({
       state.user = action.payload.user;
       state.toko = action.payload.toko;
     },
+    updateUser: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+    },
     removeAuthIdentity: (state) => {
       localStorage.removeItem('token');
       state.token = null;
@@ -28,6 +31,7 @@ export const authSlice = createSlice({
 export const {
   updateAuth,
   updateIdentity,
+  updateUser,
   removeAuthIdentity,
 } = authSlice.actions;
 

@@ -22,8 +22,8 @@ import {
 const styledInput = { mb: 1.5, '& label': { fontSize: 14 } };
 
 function DialogCreateToko({ open, onClose }) {
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const [formState, setFormState] = useState({
     name: '',
     address: '',
