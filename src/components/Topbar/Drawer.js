@@ -6,20 +6,28 @@ import {
   Box,
   Button,
   Drawer as MUIdrawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Tab,
   Tabs,
   Typography,
 } from '@mui/material';
 import {
   StorefrontTwoTone,
-  ReceiptOutlined,
-  FavoriteBorder,
-  SettingsOutlined,
-  StarBorder,
+  Favorite,
+  Settings,
   Logout,
+  Assignment,
+  ShoppingBasket,
+  DonutSmall,
+  Star,
+  ShoppingBag,
 } from '@mui/icons-material';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { removeAuthIdentity } from '../../redux/sliceAuth';
 import DialogCreateToko from '../DialogCreateToko';
@@ -35,12 +43,12 @@ function TabHeadToko() {
   );
 }
 
-function TabHeadUser() {
+function TabHeadUser({ user }) {
   return (
     <Box display="flex" alignItems="center" gap={1}>
-      <Avatar src="https://source.unsplash.com/random" alt="user" sx={{ width: 30, height: 30 }} />
+      <Avatar src={user.foto} alt={user.name || user.email} sx={{ width: 30, height: 30 }} />
       <Typography maxWidth={100} fontSize={12} fontWeight={800} display="block" whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
-        Rizki Setyawan
+        {user.name || user.email}
       </Typography>
     </Box>
   );
@@ -74,6 +82,7 @@ function a11yProps(index) {
 function BasicTabs({ onClose }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const identity = useSelector(({ auth }) => auth);
   const [value, setValue] = React.useState(0);
   const [openDialogToko, setOpenDialogToko] = React.useState(false);
 
@@ -89,73 +98,175 @@ function BasicTabs({ onClose }) {
     setOpenDialogToko(false);
   };
 
+  const handleLogout = () => {
+    dispatch(removeAuthIdentity());
+    navigate('login');
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label={<TabHeadUser />} {...a11yProps(0)} />
-          <Tab label={<TabHeadToko />} {...a11yProps(1)} />
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index={0}>
-        <Typography fontSize={15} fontWeight={800} m={2}>Aktifitas Saya</Typography>
-        {[
-          {
-            title: 'Pembelian',
-            icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: (e) => {
-              onClose(e);
-              navigate('/order');
-            },
-          },
-          {
-            title: 'Wishlist',
-            icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: (e) => {
-              onClose(e);
-              navigate('/wishlist');
-            },
-          },
-          {
-            title: 'Ulasan',
-            icon: <StarBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: (e) => {
-              onClose(e);
-              navigate('/reviews');
-            },
-          },
-          {
-            title: 'Pengaturan',
-            icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: (e) => {
-              onClose(e);
-              navigate('/settings');
-            },
-          },
-          {
-            title: 'Logout',
-            icon: <Logout sx={({ palette }) => ({ color: palette.text.secondary })} />,
-            handleClick: () => {
-              dispatch(removeAuthIdentity());
-              navigate('login');
-            },
-          },
-        ].map(({ title, icon, handleClick }) => (
-          <React.Fragment key="title">
-            <Box display="flex" alignItems="center" gap={1} sx={{ cursor: 'pointer', m: 2 }} onClick={handleClick}>
-              {icon}
-              <Typography fontSize={14} color="text.secondary">{title}</Typography>
-            </Box>
-          </React.Fragment>
-        ))}
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Box m={2} mt="30%">
-          <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
-          <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
+      { !identity.token && (
+        <Box px={2}>
+          <Typography fontSize={14} color="text.secondary" textAlign="center">Anda belum Masuk</Typography>
+          <Typography fontSize={14} color="text.secondary" textAlign="center">Silahkan masuk terlebih dahulu</Typography>
+          <Button fullWidth variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600, mt: 2 }} onClick={() => navigate('login')}>Masuk</Button>
+          {/* <Button fullWidth variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button> */}
         </Box>
-        <DialogCreateToko open={openDialogToko} onClose={handleCloseDialogToko} />
-      </TabPanel>
+      )}
+      { identity.token && (
+        <>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label={<TabHeadUser user={identity.user} />} {...a11yProps(0)} />
+              <Tab label={<TabHeadToko />} {...a11yProps(1)} />
+            </Tabs>
+          </Box>
+          <TabPanel value={value} index={0}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              height="calc(100vh - 86px)"
+            >
+              <Box>
+                <Typography fontSize={15} fontWeight={800} m={2} mt={3}>Aktifitas Saya</Typography>
+                <List sx={{ mt: 2 }}>
+                  {
+                    [
+                      {
+                        title: 'Pembelian',
+                        icon: <ShoppingBag />,
+                        handleClick: (e) => {
+                          onClose(e);
+                          navigate('/order');
+                        },
+                      },
+                      {
+                        title: 'Wishlist',
+                        icon: <Favorite />,
+                        handleClick: (e) => {
+                          onClose(e);
+                          navigate('/wishlist');
+                        },
+                      },
+                      {
+                        title: 'Ulasan',
+                        icon: <Star />,
+                        handleClick: (e) => {
+                          onClose(e);
+                          navigate('/reviews');
+                        },
+                      },
+                      {
+                        title: 'Pengaturan',
+                        icon: <Settings />,
+                        handleClick: (e) => {
+                          onClose(e);
+                          navigate('/settings');
+                        },
+                      },
+                    ].map((row, i) => (
+                      <ListItem
+                        disablePadding
+                        sx={{
+                          borderBottom: i === 4 ? 1 : 0,
+                          borderTop: 1,
+                          borderColor: 'divider',
+                        }}
+                      >
+                        <ListItemButton onClick={row.handleClick}>
+                          <ListItemIcon>
+                            {row.icon}
+                          </ListItemIcon>
+                          <ListItemText sx={{ '& span': { fontSize: 14 } }} primary={row.title} />
+                        </ListItemButton>
+                      </ListItem>
+                    ))
+                  }
+                </List>
+              </Box>
+              <List sx={{ mt: 2 }}>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleLogout}>
+                    <ListItemIcon>
+                      <Logout />
+                    </ListItemIcon>
+                    <ListItemText sx={{ '& span': { fontSize: 14 } }} primary="Keluar" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Box>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              height="calc(100vh - 86px)"
+            >
+              { !identity.toko && (
+                <Box m={2} mt="30%">
+                  <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
+                  <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
+                  <DialogCreateToko open={openDialogToko} onClose={handleCloseDialogToko} />
+                </Box>
+              )}
+              { identity.toko && (
+                <Box pt={4}>
+                  <Box display="flex" flexDirection="column" alignItems="center">
+                    <Avatar src={identity.toko.foto} alt={identity.toko.name} sx={{ width: 100, height: 100 }} />
+                    <Typography fontSize={16} fontWeight={800} mt={1.5}>{identity.toko.name}</Typography>
+                  </Box>
+                  <List sx={{ mt: 2 }}>
+                    {
+                      [
+                        {
+                          title: 'Pesanan',
+                          icon: <Assignment />,
+                        },
+                        {
+                          title: 'Produk',
+                          icon: <ShoppingBasket />,
+                        },
+                        {
+                          title: 'Statistik',
+                          icon: <DonutSmall />,
+                        },
+                      ].map((row, i) => (
+                        <ListItem
+                          disablePadding
+                          sx={{
+                            borderBottom: i === 2 ? 1 : 0,
+                            borderTop: 1,
+                            borderColor: 'divider',
+                          }}
+                        >
+                          <ListItemButton>
+                            <ListItemIcon>
+                              {row.icon}
+                            </ListItemIcon>
+                            <ListItemText sx={{ '& span': { fontSize: 14 } }} primary={row.title} />
+                          </ListItemButton>
+                        </ListItem>
+                      ))
+                    }
+                  </List>
+                </Box>
+              )}
+              <List sx={{ mt: 2 }}>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleLogout}>
+                    <ListItemIcon>
+                      <Logout />
+                    </ListItemIcon>
+                    <ListItemText sx={{ '& span': { fontSize: 14 } }} primary="Keluar" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Box>
+          </TabPanel>
+        </>
+      )}
     </Box>
   );
 }

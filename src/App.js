@@ -52,4 +52,39 @@ function App() {
   );
 }
 
+// import { IKImage, IKContext, IKUpload } from 'imagekitio-react';
+// // required parameter to fetch images
+// const urlEndpoint = 'https://ik.imagekit.io/iajwdi4bc';
+
+// // optional parameters (needed for client-side upload)
+// const publicKey = 'public_bPo9nj6bS1chtyjFAAwtbK5gNy0=';
+// const authenticationEndpoint = `${process.env.REACT_APP_URL}/api/image/auth`;
+
+// function App() {
+//   const onError = (err) => {
+//     console.log('Error', err);
+//   };
+
+//   const onSuccess = (res) => {
+//     console.log('Success', res);
+//   };
+//   return (
+//     <>
+//       <h1>ImageKit React quick start</h1>
+//       <IKContext
+//         publicKey={publicKey}
+//         urlEndpoint={urlEndpoint}
+//         authenticationEndpoint={authenticationEndpoint}
+//       >
+//         <p>Upload an image</p>
+//         <IKUpload
+//           fileName="test-upload.png"
+//           onError={onError}
+//           onSuccess={onSuccess}
+//         />
+//       </IKContext>
+//     </>
+//   );
+// }
+
 export default App;

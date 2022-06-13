@@ -13,12 +13,17 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { postToko, postFoto } from '../../utils';
+import { useDispatch } from 'react-redux';
+import { updateIdentity } from '../../redux/sliceAuth';
+import {
+  getImageAuth, postFoto, postToko, getIdentity,
+} from '../../utils';
 
 const styledInput = { mb: 1.5, '& label': { fontSize: 14 } };
 
 function DialogCreateToko({ open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
   const [formState, setFormState] = useState({
     name: '',
     address: '',
@@ -45,15 +50,19 @@ function DialogCreateToko({ open, onClose }) {
   const handleSubmit = async () => {
     setFormState({ ...formState, loading: true });
     try {
-      const foto = await postFoto({ image: formState.image });
-      if (foto.status !== 'success') {
-        throw new Error(foto.message);
-      }
+      const imageAuth = await getImageAuth();
+      const foto = await postFoto({
+        file: formState.image,
+        signature: imageAuth.signature,
+        expire: imageAuth.expire,
+        token: imageAuth.token,
+        fileName: `img-${Date.now()}`,
+      });
       const toko = await postToko({
         name: formState.name,
         address: formState.address,
         description: formState.description,
-        image: foto.data.imageTitle,
+        image: foto.url,
         status: 'active',
       });
       setFormState({ ...formState, loading: false });
@@ -61,8 +70,8 @@ function DialogCreateToko({ open, onClose }) {
         setFormState({ ...formState, imageRead: null });
         enqueueSnackbar(toko.message, { variant: 'success' });
         onClose();
-        // dispatch(updateAuth(user.data.token));
-        // navigate('/');
+        const detailUser = await getIdentity();
+        dispatch(updateIdentity(detailUser.data));
       } else {
         enqueueSnackbar(toko.message, { variant: 'error' });
       }

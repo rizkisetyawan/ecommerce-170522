@@ -13,12 +13,14 @@ export const authSlice = createSlice({
       state.token = action.payload;
     },
     updateIdentity: (state, action) => {
-      state.user = action.payload;
+      state.user = action.payload.user;
+      state.toko = action.payload.toko;
     },
     removeAuthIdentity: (state) => {
       localStorage.removeItem('token');
       state.token = null;
       state.user = null;
+      state.toko = null;
     },
   },
 });

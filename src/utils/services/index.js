@@ -15,9 +15,7 @@ const POST = async (endpoint, options) => {
   if (isFormData) {
     const headers = new Headers();
     const bodyFormData = new FormData();
-    if (requireToken) {
-      headers.append('Authorization', token);
-    }
+    bodyFormData.append('publicKey', process.env.REACT_APP_IK_PUBLIC);
     Object.entries(body).forEach(
       ([key, value]) => {
         bodyFormData.append(key, value);
@@ -42,13 +40,14 @@ const POST = async (endpoint, options) => {
       option.headers.Authorization = token;
     }
   }
-  const res = await fetch(`${isFormData ? process.env.REACT_APP_STORAGE : process.env.REACT_APP_URL}${endpoint}`, option);
+  const res = await fetch(`${isFormData ? process.env.REACT_APP_IK_UPLOAD : process.env.REACT_APP_URL}${endpoint}`, option);
   return res.json();
 };
 
 export const getIdentity = async () => GET('/api/auth', { requireToken: true });
+export const getImageAuth = async () => GET('/api/image/auth', { requireToken: true });
 
 export const postLogin = async (body) => POST('/api/auth', { body, requireToken: false });
 export const postRegister = async (body) => POST('/api/user', { body, requireToken: false });
 export const postToko = async (body) => POST('/api/umkm', { body });
-export const postFoto = async (body) => POST('/image', { body, requireToken: false, isFormData: true });
+export const postFoto = async (body) => POST('/', { body, isFormData: true });

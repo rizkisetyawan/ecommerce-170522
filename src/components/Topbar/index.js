@@ -101,7 +101,11 @@ function Topbar() {
     const tokenFromStorage = localStorage.getItem('token');
     if (tokenFromStorage) {
       const detailUser = await getIdentity();
-      dispatch(updateIdentity(detailUser.data.user));
+      if (detailUser.status !== 'success') {
+        dispatch(removeAuthIdentity(detailUser.data));
+        navigate('/');
+      }
+      dispatch(updateIdentity(detailUser.data));
     }
   };
 
