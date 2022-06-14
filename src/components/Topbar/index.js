@@ -16,17 +16,25 @@ import {
   Badge,
   Popover,
   Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import {
   ShoppingCart,
   Search as SearchIcon,
   Menu as IconMenu,
   StorefrontTwoTone,
-  ReceiptOutlined,
-  FavoriteBorder,
-  SettingsOutlined,
-  StarBorder,
+  ShoppingBag,
+  Favorite,
+  Settings,
+  Star,
   Logout,
+  Assignment,
+  ShoppingBasket,
+  DonutSmall,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
@@ -66,7 +74,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = useSelector(({ auth }) => auth.token);
+  const identity = useSelector(({ auth }) => auth);
   const count = useSelector(({ cart }) => cart.count);
 
   const [mobileDraweState, setMobileDrawerState] = React.useState(false);
@@ -141,6 +149,14 @@ function Topbar() {
     setMobileDrawerState(false);
   };
 
+  if (!identity.user) {
+    return (
+      <Box display="flex" justifyContent="center" py={5}>
+        <Typography>Loading ...</Typography>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -211,8 +227,6 @@ function Topbar() {
                           <Typography
                             fontSize={14}
                             fontWeight={600}
-                            // noWrap
-                            // sx={{ maxWidth: 250 }}
                           >
                             Lorem ipsum dolor sit, amet
                           </Typography>
@@ -227,7 +241,7 @@ function Topbar() {
               </Popover>
               <Divider sx={{ height: 42 }} orientation="vertical" />
               {
-                !token && (
+                !identity.token && (
                   <>
                     <Button variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('login')}>Masuk</Button>
                     <Button variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button>
@@ -235,11 +249,11 @@ function Topbar() {
                 )
               }
               {
-                token && (
+                identity.token && (
                   <>
                     <Box display="flex" alignItems="center" gap={0.5} mr={1} onClick={handleClickToko} sx={{ cursor: 'pointer' }}>
                       <StorefrontTwoTone sx={({ palette }) => ({ width: 30, height: 30, color: palette.text.secondary })} />
-                      <Typography fontSize={14} color="text.secondary" fontWeight={800}>Toko</Typography>
+                      <Typography fontSize={14} color="text.secondary" fontWeight={800}>Toko Saya</Typography>
                     </Box>
                     <Popover
                       id={idToko}
@@ -251,15 +265,80 @@ function Topbar() {
                         horizontal: 'left',
                       }}
                     >
-                      <Box pt={2} px={4} pb={4} minWidth={250}>
-                        <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
-                        <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
-                      </Box>
+                      {
+                        !identity.toko && (
+                          <Box pt={2} px={4} pb={4} minWidth={250}>
+                            <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
+                            <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
+                          </Box>
+                        )
+                      }
+                      {
+                        identity.toko && (
+                          <Box pt={2} display="flex" flexDirection="column" minWidth={250}>
+                            <Box display="flex" flexDirection="column" alignItems="center">
+                              <Avatar src={identity.toko.foto} alt={identity.toko.name} sx={{ width: 100, height: 100 }} />
+                              <Typography fontSize={16} fontWeight={800} mt={1.5}>{identity.toko.name}</Typography>
+                            </Box>
+                            <List disablePadding sx={{ mt: 2 }}>
+                              {
+                                [
+                                  {
+                                    title: 'Pesanan',
+                                    icon: <Assignment />,
+                                  },
+                                  {
+                                    title: 'Produk',
+                                    icon: <ShoppingBasket />,
+                                  },
+                                  {
+                                    title: 'Statistik',
+                                    icon: <DonutSmall />,
+                                  },
+                                ].map((row, i) => (
+                                  <ListItem
+                                    disablePadding
+                                    sx={{
+                                      borderBottom: i === 2 ? 1 : 0,
+                                      borderTop: 1,
+                                      borderColor: 'divider',
+                                    }}
+                                  >
+                                    <ListItemButton>
+                                      <ListItemIcon>
+                                        {row.icon}
+                                      </ListItemIcon>
+                                      <ListItemText sx={{ '& span': { fontSize: 14 } }} primary={row.title} />
+                                    </ListItemButton>
+                                  </ListItem>
+                                ))
+                              }
+                            </List>
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              gap={1}
+                              m={2}
+                              alignSelf="flex-end"
+                              onClick={() => {
+                                dispatch(removeAuthIdentity());
+                                navigate('login');
+                              }}
+                              sx={{ cursor: 'pointer' }}
+                            >
+                              <Logout />
+                              <Typography fontSize={14} color="text.secondary">
+                                Keluar
+                              </Typography>
+                            </Box>
+                          </Box>
+                        )
+                      }
                     </Popover>
                     <DialogCreateToko open={openDialogToko} onClose={handleCloseDialogToko} />
                     <Box display="flex" alignItems="center" gap={0.5} onClick={handleClickUser} sx={{ cursor: 'pointer' }}>
-                      <Avatar src="https://source.unsplash.com/random" alt="image profile" sx={{ width: 30, height: 30 }} />
-                      <Typography fontSize={14} color="text.secondary" fontWeight={800}>Rizki</Typography>
+                      <Avatar src={identity.user.foto} sx={{ width: 30, height: 30 }} />
+                      <Typography fontSize={14} color="text.secondary" fontWeight={800}>{identity.user.name}</Typography>
                     </Box>
                     <Popover
                       id={idUser}
@@ -271,50 +350,60 @@ function Topbar() {
                         horizontal: 'left',
                       }}
                     >
-                      <Box px={4} py={2} display="flex" flexDirection="column" gap={2} minWidth={200}>
-                        <Box display="flex" alignItems="center" gap={1.5}>
-                          <Avatar src="https://source.unsplash.com/random" alt="image profile" />
+                      <Box pt={2} display="flex" flexDirection="column" minWidth={200}>
+                        <Box display="flex" alignItems="center" gap={1.5} mx={4} mb={1}>
+                          <Avatar src={identity.user.foto} />
                           <Box>
-                            <Typography fontSize={14} fontWeight={800}>Rizki</Typography>
-                            <Typography fontSize={14} color="text.secondary">rizki@gmail.com</Typography>
+                            <Typography fontSize={14} fontWeight={800}>{identity.user.name}</Typography>
+                            <Typography fontSize={14} color="text.secondary">{identity.user.email}</Typography>
                           </Box>
                         </Box>
-                        {[
-                          {
-                            title: 'Pembelian',
-                            icon: <ReceiptOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-                            handleClick: () => navigate('/order'),
-                          },
-                          {
-                            title: 'Wishlist',
-                            icon: <FavoriteBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
-                            handleClick: () => navigate('/wishlist'),
-                          },
-                          {
-                            title: 'Ulasan',
-                            icon: <StarBorder sx={({ palette }) => ({ color: palette.text.secondary })} />,
-                            handleClick: () => navigate('/reviews'),
-                          },
-                          {
-                            title: 'Pengaturan',
-                            icon: <SettingsOutlined sx={({ palette }) => ({ color: palette.text.secondary })} />,
-                            handleClick: () => navigate('/settings'),
-                          },
-                        ].map(({ title, icon, handleClick }) => (
-                          <React.Fragment key="title">
-                            <Divider />
-                            <Box display="flex" alignItems="center" gap={1} sx={{ cursor: 'pointer' }} onClick={handleClick}>
-                              {icon}
-                              <Typography fontSize={14} color="text.secondary">{title}</Typography>
-                            </Box>
-                          </React.Fragment>
-                        ))}
+                        <List>
+                          {[
+                            {
+                              title: 'Pembelian',
+                              icon: <ShoppingBag />,
+                              handleClick: () => navigate('/order'),
+                            },
+                            {
+                              title: 'Wishlist',
+                              icon: <Favorite />,
+                              handleClick: () => navigate('/wishlist'),
+                            },
+                            {
+                              title: 'Ulasan',
+                              icon: <Star />,
+                              handleClick: () => navigate('/reviews'),
+                            },
+                            {
+                              title: 'Pengaturan',
+                              icon: <Settings />,
+                              handleClick: () => navigate('/settings'),
+                            },
+                          ].map((row, i) => (
+                            <ListItem
+                              disablePadding
+                              sx={{
+                                borderBottom: i === 4 ? 1 : 0,
+                                borderTop: 1,
+                                borderColor: 'divider',
+                              }}
+                            >
+                              <ListItemButton onClick={row.handleClick}>
+                                <ListItemIcon>
+                                  {row.icon}
+                                </ListItemIcon>
+                                <ListItemText sx={{ '& span': { fontSize: 14 } }} primary={row.title} />
+                              </ListItemButton>
+                            </ListItem>
+                          ))}
+                        </List>
                         <Divider />
                         <Box
                           display="flex"
                           alignItems="center"
                           gap={1}
-                          my={2}
+                          m={2}
                           alignSelf="flex-end"
                           onClick={() => {
                             dispatch(removeAuthIdentity());

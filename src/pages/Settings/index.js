@@ -23,7 +23,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { putUserDetail } from '../../utils';
+import { putUserDetail, getImageAuth, postFoto } from '../../utils';
 import { updateUser } from '../../redux/sliceAuth';
 
 function ActionInputText({ loading, onCancel, onCheckSubmit }) {
@@ -147,6 +147,8 @@ function InputText({
 }
 
 function Settings() {
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const user = useSelector(({ auth }) => auth.user);
   const [editState, setEditState] = useState({
     name: false,
@@ -155,12 +157,55 @@ function Settings() {
     hp: false,
     email: false,
   });
+  const [imageState, setImageState] = useState({
+    image: null,
+    imageRead: null,
+    loading: false,
+  });
 
   const handleEditState = (name, value) => {
     setEditState({
       ...editState,
       [name]: value,
     });
+  };
+
+  const handleImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setImageState({
+        ...imageState,
+        image: event.target.files[0],
+        imageRead: URL.createObjectURL(event.target.files[0]),
+      });
+    }
+  };
+
+  const handleSaveImage = async () => {
+    setImageState({ ...imageState, loading: true });
+    try {
+      if (imageState.image.size > 1000000) {
+        throw new Error('Besar file: maksimum 1.000.000 bytes (1 Megabytes)');
+      }
+      const imageAuth = await getImageAuth();
+      const foto = await postFoto({
+        file: imageState.image,
+        signature: imageAuth.signature,
+        expire: imageAuth.expire,
+        token: imageAuth.token,
+        fileName: `img-${Date.now()}`,
+      });
+      const detailUser = await putUserDetail({ foto: foto.url });
+      setImageState({ ...imageState, loading: false });
+      if (detailUser.status === 'success') {
+        dispatch(updateUser({ foto: foto.url }));
+        setImageState({ ...imageState, image: null, imageRead: null });
+        return;
+      }
+      throw new Error(detailUser.message);
+    } catch (err) {
+      setImageState({ ...imageState, loading: false });
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
   };
 
   return (
@@ -183,8 +228,7 @@ function Settings() {
               >
                 <Box display="flex" justifyContent="center">
                   <Avatar
-                    src={user.foto}
-                    alt={user.name || user.email}
+                    src={imageState.imageRead || user.foto}
                     sx={{
                       width: '100%',
                       height: 'auto',
@@ -195,21 +239,61 @@ function Settings() {
                     variant="square"
                   />
                 </Box>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  sx={{
-                    fontSize: 14,
-                    fontWeight: 800,
-                    color: 'text.primary',
-                    borderColor: 'divider',
-                    mb: 2,
-                  }}
-                >
-                  Pilih Foto
-                </Button>
+                <Box>
+                  {
+                    !imageState.image && (
+                      <label htmlFor="contained-button-file">
+                        <input style={{ display: 'none' }} accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageChange} />
+                        <Button
+                          fullWidth
+                          component="span"
+                          variant="contained"
+                          sx={{
+                            fontSize: 14,
+                            fontWeight: 800,
+                            mb: 1,
+                          }}
+                        >
+                          Ubah Foto
+                        </Button>
+                      </label>
+                    )
+                  }
+                  {
+                    (imageState.image) && (
+                      <Box mb={2}>
+                        { imageState.loading && (
+                          <Box display="flex" justifyContent="center">
+                            <Typography color="text.secondary">Loading ...</Typography>
+                          </Box>
+                        )}
+                        { !imageState.loading && (
+                          <>
+                            <Button
+                              sx={{ mb: 1 }}
+                              fullWidth
+                              variant="contained"
+                              onClick={handleSaveImage}
+                            >
+                              Simpan
+                            </Button>
+                            <Button
+                              fullWidth
+                              variant="outlined"
+                              onClick={() => {
+                                setImageState({ ...imageState, image: null, imageRead: null });
+                              }}
+                            >
+                              Batal
+                            </Button>
+                          </>
+                        )}
+                      </Box>
+                    )
+                  }
+                </Box>
                 <Typography fontSize={12} color="text.secondary">
-                  Besar file: maksimum 10.000.000 bytes (10 Megabytes).
+                  Besar file: maksimum 1.000.000 bytes (1 Megabytes).
                   Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
                 </Typography>
               </Box>

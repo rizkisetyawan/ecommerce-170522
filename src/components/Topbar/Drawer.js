@@ -129,8 +129,14 @@ function BasicTabs({ onClose }) {
               height="calc(100vh - 86px)"
             >
               <Box>
-                <Typography fontSize={15} fontWeight={800} m={2} mt={3}>Aktifitas Saya</Typography>
-                <List sx={{ mt: 2 }}>
+                <Box display="flex" alignItems="center" gap={1.5} mx={4} mt={2} mb={1}>
+                  <Avatar src={identity.user.foto} />
+                  <Box>
+                    <Typography fontSize={14} fontWeight={800}>{identity.user.name}</Typography>
+                    <Typography fontSize={14} color="text.secondary">{identity.user.email}</Typography>
+                  </Box>
+                </Box>
+                <List>
                   {
                     [
                       {
