@@ -6,6 +6,7 @@ export const authSlice = createSlice({
   initialState: {
     token: localStorage.getItem('token') || null,
     user: null,
+    toko: null,
   },
   reducers: {
     updateAuth: (state, action) => {

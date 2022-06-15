@@ -3,6 +3,7 @@ import CardProduct from './CardProduct';
 import PayModal from './PayModal';
 import Auth from './Auth';
 import DialogCreateToko from './DialogCreateToko';
+import DialogCreateProduct from './DialogCreateProduct';
 
 export {
   Topbar,
@@ -10,4 +11,5 @@ export {
   PayModal,
   Auth,
   DialogCreateToko,
+  DialogCreateProduct,
 };

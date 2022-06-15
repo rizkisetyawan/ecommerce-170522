@@ -1,14 +1,15 @@
-const GET = async (endpoint, options) => {
+const GET = async (endpoint, options = {}) => {
+  const { requireToken = true } = options;
   const token = localStorage.getItem('token');
   const option = {};
-  if (options.requireToken) {
+  if (requireToken) {
     option.headers = { Authorization: token };
   }
   const res = await fetch(`${process.env.REACT_APP_URL}${endpoint}`, option);
   return res.json();
 };
 
-const POST = async (endpoint, options) => {
+const POST = async (endpoint, options = {}) => {
   const { body, requireToken = true, isFormData = false } = options;
   const token = await localStorage.getItem('token');
   let option;
@@ -63,12 +64,15 @@ const PUT = async (endpoint, options) => {
   return res.json();
 };
 
-export const getIdentity = async () => GET('/api/auth', { requireToken: true });
-export const getImageAuth = async () => GET('/api/image/auth', { requireToken: true });
+export const getIdentity = async () => GET('/api/auth');
+export const getImageAuth = async () => GET('/api/image/auth');
+export const getProducts = async () => GET('/api/product');
+export const getCategory = async () => GET('/api/product/category');
 
 export const postLogin = async (body) => POST('/api/auth', { body, requireToken: false });
 export const postRegister = async (body) => POST('/api/user', { body, requireToken: false });
-export const postToko = async (body) => POST('/api/umkm', { body });
 export const postFoto = async (body) => POST('/', { body, isFormData: true });
+export const postToko = async (body) => POST('/api/umkm', { body });
+export const postProduct = async (body) => POST('/api/product', { body });
 
 export const putUserDetail = async (body) => PUT('/api/user/detail', { body });

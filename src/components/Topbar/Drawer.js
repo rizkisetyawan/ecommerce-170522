@@ -229,14 +229,20 @@ function BasicTabs({ onClose }) {
                         {
                           title: 'Pesanan',
                           icon: <Assignment />,
+                          handleClick: () => {},
                         },
                         {
                           title: 'Produk',
                           icon: <ShoppingBasket />,
+                          handleClick: (e) => {
+                            onClose(e);
+                            navigate('/products');
+                          },
                         },
                         {
                           title: 'Statistik',
                           icon: <DonutSmall />,
+                          handleClick: () => {},
                         },
                       ].map((row, i) => (
                         <ListItem
@@ -247,7 +253,7 @@ function BasicTabs({ onClose }) {
                             borderColor: 'divider',
                           }}
                         >
-                          <ListItemButton>
+                          <ListItemButton onClick={row.handleClick}>
                             <ListItemIcon>
                               {row.icon}
                             </ListItemIcon>

@@ -9,6 +9,7 @@ import Category from './Category';
 import Order from './Order';
 import Settings from './Settings';
 import Reviews from './Reviews';
+import Products from './Products';
 
 export {
   Home,
@@ -22,4 +23,5 @@ export {
   Order,
   Settings,
   Reviews,
+  Products,
 };

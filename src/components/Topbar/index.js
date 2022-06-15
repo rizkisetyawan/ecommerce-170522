@@ -149,7 +149,7 @@ function Topbar() {
     setMobileDrawerState(false);
   };
 
-  if (!identity.user) {
+  if (!identity.user && identity.token) {
     return (
       <Box display="flex" justifyContent="center" py={5}>
         <Typography>Loading ...</Typography>
@@ -290,6 +290,7 @@ function Topbar() {
                                   {
                                     title: 'Produk',
                                     icon: <ShoppingBasket />,
+                                    handleClick: () => navigate('/products'),
                                   },
                                   {
                                     title: 'Statistik',
@@ -304,7 +305,7 @@ function Topbar() {
                                       borderColor: 'divider',
                                     }}
                                   >
-                                    <ListItemButton>
+                                    <ListItemButton onClick={row.handleClick}>
                                       <ListItemIcon>
                                         {row.icon}
                                       </ListItemIcon>
