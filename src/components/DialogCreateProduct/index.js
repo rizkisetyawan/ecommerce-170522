@@ -42,7 +42,12 @@ const initForm = {
   loading: false,
 };
 
-function DialogCreateProduct({ open, onClose }) {
+function DialogCreateProduct({
+  open,
+  onClose,
+  data,
+  action,
+}) {
   const toko = useSelector(({ auth }) => auth.toko);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -104,6 +109,11 @@ function DialogCreateProduct({ open, onClose }) {
     }
   };
 
+  const handleClose = () => {
+    setFormState(initForm);
+    onClose();
+  };
+
   const fetchCategory = async () => {
     setCategoryState({ ...categoryState, loading: true });
     try {
@@ -129,10 +139,19 @@ function DialogCreateProduct({ open, onClose }) {
     fetchCategory();
   }, []);
 
+  useEffect(() => {
+    if (data) {
+      setFormState({ ...formState, ...data, imageRead: data.foto });
+    }
+  }, [data]);
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs">
+    <Dialog open={open} onClose={handleClose} maxWidth="xs">
       <Box py={3} px={{ xs: 2, md: 4 }}>
-        <Typography fontWeight={800} textAlign="center" mb={3}>TAMBAH PRODUK BARU</Typography>
+        <Typography fontWeight={800} textAlign="center" mb={3}>
+          { action === 'edit' && 'UBAH PRODUK'}
+          { action === 'add' && 'TAMBAH PRODUK BARU'}
+        </Typography>
         <Grid container rowSpacing={1.5} columnSpacing={1.5}>
           <Grid item xs={3} sm={4}>
             <Typography fontSize={{ xs: 12, sm: 14 }}>Foto</Typography>
@@ -193,7 +212,15 @@ function DialogCreateProduct({ open, onClose }) {
             <Typography fontSize={{ xs: 12, sm: 14 }}>Nama Produk</Typography>
           </Grid>
           <Grid item xs={9} sm={8}>
-            <TextField name="name" onChange={handleChange} fullWidth variant="outlined" size="small" sx={styledInput} />
+            <TextField
+              name="name"
+              onChange={handleChange}
+              value={formState.name}
+              fullWidth
+              variant="outlined"
+              size="small"
+              sx={styledInput}
+            />
           </Grid>
           <Grid item xs={3} sm={4}>
             <Typography fontSize={{ xs: 12, sm: 14 }}>Kategori</Typography>
@@ -203,6 +230,7 @@ function DialogCreateProduct({ open, onClose }) {
             { (!categoryState.loading && categoryState.message) && <Typography color="text.secondary" fontSize={12} mb={1.5}>{categoryState.data}</Typography>}
             { (!categoryState.loading && categoryState.data) && (
               <Autocomplete
+                value={formState.category}
                 ListboxProps={{ style: { maxHeight: 150 } }}
                 disablePortal
                 id="combo-box-demo"
@@ -226,6 +254,7 @@ function DialogCreateProduct({ open, onClose }) {
               variant="outlined"
               size="small"
               sx={styledInput}
+              value={formState.price}
               InputProps={{
                 min: 1,
                 startAdornment: <InputAdornment position="start" sx={{ '& p': { fontSize: { xs: 12, sm: 14 } } }}>Rp</InputAdornment>,
@@ -239,6 +268,7 @@ function DialogCreateProduct({ open, onClose }) {
             <TextField
               name="stock"
               type="number"
+              value={formState.stock}
               onChange={handleChange}
               fullWidth
               variant="outlined"
@@ -257,7 +287,7 @@ function DialogCreateProduct({ open, onClose }) {
           <Grid item xs={9} sm={8}>
             <Switch
               {...label}
-              defaultChecked
+              checked={formState.status === 'aktif'}
               onChange={(e) => setFormState({ ...formState, status: e.target.checked ? 'aktif' : 'tidak aktif' })}
             />
           </Grid>
@@ -265,13 +295,23 @@ function DialogCreateProduct({ open, onClose }) {
             <Typography fontSize={{ xs: 12, sm: 14 }}>Deskripsi</Typography>
           </Grid>
           <Grid item xs={9} sm={8}>
-            <TextField name="description" onChange={handleChange} fullWidth variant="outlined" size="small" multiline rows={4} sx={styledInput} />
+            <TextField
+              name="description"
+              value={formState.description}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+              size="small"
+              multiline
+              rows={4}
+              sx={styledInput}
+            />
           </Grid>
         </Grid>
         <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
           <Button
             sx={{ fontSize: 14, textTransform: 'capitalize', fontWeight: 800 }}
-            onClick={onClose}
+            onClick={handleClose}
             disabled={formState.loading}
           >
             Batal
@@ -282,7 +322,9 @@ function DialogCreateProduct({ open, onClose }) {
             onClick={handleSubmit}
             disabled={formState.loading}
           >
-            {formState.loading ? 'Loading ...' : 'Tambah Produk'}
+            {formState.loading && 'Loading ...' }
+            {(!formState.loading && action === 'edit') && 'Ubah Produk' }
+            {(!formState.loading && action === 'add') && 'Tambah Produk' }
           </Button>
         </Box>
       </Box>

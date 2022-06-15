@@ -27,7 +27,11 @@ const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 function Products() {
   const { enqueueSnackbar } = useSnackbar();
-  const [openDialogProduct, setOpenDialogProduct] = useState(false);
+  const [openDialogProduct, setOpenDialogProduct] = useState({
+    action: null,
+    open: false,
+    data: null,
+  });
   const [productsState, setProductsState] = useState({
     loading: false,
     data: null,
@@ -65,7 +69,7 @@ function Products() {
       <Grid container mb={2}>
         <Grid item xs={6}>
           <Button
-            onClick={() => setOpenDialogProduct(true)}
+            onClick={() => setOpenDialogProduct({ open: true, data: null, action: 'add' })}
             variant="contained"
             sx={{
               fontSize: 14,
@@ -153,11 +157,14 @@ function Products() {
                     <TableCell align="center"><Switch {...label} checked={row.status === 'aktif'} /></TableCell>
                     <TableCell align="center">
                       <Button
+                        onClick={() => {
+                          setOpenDialogProduct({ open: true, data: row, action: 'edit' });
+                        }}
+                        startIcon={<Edit />}
                         sx={{
                           textTransform: 'capitalize',
                           fontWeight: 800,
                         }}
-                        startIcon={<Edit />}
                       >
                         Ubah
                       </Button>
@@ -170,8 +177,10 @@ function Products() {
         )
       }
       <DialogCreateProduct
-        open={openDialogProduct}
-        onClose={() => setOpenDialogProduct(false)}
+        open={openDialogProduct.open}
+        data={openDialogProduct.data}
+        action={openDialogProduct.action}
+        onClose={() => setOpenDialogProduct({ open: false, data: null, action: null })}
       />
     </Container>
   );
