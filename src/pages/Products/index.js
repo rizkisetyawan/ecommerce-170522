@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import { Edit, Search } from '@mui/icons-material';
 import {
@@ -21,9 +22,47 @@ import {
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { DialogCreateProduct } from '../../components';
-import { getProducts, rp } from '../../utils';
+import { getProducts, putStatusProduct, rp } from '../../utils';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+function StatusSwitch({ id, isActive }) {
+  const [checkedState, setCheckedState] = useState({
+    isActive,
+    loading: false,
+    message: null,
+  });
+
+  const handleChecked = async (e) => {
+    const { checked } = e.target;
+    setCheckedState({ ...checkedState, loading: true });
+    try {
+      const product = await putStatusProduct(id, { status: checked ? 'aktif' : 'tidak aktif' });
+      if (product.status !== 'success') {
+        throw new Error(product.message);
+      }
+      setCheckedState({ ...checkedState, loading: false, isActive: checked });
+    } catch (err) {
+      setCheckedState({ ...checkedState, loading: false, message: err.message });
+    }
+  };
+
+  if (checkedState.loading) {
+    return <Typography fontSize={12} color="text.secondary">Loading ...</Typography>;
+  }
+
+  if (!checkedState.loading && checkedState.message) {
+    return <Typography fontSize={12} color="text.secondary">{checkedState.message}</Typography>;
+  }
+
+  return (
+    <Switch
+      {...label}
+      checked={checkedState.isActive}
+      onChange={handleChecked}
+    />
+  );
+}
 
 function Products() {
   const { enqueueSnackbar } = useSnackbar();
@@ -37,6 +76,7 @@ function Products() {
     data: null,
     message: null,
   });
+  const [searchState, setSearchState] = useState(null);
 
   const fetchProducts = async () => {
     setProductsState({ ...productsState, loading: true });
@@ -57,6 +97,15 @@ function Products() {
         message: err.message,
       });
       enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
+  const handleSearchProduct = (e) => {
+    const { value } = e.target;
+    if (!value) {
+      setSearchState(null);
+    } else {
+      setSearchState(productsState.data.filter((row) => row.name.includes(e.target.value)));
     }
   };
 
@@ -91,6 +140,7 @@ function Products() {
               }}
               id="input-with-icon-textfield"
               placeholder="Search ..."
+              onChange={handleSearchProduct}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -131,7 +181,7 @@ function Products() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {productsState.data.map((row) => (
+                {(searchState || productsState.data).map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -154,9 +204,15 @@ function Products() {
                     </TableCell>
                     <TableCell align="center">{rp(row.price)}</TableCell>
                     <TableCell align="center">{row.stock}</TableCell>
-                    <TableCell align="center"><Switch {...label} checked={row.status === 'aktif'} /></TableCell>
+                    <TableCell align="center">
+                      <StatusSwitch
+                        id={row.id_item}
+                        isActive={row.status === 'aktif'}
+                      />
+                    </TableCell>
                     <TableCell align="center">
                       <Button
+                        color="inherit"
                         onClick={() => {
                           setOpenDialogProduct({ open: true, data: row, action: 'edit' });
                         }}
@@ -180,6 +236,7 @@ function Products() {
         open={openDialogProduct.open}
         data={openDialogProduct.data}
         action={openDialogProduct.action}
+        onSuccess={fetchProducts}
         onClose={() => setOpenDialogProduct({ open: false, data: null, action: null })}
       />
     </Container>

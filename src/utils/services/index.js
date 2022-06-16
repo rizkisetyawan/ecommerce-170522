@@ -64,15 +64,18 @@ const PUT = async (endpoint, options) => {
   return res.json();
 };
 
-export const getIdentity = async () => GET('/api/auth');
-export const getImageAuth = async () => GET('/api/image/auth');
-export const getProducts = async () => GET('/api/product');
-export const getCategory = async () => GET('/api/product/category');
+export const getIdentity = () => GET('/api/auth');
+export const getImageAuth = () => GET('/api/image/auth');
+export const getProducts = () => GET('/api/product');
+export const getDetailProduct = (id) => GET(`/api/product/detail/${id}`);
+export const getCategory = () => GET('/api/product/category');
 
-export const postLogin = async (body) => POST('/api/auth', { body, requireToken: false });
-export const postRegister = async (body) => POST('/api/user', { body, requireToken: false });
-export const postFoto = async (body) => POST('/', { body, isFormData: true });
-export const postToko = async (body) => POST('/api/umkm', { body });
-export const postProduct = async (body) => POST('/api/product', { body });
+export const postLogin = (body) => POST('/api/auth', { body, requireToken: false });
+export const postRegister = (body) => POST('/api/user', { body, requireToken: false });
+export const postFoto = (body) => POST('/', { body, isFormData: true });
+export const postToko = (body) => POST('/api/umkm', { body });
+export const postProduct = (body) => POST('/api/product', { body });
 
-export const putUserDetail = async (body) => PUT('/api/user/detail', { body });
+export const putUserDetail = (body) => PUT('/api/user/detail', { body });
+export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
+export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });

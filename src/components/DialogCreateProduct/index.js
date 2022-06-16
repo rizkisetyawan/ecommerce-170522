@@ -17,14 +17,14 @@ import {
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateIdentity } from '../../redux/sliceAuth';
+import { useSelector } from 'react-redux';
 import {
   getImageAuth,
+  getCategory,
+  getDetailProduct,
   postFoto,
   postProduct,
-  getIdentity,
-  getCategory,
+  putProduct,
 } from '../../utils';
 
 const styledInput = { '& input': { fontSize: { xs: 12, sm: 14 } } };
@@ -40,16 +40,17 @@ const initForm = {
   image: null,
   imageRead: null,
   loading: false,
+  message: null,
 };
 
 function DialogCreateProduct({
   open,
   onClose,
+  onSuccess,
   data,
   action,
 }) {
   const toko = useSelector(({ auth }) => auth.toko);
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [formState, setFormState] = useState(initForm);
   const [categoryState, setCategoryState] = useState({
@@ -75,31 +76,50 @@ function DialogCreateProduct({
   const handleSubmit = async () => {
     setFormState({ ...formState, loading: true });
     try {
-      const imageAuth = await getImageAuth();
-      const foto = await postFoto({
-        file: formState.image,
-        signature: imageAuth.signature,
-        expire: imageAuth.expire,
-        token: imageAuth.token,
-        fileName: `img-${Date.now()}`,
-      });
-      const product = await postProduct({
-        id_umkm: toko.id_umkm,
-        category: formState.category,
-        name: formState.name,
-        price: formState.price,
-        stock: formState.stock,
-        description: formState.description,
-        status: formState.status,
-        foto: foto.url,
-      });
+      let foto;
+      let product;
+      if (formState.image) {
+        const imageAuth = await getImageAuth();
+        foto = await postFoto({
+          file: formState.image,
+          signature: imageAuth.signature,
+          expire: imageAuth.expire,
+          token: imageAuth.token,
+          fileName: `img-${Date.now()}`,
+        });
+      }
+      if (action === 'add') {
+        product = await postProduct({
+          id_umkm: toko.id_umkm,
+          category: formState.category,
+          name: formState.name,
+          price: formState.price,
+          stock: formState.stock,
+          description: formState.description,
+          status: formState.status,
+          foto: foto.url,
+        });
+      }
+      if (action === 'edit') {
+        product = await putProduct(
+          formState.id_item,
+          {
+            category: formState.category,
+            name: formState.name,
+            price: formState.price,
+            stock: formState.stock,
+            description: formState.description,
+            status: formState.status,
+            foto: foto ? foto.url : formState.foto,
+          },
+        );
+      }
       setFormState({ ...formState, loading: false });
       if (product.status === 'success') {
         setFormState(initForm);
         enqueueSnackbar(product.message, { variant: 'success' });
+        onSuccess();
         onClose();
-        const detailUser = await getIdentity();
-        dispatch(updateIdentity(detailUser.data));
       } else {
         enqueueSnackbar(product.message, { variant: 'error' });
       }
@@ -110,8 +130,10 @@ function DialogCreateProduct({
   };
 
   const handleClose = () => {
-    setFormState(initForm);
     onClose();
+    setTimeout(() => {
+      setFormState(initForm);
+    }, 500);
   };
 
   const fetchCategory = async () => {
@@ -135,13 +157,35 @@ function DialogCreateProduct({
     }
   };
 
+  const fetchDetailProduct = async () => {
+    setFormState({ ...formState, loading: true });
+    try {
+      const product = await getDetailProduct(data.id_item);
+      if (product.status !== 'success') {
+        throw new Error(product.message);
+      }
+      setFormState({
+        ...formState,
+        ...product.data,
+        loading: false,
+        imageRead: product.data.foto,
+      });
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        message: 'Terjadi kesalahan, silahkan coba lagi nanti',
+      });
+    }
+  };
+
   useEffect(() => {
     fetchCategory();
   }, []);
 
   useEffect(() => {
-    if (data) {
-      setFormState({ ...formState, ...data, imageRead: data.foto });
+    if (action === 'edit') {
+      fetchDetailProduct();
     }
   }, [data]);
 
@@ -153,7 +197,7 @@ function DialogCreateProduct({
           { action === 'add' && 'TAMBAH PRODUK BARU'}
         </Typography>
         <Grid container rowSpacing={1.5} columnSpacing={1.5}>
-          <Grid item xs={3} sm={4}>
+          <Grid item xs={3} sm={4} display="flex" alignItems="center">
             <Typography fontSize={{ xs: 12, sm: 14 }}>Foto</Typography>
           </Grid>
           <Grid item xs={9} sm={8}>
@@ -222,7 +266,7 @@ function DialogCreateProduct({
               sx={styledInput}
             />
           </Grid>
-          <Grid item xs={3} sm={4}>
+          <Grid item xs={3} sm={4} display="flex" alignItems="center">
             <Typography fontSize={{ xs: 12, sm: 14 }}>Kategori</Typography>
           </Grid>
           <Grid item xs={9} sm={8}>
