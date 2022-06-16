@@ -69,6 +69,7 @@ export const getImageAuth = () => GET('/api/image/auth');
 export const getProducts = () => GET('/api/product');
 export const getDetailProduct = (id) => GET(`/api/product/detail/${id}`);
 export const getCategory = () => GET('/api/product/category');
+export const getCart = () => GET('/api/cart');
 
 export const postLogin = (body) => POST('/api/auth', { body, requireToken: false });
 export const postRegister = (body) => POST('/api/user', { body, requireToken: false });
@@ -79,3 +80,4 @@ export const postProduct = (body) => POST('/api/product', { body });
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
+export const putCart = (body) => PUT('/api/cart', { body });

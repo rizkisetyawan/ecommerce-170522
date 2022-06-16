@@ -10,6 +10,7 @@ import Order from './Order';
 import Settings from './Settings';
 import Reviews from './Reviews';
 import Products from './Products';
+import Statistics from './Statistics';
 
 export {
   Home,
@@ -24,4 +25,5 @@ export {
   Settings,
   Reviews,
   Products,
+  Statistics,
 };

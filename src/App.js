@@ -17,6 +17,7 @@ import {
   Settings,
   Reviews,
   Products,
+  Statistics,
 } from './pages';
 import { Topbar } from './components';
 
@@ -35,7 +36,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Topbar />}>
               <Route index element={<Home />} />
-              <Route path="product" element={<Product />} />
+              <Route path="product/:id" element={<Product />} />
               <Route path="products" element={<Products />} />
               <Route path="cart" element={<Cart />} />
               <Route path="payment" element={<Payment />} />
@@ -43,6 +44,7 @@ function App() {
               <Route path="order" element={<Order />} />
               <Route path="reviews" element={<Reviews />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="statistics" element={<Statistics />} />
               <Route path="category/:title" element={<Category />} />
             </Route>
             <Route path="register" element={<Register />} />

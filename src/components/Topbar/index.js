@@ -38,9 +38,10 @@ import {
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
+import { addCart } from '../../redux/sliceCart';
 import Drawer from './Drawer';
 import DialogCreateToko from '../DialogCreateToko';
-import { getIdentity } from '../../utils';
+import { getIdentity, getCart } from '../../utils';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -75,7 +76,7 @@ function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const identity = useSelector(({ auth }) => auth);
-  const count = useSelector(({ cart }) => cart.count);
+  const globalCart = useSelector(({ cart }) => cart);
 
   const [mobileDraweState, setMobileDrawerState] = React.useState(false);
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
@@ -89,6 +90,19 @@ function Topbar() {
   const idCart = openCart ? 'simple-popover' : undefined;
   const idUser = openUser ? 'simple-popover-user' : undefined;
   const idToko = openToko ? 'simple-popover-toko' : undefined;
+
+  const fetchCart = async () => {
+    try {
+      const cart = await getCart();
+      if (cart.status !== 'success') {
+        throw new Error(cart.message);
+      }
+      dispatch(addCart(cart.data));
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log('fetchCart error ---> ', err.message);
+    }
+  };
 
   const checkToken = async () => {
     const tokenFromStorage = localStorage.getItem('token');
@@ -104,6 +118,7 @@ function Topbar() {
 
   React.useEffect(() => {
     checkToken();
+    fetchCart();
   }, []);
 
   const handleClickCart = (event) => {
@@ -189,7 +204,7 @@ function Topbar() {
             </Search>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>
               <IconButton onClick={handleClickCart}>
-                <Badge badgeContent={count} color="error">
+                <Badge badgeContent={globalCart.data.length} color="error">
                   <ShoppingCart />
                 </Badge>
               </IconButton>
@@ -425,7 +440,7 @@ function Topbar() {
             </Box>
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
               <IconButton color="inherit" onClick={handleClickCart}>
-                <Badge badgeContent={count} color="error">
+                <Badge badgeContent={globalCart.data.length} color="error">
                   <ShoppingCart />
                 </Badge>
               </IconButton>
