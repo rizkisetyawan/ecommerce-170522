@@ -56,6 +56,7 @@ function DialogCreateToko({ open, onClose }) {
         signature: imageAuth.signature,
         expire: imageAuth.expire,
         token: imageAuth.token,
+        folder: '/user',
         fileName: `img-${Date.now()}`,
       });
       const toko = await postToko({

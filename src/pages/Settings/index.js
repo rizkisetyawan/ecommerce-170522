@@ -192,6 +192,7 @@ function Settings() {
         signature: imageAuth.signature,
         expire: imageAuth.expire,
         token: imageAuth.token,
+        folder: '/user',
         fileName: `img-${Date.now()}`,
       });
       const detailUser = await putUserDetail({ foto: foto.url });

@@ -85,6 +85,7 @@ function DialogCreateProduct({
           signature: imageAuth.signature,
           expire: imageAuth.expire,
           token: imageAuth.token,
+          folder: '/product',
           fileName: `img-${Date.now()}`,
         });
       }
