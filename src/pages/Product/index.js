@@ -19,18 +19,25 @@ import {
 } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addCount } from '../../redux/sliceCart';
+import { useSnackbar } from 'notistack';
+import { addCart, initCart } from '../../redux/sliceCart';
 import { PayModal } from '../../components';
-import { getDetailProduct, rp } from '../../utils';
+import {
+  getDetailProduct, rp, postCart, getCart,
+} from '../../utils';
 
 function Product() {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const [openModalState, setOpenModalState] = useState(false);
   const [productState, setProductState] = useState({
     loading: false,
     data: null,
     message: null,
+  });
+  const [cartState, setCartState] = useState({
+    loading: false,
   });
   const [qtyState, setQtyState] = useState(1);
 
@@ -55,16 +62,35 @@ function Product() {
     }
   };
 
-  const handleAddCart = () => {
+  const fetchCart = async () => {
     try {
-      dispatch(addCount());
+      const cart = await getCart();
+      if (cart.status !== 'success') {
+        throw new Error(cart.message);
+      }
+      dispatch(initCart(cart.data));
     } catch (err) {
-      console.log(err.message);
+      throw err.message;
+    }
+  };
+
+  const handleAddCart = async () => {
+    setCartState({ ...cartState, loading: true });
+    try {
+      const cart = await postCart({ id_item: productState.data.id_item, qty: qtyState });
+      if (cart.status !== 'success') {
+        throw new Error(cart.message);
+      }
+      fetchCart();
+      setCartState({ ...cartState, loading: false });
+    } catch (err) {
+      setCartState({ ...cartState, loading: false });
+      enqueueSnackbar(err.message, { variant: 'error' });
     }
   };
 
   const handleAddQty = () => {
-    setQtyState((prevVal) => prevVal + 1);
+    setQtyState((prevVal) => (productState.data.stock <= prevVal ? prevVal : prevVal + 1));
   };
 
   const handleRemoveQty = () => {
@@ -138,7 +164,7 @@ function Product() {
                   <Typography fontWeight={600} mb={2}>Atur jumlah</Typography>
                   <Box display="flex" gap={1.5} alignItems="center">
                     <Box borderRadius={0.5} border="1px solid #bfc9d9" display="flex" alignItems="center">
-                      <IconButton color="primary" onClick={handleAddQty}>
+                      <IconButton color={productState.data.stock <= qtyState ? 'default' : 'primary'} onClick={handleAddQty}>
                         <AddCircle />
                       </IconButton>
                       <Typography color="text.secondary" mx={0.5} textAlign="center">{qtyState}</Typography>
@@ -149,7 +175,7 @@ function Product() {
                     <Typography fontSize={14}>
                       Stok
                       {' '}
-                      <strong>1.925</strong>
+                      <strong>{productState.data.stock}</strong>
                     </Typography>
                   </Box>
                   <Box display="flex" alignItems="center" gap={2} my={2}>
@@ -177,8 +203,9 @@ function Product() {
                           fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
                         }}
                         onClick={handleAddCart}
+                        disabled={cartState.loading}
                       >
-                        + Keranjang
+                        {cartState.loading ? 'Loading ...' : '+ Keranjang'}
                       </Button>
                     </Grid>
                   </Grid>

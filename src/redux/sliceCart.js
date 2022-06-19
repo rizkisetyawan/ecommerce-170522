@@ -14,12 +14,20 @@ export const cartSlice = createSlice({
     reduceCount: (state) => {
       state.count -= 1;
     },
+    initCart: (state, action) => {
+      state.data = action.payload;
+    },
     addCart: (state, action) => {
-      state.data = [...state.data, ...action.payload];
+      state.data.push(action.payload);
     },
   },
 });
 
-export const { addCount, reduceCount, addCart } = cartSlice.actions;
+export const {
+  addCount,
+  reduceCount,
+  addCart,
+  initCart,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

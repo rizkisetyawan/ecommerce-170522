@@ -67,10 +67,13 @@ const PUT = async (endpoint, options) => {
 export const getIdentity = () => GET('/api/auth');
 export const getImageAuth = () => GET('/api/image/auth');
 export const getProducts = () => GET('/api/product');
+export const getProductsUmkm = () => GET('/api/product/umkm');
 export const getDetailProduct = (id) => GET(`/api/product/detail/${id}`);
 export const getCategory = () => GET('/api/product/category');
 export const getCart = () => GET('/api/cart');
+export const getTrx = () => GET('/api/trx');
 export const getBank = () => GET('/api/trx/bank');
+export const getInvoice = (noInvoice) => GET(`/api/trx/invoice/${noInvoice}`);
 
 export const postLogin = (body) => POST('/api/auth', { body, requireToken: false });
 export const postRegister = (body) => POST('/api/user', { body, requireToken: false });
@@ -78,8 +81,10 @@ export const postFoto = (body) => POST('/', { body, isFormData: true });
 export const postToko = (body) => POST('/api/umkm', { body });
 export const postProduct = (body) => POST('/api/product', { body });
 export const postTrx = (body) => POST('/api/trx', { body });
+export const postCart = (body) => POST('/api/cart', { body });
 
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
 export const putCart = (body) => PUT('/api/cart', { body });
+export const putReview = (idItemOrder, idItem, body) => PUT(`/api/trx/review/${idItemOrder}/${idItem}`, { body });

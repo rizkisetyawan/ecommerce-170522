@@ -22,7 +22,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { DialogCreateProduct } from '../../components';
-import { getProducts, putStatusProduct, rp } from '../../utils';
+import { getProductsUmkm, putStatusProduct, rp } from '../../utils';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -81,7 +81,7 @@ function Products() {
   const fetchProducts = async () => {
     setProductsState({ ...productsState, loading: true });
     try {
-      const products = await getProducts();
+      const products = await getProductsUmkm();
       if (products.status !== 'success') {
         throw new Error(products.message);
       }

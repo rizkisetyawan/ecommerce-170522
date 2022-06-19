@@ -21,25 +21,7 @@ import { postTrx, getBank, rp } from '../../utils';
 function PayModal({ open, onClose, data }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const listBank = [
-    {
-      name: 'bca',
-      foto: 'https://ik.imagekit.io/iajwdi4bc/bank/bca_Y--QOBExl.png',
-    },
-    {
-      name: 'bni',
-      foto: 'https://ik.imagekit.io/iajwdi4bc/bank/bri_fQUVjqkQn.png',
-    },
-    {
-      name: 'bri',
-      foto: 'https://ik.imagekit.io/iajwdi4bc/bank/bri_fQUVjqkQn.png',
-    },
-    {
-      name: 'cimb',
-      foto: 'https://ik.imagekit.io/iajwdi4bc/bank/cimb_z1Z2CsGpK.png',
-    },
-  ];
-  const [selectBankState, setSelectBankState] = useState(listBank[0]);
+  const [selectBankState, setSelectBankState] = useState(null);
   const [formState, setFormState] = useState({
     loading: false,
     data: null,
@@ -62,6 +44,7 @@ function PayModal({ open, onClose, data }) {
         loading: false,
         data: bank.data,
       });
+      setSelectBankState(bank.data[0]);
     } catch (err) {
       setBankState({
         ...bankState,
@@ -75,18 +58,19 @@ function PayModal({ open, onClose, data }) {
     setFormState({ ...formState, loading: true });
     try {
       const trx = await postTrx({
-        id_item_order: `INV/${moment().format('YYYYMMDD')}/MPL/${Date.now()}`,
+        id_item_order: `INV-${moment().format('YYYYMMDD')}-${Date.now()}`,
         id_item: data.id_item,
         qty: data.qty,
         description: data.description,
-        payment: selectBankState.name,
-        status: 'menunggu pembayaran',
+        payment: selectBankState.bank_name,
+        status: 'belum dibayar',
+        price: data.price,
       });
       if (trx.status !== 'success') {
         throw new Error(trx.message);
       }
       setFormState({ ...formState, loading: false });
-      navigate('/payment');
+      navigate(`/payment/${trx.data.id_item_order}`);
     } catch (err) {
       setFormState({ ...formState, loading: false });
       enqueueSnackbar(err.message, { variant: 'error' });
@@ -162,8 +146,9 @@ function PayModal({ open, onClose, data }) {
               variant="contained"
               sx={{ fontWeight: 800 }}
               onClick={handleSubmit}
+              disabled={formState.loading}
             >
-              Bayar
+              {formState.loading ? 'Loading ...' : 'Bayar'}
             </Button>
           </>
         )}

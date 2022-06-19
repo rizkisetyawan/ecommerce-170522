@@ -4,6 +4,7 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { useNavigate, Outlet } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import {
   Button,
   Divider,
@@ -38,10 +39,10 @@ import {
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
-import { addCart } from '../../redux/sliceCart';
+import { initCart } from '../../redux/sliceCart';
 import Drawer from './Drawer';
 import DialogCreateToko from '../DialogCreateToko';
-import { getIdentity, getCart } from '../../utils';
+import { getIdentity, getCart, rp } from '../../utils';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -72,12 +73,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   flex: 1,
 }));
 
+const totalCount = (data) => data.reduce((partialSum, obj) => partialSum + Number(obj.qty), 0);
+
 function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const identity = useSelector(({ auth }) => auth);
   const globalCart = useSelector(({ cart }) => cart);
-
+  const [loadingCart, setLoadingCart] = React.useState(false);
   const [mobileDraweState, setMobileDrawerState] = React.useState(false);
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
   const [userAnchorEl, setUserAnchorEl] = React.useState(null);
@@ -92,15 +96,17 @@ function Topbar() {
   const idToko = openToko ? 'simple-popover-toko' : undefined;
 
   const fetchCart = async () => {
+    setLoadingCart(true);
     try {
       const cart = await getCart();
       if (cart.status !== 'success') {
         throw new Error(cart.message);
       }
-      dispatch(addCart(cart.data));
+      dispatch(initCart(cart.data));
+      setLoadingCart(false);
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log('fetchCart error ---> ', err.message);
+      setLoadingCart(false);
+      enqueueSnackbar(err.message, { variant: 'error' });
     }
   };
 
@@ -204,7 +210,7 @@ function Topbar() {
             </Search>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>
               <IconButton onClick={handleClickCart}>
-                <Badge badgeContent={globalCart.data.length} color="error">
+                <Badge badgeContent={totalCount(globalCart.data)} color="error">
                   <ShoppingCart />
                 </Badge>
               </IconButton>
@@ -217,42 +223,72 @@ function Topbar() {
                   vertical: 53,
                   horizontal: 'left',
                 }}
+                PaperProps={{
+                  style: {
+                    maxWidth: 400,
+                  },
+                }}
               >
-                <Box sx={{ p: 2 }}>
-                  <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography fontWeight={600} fontSize={14} color="text.secondary">Keranjang (4)</Typography>
-                    <Typography
-                      fontWeight={600}
-                      fontSize={14}
-                      color="primary.main"
-                      sx={{ cursor: 'pointer' }}
-                      onClick={() => {
-                        handleCloseCart();
-                        navigate('cart');
-                      }}
-                    >
-                      Lihat Semua
-                    </Typography>
+                {loadingCart && (
+                  <Box px={6} py={4}>
+                    <Typography color="text.secondary" fontSize={14}>Loading ...</Typography>
                   </Box>
-                  { [1, 2, 3].map((row) => (
-                    <React.Fragment key={row}>
-                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                        <Avatar variant="square" src="https://source.unsplash.com/random" alt="testing" />
-                        <Box>
-                          <Typography
-                            fontSize={14}
-                            fontWeight={600}
-                          >
-                            Lorem ipsum dolor sit, amet
-                          </Typography>
-                          <Typography fontSize={12} color="text.secondary">3 Barang</Typography>
+                )}
+                {(globalCart.data.length !== 0 && !loadingCart) && (
+                  <Box sx={{ p: 2 }}>
+                    <Box mb={2} display="flex" justifyContent="space-between" alignItems="center" gap={4}>
+                      <Typography fontWeight={600} fontSize={14} color="text.secondary">
+                        Keranjang (
+                        {totalCount(globalCart.data)}
+                        )
+                      </Typography>
+                      <Typography
+                        fontWeight={600}
+                        fontSize={14}
+                        color="primary.main"
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          handleCloseCart();
+                          navigate('cart');
+                        }}
+                      >
+                        Lihat Semua
+                      </Typography>
+                    </Box>
+                    { globalCart.data.map((row) => (
+                      <React.Fragment key={row.id_item}>
+                        <Box sx={{
+                          display: 'flex', gap: { xs: 2, sm: 4 }, alignItems: 'center', justifyContent: 'space-between',
+                        }}
+                        >
+                          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                            <Avatar variant="square" src={row.foto} alt={row.name} />
+                            <Box>
+                              <Typography
+                                fontSize={14}
+                                fontWeight={600}
+                              >
+                                {row.name}
+                              </Typography>
+                              <Typography fontSize={12} color="text.secondary">
+                                {row.qty}
+                                {' '}
+                                Barang
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Typography fontSize={14} sx={{ color: 'error.main' }} fontWeight={600}>{rp(row.price)}</Typography>
                         </Box>
-                        <Typography fontSize={14} sx={{ color: 'error.main' }} fontWeight={600}>Rp705.000</Typography>
-                      </Box>
-                      <Divider sx={{ width: '100%', my: 1 }} />
-                    </React.Fragment>
-                  ))}
-                </Box>
+                        <Divider sx={{ width: '100%', my: 1 }} />
+                      </React.Fragment>
+                    ))}
+                  </Box>
+                )}
+                {(globalCart.data.length === 0 && !loadingCart) && (
+                  <Box px={6} py={4}>
+                    <Typography color="text.secondary" fontSize={14}>Keranjangmu Kosong</Typography>
+                  </Box>
+                )}
               </Popover>
               <Divider sx={{ height: 42 }} orientation="vertical" />
               {
@@ -440,7 +476,7 @@ function Topbar() {
             </Box>
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
               <IconButton color="inherit" onClick={handleClickCart}>
-                <Badge badgeContent={globalCart.data.length} color="error">
+                <Badge badgeContent={totalCount(globalCart.data)} color="error">
                   <ShoppingCart />
                 </Badge>
               </IconButton>
