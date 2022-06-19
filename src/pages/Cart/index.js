@@ -9,6 +9,7 @@ import {
   IconButton,
   Button,
   Avatar,
+  TextField,
 } from '@mui/material';
 import {
   AddCircleOutline,
@@ -31,7 +32,25 @@ const totalPrice = (data) => {
   return result;
 };
 
-function CartItem({ onAddCart, onReduceCart, data }) {
+function CartItem({
+  onAddCart, onReduceCart, data, globalCart,
+}) {
+  const dispatch = useDispatch();
+  const [qtyState, setQtyState] = useState(data.qty);
+
+  const handleChangeQty = (e) => {
+    setQtyState(e.target.value);
+    dispatch(initCart(globalCart.map((row) => {
+      if (row.id_item === data.id_item) {
+        return {
+          ...row,
+          qty: e.target.value,
+        };
+      }
+      return row;
+    })));
+  };
+
   return (
     <>
       <Divider sx={{ my: 2 }} />
@@ -69,8 +88,13 @@ function CartItem({ onAddCart, onReduceCart, data }) {
         </IconButton>
         <Divider orientation="vertical" sx={{ mx: 1, height: 32, mr: { xs: 3, lg: 6 } }} />
         <RemoveCircleOutline color="disabled" onClick={onReduceCart} sx={{ cursor: 'pointer' }} />
-        <Box borderBottom="1px solid #f0f0f0">
-          <Typography mx={2} color="text.secondary" fontWeight={600}>{data.qty}</Typography>
+        <Box borderBottom="1px solid #f0f0f0" mx={1} maxWidth={30}>
+          <TextField
+            value={qtyState}
+            inputProps={{ style: { textAlign: 'center' } }}
+            variant="standard"
+            onChange={handleChangeQty}
+          />
         </Box>
         <AddCircleOutline color="primary" onClick={onAddCart} sx={{ cursor: 'pointer' }} />
       </Box>
@@ -135,6 +159,7 @@ function Cart() {
                 onAddCart={handleAddCart}
                 onReduceCart={handleReduceCart}
                 data={row}
+                globalCart={globalCart.data}
               />
             ))}
           </Grid>

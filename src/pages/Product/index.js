@@ -20,7 +20,7 @@ import {
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { addCart, initCart } from '../../redux/sliceCart';
+import { initCart } from '../../redux/sliceCart';
 import { PayModal } from '../../components';
 import {
   getDetailProduct, rp, postCart, getCart,

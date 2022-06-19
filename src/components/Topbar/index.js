@@ -223,11 +223,6 @@ function Topbar() {
                   vertical: 53,
                   horizontal: 'left',
                 }}
-                PaperProps={{
-                  style: {
-                    maxWidth: 400,
-                  },
-                }}
               >
                 {loadingCart && (
                   <Box px={6} py={4}>
