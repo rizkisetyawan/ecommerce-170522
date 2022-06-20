@@ -45,11 +45,30 @@ const POST = async (endpoint, options = {}) => {
   return res.json();
 };
 
-const PUT = async (endpoint, options) => {
+const PUT = async (endpoint, options = {}) => {
   const { body, requireToken = true } = options;
   const token = await localStorage.getItem('token');
   const option = {
     method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Accept-Encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  if (requireToken) {
+    option.headers.Authorization = token;
+  }
+  const res = await fetch(`${process.env.REACT_APP_URL}${endpoint}`, option);
+  return res.json();
+};
+
+const DELETE = async (endpoint, options = {}) => {
+  const { body, requireToken = true } = options;
+  const token = await localStorage.getItem('token');
+  const option = {
+    method: 'DELETE',
     headers: {
       Accept: 'application/json',
       'Accept-Encoding': 'gzip, deflate',
@@ -86,5 +105,6 @@ export const postCart = (body) => POST('/api/cart', { body });
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
-export const putCart = (body) => PUT('/api/cart', { body });
 export const putReview = (idItemOrder, idItem, body) => PUT(`/api/trx/review/${idItemOrder}/${idItem}`, { body });
+
+export const deleteCart = (idItem) => DELETE(`/api/cart/${idItem}`);

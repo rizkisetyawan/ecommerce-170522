@@ -21,7 +21,7 @@ import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCount, initCart, reduceCount } from '../../redux/sliceCart';
 import { PayModal } from '../../components';
-import { getCart, rp } from '../../utils';
+import { getCart, deleteCart, rp } from '../../utils';
 
 const totalPrice = (data) => {
   let result = 0;
@@ -36,7 +36,20 @@ function CartItem({
   onAddCart, onReduceCart, data, globalCart,
 }) {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const [qtyState, setQtyState] = useState(data.qty);
+
+  const handleDeleteCart = async () => {
+    try {
+      const cart = await deleteCart(data.id_item);
+      if (cart.status !== 'success') {
+        throw new Error(cart.message);
+      }
+      dispatch(initCart(globalCart.filter((row) => row.id_item !== cart.data.id_item)));
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
 
   const handleChangeQty = (e) => {
     setQtyState(e.target.value);
@@ -83,7 +96,7 @@ function CartItem({
       <Box display="flex" justifyContent="flex-end" alignItems="center">
         <Typography fontSize={12} color="text.secondary">Pindahkan ke Wishlist</Typography>
         <Divider orientation="vertical" sx={{ mx: 1, height: 32, ml: { xs: 3, lg: 6 } }} />
-        <IconButton color="default">
+        <IconButton color="default" onClick={handleDeleteCart}>
           <Delete />
         </IconButton>
         <Divider orientation="vertical" sx={{ mx: 1, height: 32, mr: { xs: 3, lg: 6 } }} />
