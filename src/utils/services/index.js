@@ -100,6 +100,7 @@ export const postFoto = (body) => POST('/', { body, isFormData: true });
 export const postToko = (body) => POST('/api/umkm', { body });
 export const postProduct = (body) => POST('/api/product', { body });
 export const postTrx = (body) => POST('/api/trx', { body });
+export const postTrxMulti = (body) => POST('/api/trx/multi', { body });
 export const postCart = (body) => POST('/api/cart', { body });
 
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });

@@ -32,9 +32,7 @@ const totalPrice = (data) => {
   return result;
 };
 
-function CartItem({
-  onAddCart, onReduceCart, data, globalCart,
-}) {
+function CartItem({ data, globalCart }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [qtyState, setQtyState] = useState(data.qty);
@@ -51,13 +49,39 @@ function CartItem({
     }
   };
 
+  const handleAddCart = () => {
+    setQtyState((prevState) => Number(prevState) + 1);
+    dispatch(initCart(globalCart.map((row) => {
+      if (row.id_item === data.id_item) {
+        return {
+          ...row,
+          qty: Number(row.qty) + 1,
+        };
+      }
+      return row;
+    })));
+  };
+
+  const handleReduceCart = () => {
+    setQtyState((prevState) => Number(prevState) - 1);
+    dispatch(initCart(globalCart.map((row) => {
+      if (row.id_item === data.id_item) {
+        return {
+          ...row,
+          qty: Number(row.qty) - 1,
+        };
+      }
+      return row;
+    })));
+  };
+
   const handleChangeQty = (e) => {
     setQtyState(e.target.value);
     dispatch(initCart(globalCart.map((row) => {
       if (row.id_item === data.id_item) {
         return {
           ...row,
-          qty: e.target.value,
+          qty: Number(e.target.value),
         };
       }
       return row;
@@ -100,7 +124,9 @@ function CartItem({
           <Delete />
         </IconButton>
         <Divider orientation="vertical" sx={{ mx: 1, height: 32, mr: { xs: 3, lg: 6 } }} />
-        <RemoveCircleOutline color="disabled" onClick={onReduceCart} sx={{ cursor: 'pointer' }} />
+        <IconButton disabled={qtyState <= 1} onClick={handleReduceCart}>
+          <RemoveCircleOutline />
+        </IconButton>
         <Box borderBottom="1px solid #f0f0f0" mx={1} maxWidth={30}>
           <TextField
             value={qtyState}
@@ -109,7 +135,9 @@ function CartItem({
             onChange={handleChangeQty}
           />
         </Box>
-        <AddCircleOutline color="primary" onClick={onAddCart} sx={{ cursor: 'pointer' }} />
+        <IconButton disabled={data.stock <= qtyState} onClick={handleAddCart}>
+          <AddCircleOutline />
+        </IconButton>
       </Box>
     </>
   );
@@ -122,43 +150,35 @@ function Cart() {
   const [loadingCart, setLoadingCart] = React.useState(false);
   const globalCart = useSelector(({ cart }) => cart);
 
-  const handleAddCart = () => {
-    dispatch(addCount());
-  };
-
-  const handleReduceCart = () => {
-    dispatch(reduceCount());
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const fetchCart = async () => {
+    setLoadingCart(true);
     try {
       const cart = await getCart();
       if (cart.status !== 'success') {
         throw new Error(cart.message);
       }
       dispatch(initCart(cart.data));
+      setLoadingCart(false);
     } catch (err) {
+      setLoadingCart(false);
       enqueueSnackbar(err.message, { variant: 'error' });
     }
   };
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     fetchCart();
   }, []);
 
   return (
     <Container sx={{ my: 4 }}>
       {loadingCart && (
-        <Box py={6}>
+        <Box py={6} display="flex" justifyContent="center">
           <Typography color="text.secondary">Loading ...</Typography>
         </Box>
       )}
       {(globalCart.data.length === 0 && !loadingCart) && (
-        <Box px={6} py={4}>
+        <Box px={6} py={4} display="flex" justifyContent="center">
           <Typography color="text.secondary">Keranjangmu Kosong</Typography>
         </Box>
       )}
@@ -169,8 +189,6 @@ function Cart() {
             {globalCart.data.map((row) => (
               <CartItem
                 key={row.id_item}
-                onAddCart={handleAddCart}
-                onReduceCart={handleReduceCart}
                 data={row}
                 globalCart={globalCart.data}
               />
@@ -205,7 +223,11 @@ function Cart() {
           </Grid>
         </Grid>
       )}
-      {/* <PayModal open={openModalState} onClose={() => setOpenModalState(false)} /> */}
+      <PayModal
+        open={openModalState}
+        onClose={() => setOpenModalState(false)}
+        data={globalCart.data}
+      />
     </Container>
   );
 }

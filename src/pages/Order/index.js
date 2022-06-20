@@ -13,8 +13,9 @@ import {
 } from '@mui/material';
 import { ShoppingBag, ArrowForwardIos } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { getTrx, rp } from '../../utils';
+import { getTrx, rp, colorTrx } from '../../utils';
 
 function ReviewDialog({ open, onClose }) {
   return (
@@ -72,105 +73,122 @@ const totalPrice = (data) => {
   let result = 0;
   data.toko.forEach((row) => {
     row.items.forEach((row2) => {
-      result += row2.price;
+      result += Number(row2.price);
     });
   });
   return result;
 };
 
 function OrderDetailDialog({ open, onClose, data }) {
+  // const colorStatus = colorTrx(data.status);
+  const navigate = useNavigate();
   return (
-    <Dialog onClose={onClose} open={open}>
+    <Dialog maxWidth="xs" onClose={onClose} open={open}>
       { !data && (
         <Box py={6} display="flex" justifyContent="center">
           <Typography color="text.secondary">Loading ...</Typography>
         </Box>
       )}
       { data && (
-        <Box p={3}>
-          <Typography fontWeight={800} mb={2}>Detail Transaksi</Typography>
-          <Grid container justifyContent="space-between" spacing={1}>
-            <Grid item xs={4}>
-              <Typography fontSize={12} color="text.secondary">Status</Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Typography px={1} py={0.2} bgcolor="rgb(214, 255, 222)" fontSize={12} fontWeight={800} display="inline-block" sx={{ color: 'rgb(3, 172, 14)' }}>{data.status}</Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography fontSize={12} color="text.secondary">No. Invoice</Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Typography fontSize={12} color="primary" fontWeight={800}>
-                :
-                {' '}
-                {data.id_item_order}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography fontSize={12} color="text.secondary">Tanggal Pembelian</Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Typography fontSize={12} color="text.secondary" fontWeight={800}>
-                :
-                {' '}
-                {moment(data.created_at).format('DD MMM YYYY, HH:mm')}
-                {' '}
-                WIB
-              </Typography>
-            </Grid>
-            <Grid item xs={12} my={2}>
-              <Divider />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography fontWeight={800} fontSize={14}>Detail Produk</Typography>
-            </Grid>
-            {data.toko.map((toko) => (
-              <React.Fragment key={toko.toko_name}>
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end',
-                  }}
-                >
-                  <Typography fontWeight={800} fontSize={12}>{toko.toko_name}</Typography>
-                  <ArrowForwardIos sx={{ fontSize: 10 }} />
-                </Grid>
-                { toko.items.map((item) => (
+        <>
+          <Box p={3}>
+            <Typography fontWeight={800} mb={2}>Detail Transaksi</Typography>
+            <Grid container justifyContent="space-between" spacing={1}>
+              <Grid item xs={4}>
+                <Typography fontSize={12} color="text.secondary">Status</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography px={1} py={0.2} bgcolor={colorTrx(data.status).bgcolor} fontSize={12} fontWeight={800} display="inline-block" sx={{ color: colorTrx(data.status).color }}>{data.status}</Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography fontSize={12} color="text.secondary">No. Invoice</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography fontSize={12} color="primary" fontWeight={800}>
+                  :
+                  {' '}
+                  {data.id_item_order}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography fontSize={12} color="text.secondary">Tanggal Pembelian</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography fontSize={12} color="text.secondary" fontWeight={800}>
+                  :
+                  {' '}
+                  {moment(data.created_at).format('DD MMM YYYY, HH:mm')}
+                  {' '}
+                  WIB
+                </Typography>
+              </Grid>
+              <Grid item xs={12} my={2}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography fontWeight={800} fontSize={14}>Detail Produk</Typography>
+              </Grid>
+              {data.toko.map((toko) => (
+                <React.Fragment key={toko.toko_name}>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end',
+                    }}
+                  >
+                    <Typography fontWeight={800} fontSize={12}>{toko.toko_name}</Typography>
+                    <ArrowForwardIos sx={{ fontSize: 10 }} />
+                  </Grid>
                   <Grid item xs={12}>
                     <Box border={1} borderColor="divider" p={1} mb={1.2}>
-                      <Box display="flex" gap={1.2} alignItems="center" mb={1}>
-                        <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
-                        <Box>
-                          <Typography fontSize={12} fontWeight={800} gutterBottom>
-                            {item.item_name}
-                          </Typography>
-                          <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                            {item.qty}
-                            {' '}
-                            x
-                            {' '}
-                            {rp(item.price / item.qty)}
-                          </Typography>
+                      { toko.items.map((item, i) => (
+                        <Box display="flex" gap={1.2} alignItems="center" mb={toko.items.length - 1 !== i ? 1 : 0}>
+                          <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
+                          <Box>
+                            <Typography fontSize={12} fontWeight={800} gutterBottom>
+                              {item.item_name}
+                            </Typography>
+                            <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                              {item.qty}
+                              {' '}
+                              x
+                              {' '}
+                              {rp(item.price / item.qty)}
+                            </Typography>
+                          </Box>
                         </Box>
-                      </Box>
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ xs: 'column', sm: 'row' }}
-                      alignItems={{ xs: 'flex-end', sm: 'center' }}
-                      gap={{ xs: 0.5, sm: 2 }}
-                      justifyContent="flex-end"
-                    >
-                      <Typography fontSize={14}>Total Harga</Typography>
-                      <Typography fontSize={14} fontWeight={800}>{rp(totalPrice(data))}</Typography>
+                      ))}
                     </Box>
                   </Grid>
-                ))}
-              </React.Fragment>
-            ))}
-          </Grid>
-        </Box>
+                </React.Fragment>
+              ))}
+            </Grid>
+            <Box
+              display="flex"
+              flexDirection={{ xs: 'column', sm: 'row' }}
+              alignItems={{ xs: 'flex-end', sm: 'center' }}
+              gap={{ xs: 0.5, sm: 2 }}
+              justifyContent="flex-end"
+            >
+              <Typography fontSize={14}>Total Harga</Typography>
+              <Typography fontSize={14} fontWeight={800}>
+                {rp(totalPrice(data))}
+              </Typography>
+            </Box>
+          </Box>
+          { data.status !== 'selesai' && (
+            <Button
+              sx={{
+                mx: 2, mb: 2, fontSize: 12, textTransform: 'capitalize', fontWeight: 800,
+              }}
+              onClick={() => navigate(`/payment/${data.id_item_order}`)}
+              variant="contained"
+            >
+              cara pembayaran
+            </Button>
+          )}
+        </>
       )}
     </Dialog>
   );
@@ -184,12 +202,12 @@ function OrderItem({ onOpenReview, onOpenDetail, data }) {
           <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
           <Typography fontWeight={800} fontSize={12}>Belanja</Typography>
           <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
-          <Box px={1} py={0.2} bgcolor="rgb(214, 255, 222)">
+          <Box px={1} py={0.2} bgcolor={colorTrx(data.status).bgcolor}>
             <Typography
               fontSize={12}
               fontWeight={800}
               textTransform="capitalize"
-              sx={{ color: 'rgb(3, 172, 14)' }}
+              sx={{ color: colorTrx(data.status).color }}
             >
               {data.status}
             </Typography>
@@ -204,38 +222,42 @@ function OrderItem({ onOpenReview, onOpenDetail, data }) {
         flexDirection={{ xs: 'column', md: 'row' }}
         justifyContent="space-between"
       >
-        {data.toko.map((toko) => (
-          <Box key={toko.toko_name} mb={2}>
-            <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
-            {toko.items.map((item) => (
-              <Box display="flex" gap={2}>
-                <Box display="flex" gap={2}>
-                  <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60 }} />
-                  <Box>
-                    <Typography fontSize={14} fontWeight={800}>
-                      {item.item_name}
-                    </Typography>
-                    <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                      {item.qty}
-                      {' '}
-                      barang x
-                      {' '}
-                      {rp(item.price / item.qty)}
-                    </Typography>
+        <Box>
+          {data.toko.map((toko) => (
+            <Box key={toko.toko_name} mb={2}>
+              <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
+              {toko.items.map((item) => (
+                <Box display="flex" gap={2} mb={1.2} justifyContent="space-between">
+                  <Box display="flex" gap={2}>
+                    <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
+                    <Box>
+                      <Typography fontSize={14} fontWeight={800}>
+                        {item.item_name}
+                      </Typography>
+                      <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                        {item.qty}
+                        {' '}
+                        barang x
+                        {' '}
+                        {rp(item.price / item.qty)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box display="flex" gap={2}>
+                    <Divider orientation="vertical" sx={{ height: 50, display: { xs: 'none', md: 'block' } }} />
+                    <Box>
+                      <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
+                      <Typography fontSize={14} fontWeight={800}>
+                        {rp(item.price)}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Box>
-                <Divider orientation="vertical" sx={{ height: 50, display: { xs: 'none', md: 'block' } }} />
-                <Box>
-                  <Typography fontSize={12} color="text.secondary" fontWeight={400}>Total Belanja</Typography>
-                  <Typography fontSize={14} fontWeight={800}>
-                    {rp(item.price)}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        ))}
-        <Box display="flex" flexDirection={{ xs: 'column', lg: 'row' }} width="100%" maxWidth={{ sm: 250 }} gap={{ xs: 1, lg: 2 }}>
+              ))}
+            </Box>
+          ))}
+        </Box>
+        <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} gap={{ xs: 1, lg: 2 }}>
           {data.status === 'selesai' && <Button fullWidth variant="contained" onClick={onOpenReview} sx={{ fontWeight: 800, fontSize: 12 }}>Beri Ulasan</Button>}
           <Button fullWidth variant="outlined" onClick={() => onOpenDetail(data)} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
         </Box>

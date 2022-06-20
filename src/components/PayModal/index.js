@@ -16,11 +16,24 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { postTrx, getBank, rp } from '../../utils';
+import {
+  postTrx, getBank, rp, postTrxMulti,
+} from '../../utils';
+
+const totalPrice = (data) => {
+  let result = 0;
+  data.forEach((row) => {
+    const accPrice = row.qty * Number(row.price);
+    result += accPrice;
+  });
+  return result;
+};
 
 function PayModal({ open, onClose, data }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const dataIsArray = Array.isArray(data);
+  const price = data.price || totalPrice(data);
   const [selectBankState, setSelectBankState] = useState(null);
   const [formState, setFormState] = useState({
     loading: false,
@@ -57,15 +70,28 @@ function PayModal({ open, onClose, data }) {
   const handleSubmit = async () => {
     setFormState({ ...formState, loading: true });
     try {
-      const trx = await postTrx({
-        id_item_order: `INV-${moment().format('YYYYMMDD')}-${Date.now()}`,
-        id_item: data.id_item,
-        qty: data.qty,
-        description: data.description,
-        payment: selectBankState.bank_name,
-        status: 'belum dibayar',
-        price: data.price,
-      });
+      let trx;
+      if (dataIsArray) {
+        trx = await postTrxMulti(data.map((row) => ({
+          id_item_order: `INV-${moment().format('YYYYMMDD')}-${Date.now()}`,
+          id_item: row.id_item,
+          qty: row.qty,
+          description: row.description,
+          payment: selectBankState.bank_name,
+          status: 'belum dibayar',
+          price: +row.price * row.qty,
+        })));
+      } else {
+        trx = await postTrx({
+          id_item_order: `INV-${moment().format('YYYYMMDD')}-${Date.now()}`,
+          id_item: data.id_item,
+          qty: data.qty,
+          description: data.description,
+          payment: selectBankState.bank_name,
+          status: 'belum dibayar',
+          price: data.price,
+        });
+      }
       if (trx.status !== 'success') {
         throw new Error(trx.message);
       }
@@ -139,7 +165,7 @@ function PayModal({ open, onClose, data }) {
                 <Avatar src={selectBankState.logo} variant="square" alt="testing" sx={{ '& img': { objectFit: 'contain' }, width: 50, height: 50 }} />
               </Box>
               <Typography fontSize={12} color="text.secondary">Total Tagihan</Typography>
-              <Typography fontSize={18} color="primary" fontWeight={800}>{rp(data.price)}</Typography>
+              <Typography fontSize={18} color="primary" fontWeight={800}>{rp(price)}</Typography>
             </Box>
             <Button
               fullWidth

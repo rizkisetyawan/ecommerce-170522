@@ -232,6 +232,13 @@ function Products() {
           </TableContainer>
         )
       }
+      {
+        (!productsState.loading && productsState.data.length === 0) && (
+          <Box display="grid" justifyContent="center" py={6}>
+            <Typography color="text.secondary">Tidak ada produk</Typography>
+          </Box>
+        )
+      }
       <DialogCreateProduct
         open={openDialogProduct.open}
         data={openDialogProduct.data}
