@@ -107,5 +107,6 @@ export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
 export const putReview = (idItemOrder, idItem, body) => PUT(`/api/trx/review/${idItemOrder}/${idItem}`, { body });
+export const putToko = (idUmkm, body) => PUT(`/api/umkm/${idUmkm}`, { body });
 
 export const deleteCart = (idItem) => DELETE(`/api/cart/${idItem}`);

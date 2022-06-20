@@ -36,6 +36,7 @@ import {
   Assignment,
   ShoppingBasket,
   DonutSmall,
+  Storefront,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
@@ -86,7 +87,7 @@ function Topbar() {
   const [cartAnchorEl, setCartAnchorEl] = React.useState(null);
   const [userAnchorEl, setUserAnchorEl] = React.useState(null);
   const [tokoAnchorEl, setTokoAnchorEl] = React.useState(null);
-  const [openDialogToko, setOpenDialogToko] = React.useState(false);
+  const [dialogTokoState, setDialogTokoState] = React.useState(false);
   const openCart = Boolean(cartAnchorEl);
   const openUser = Boolean(userAnchorEl);
   const openToko = Boolean(tokoAnchorEl);
@@ -155,12 +156,18 @@ function Topbar() {
     setMobileDrawerState(true);
   };
 
-  const handleOpenDialogToko = () => {
-    setOpenDialogToko(true);
+  const handleOpenDialogToko = (action) => {
+    setDialogTokoState({
+      open: true,
+      action,
+    });
   };
 
   const handleCloseDialogToko = () => {
-    setOpenDialogToko(false);
+    setDialogTokoState({
+      open: false,
+      action: 'add',
+    });
   };
 
   const handleMobileMenuClose = (event) => {
@@ -315,20 +322,30 @@ function Topbar() {
                         !identity.toko && (
                           <Box pt={2} px={4} pb={4} minWidth={250}>
                             <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
-                            <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
+                            <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={() => handleOpenDialogToko('add')}>Buka Toko Gratis</Button>
                           </Box>
                         )
                       }
                       {
                         identity.toko && (
                           <Box pt={2} display="flex" flexDirection="column" minWidth={250}>
-                            <Box display="flex" flexDirection="column" alignItems="center">
-                              <Avatar src={identity.toko.foto} alt={identity.toko.name} sx={{ width: 100, height: 100 }} />
-                              <Typography fontSize={16} fontWeight={800} mt={1.5}>{identity.toko.name}</Typography>
+                            <Box display="flex" alignItems="center" gap={1.5} mx={4}>
+                              <Avatar src={identity.toko.foto} variant="square" sx={{ borderRadius: 1 }} />
+                              <Box>
+                                <Typography fontSize={14} fontWeight={800}>{identity.toko.name}</Typography>
+                              </Box>
                             </Box>
                             <List disablePadding sx={{ mt: 2 }}>
                               {
                                 [
+                                  {
+                                    title: 'Profil Toko',
+                                    icon: <Storefront />,
+                                    handleClick: () => {
+                                      handleCloseToko();
+                                      handleOpenDialogToko('edit');
+                                    },
+                                  },
                                   {
                                     title: 'Pesanan',
                                     icon: <Assignment />,
@@ -336,7 +353,10 @@ function Topbar() {
                                   {
                                     title: 'Produk',
                                     icon: <ShoppingBasket />,
-                                    handleClick: () => navigate('/products'),
+                                    handleClick: () => {
+                                      handleCloseToko();
+                                      navigate('/products');
+                                    },
                                   },
                                   {
                                     title: 'Statistik',
@@ -344,6 +364,7 @@ function Topbar() {
                                   },
                                 ].map((row, i) => (
                                   <ListItem
+                                    key={row.title}
                                     disablePadding
                                     sx={{
                                       borderBottom: i === 2 ? 1 : 0,
@@ -382,7 +403,12 @@ function Topbar() {
                         )
                       }
                     </Popover>
-                    <DialogCreateToko open={openDialogToko} onClose={handleCloseDialogToko} />
+                    <DialogCreateToko
+                      open={dialogTokoState.open}
+                      action={dialogTokoState.action}
+                      onClose={handleCloseDialogToko}
+                      data={identity.toko}
+                    />
                     <Box display="flex" alignItems="center" gap={0.5} onClick={handleClickUser} sx={{ cursor: 'pointer' }}>
                       <Avatar src={identity.user.foto} sx={{ width: 30, height: 30 }} />
                       <Typography fontSize={14} color="text.secondary" fontWeight={800}>{identity.user.name}</Typography>
@@ -429,6 +455,7 @@ function Topbar() {
                             },
                           ].map((row, i) => (
                             <ListItem
+                              key={row.title}
                               disablePadding
                               sx={{
                                 borderBottom: i === 4 ? 1 : 0,

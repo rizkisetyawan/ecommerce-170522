@@ -25,6 +25,7 @@ import {
   DonutSmall,
   Star,
   ShoppingBag,
+  Storefront,
 } from '@mui/icons-material';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -84,18 +85,27 @@ function BasicTabs({ onClose }) {
   const navigate = useNavigate();
   const identity = useSelector(({ auth }) => auth);
   const [value, setValue] = React.useState(0);
-  const [openDialogToko, setOpenDialogToko] = React.useState(false);
+  const [dialogTokoState, setDialogTokoState] = React.useState({
+    open: false,
+    action: 'add',
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleOpenDialogToko = () => {
-    setOpenDialogToko(true);
+  const handleOpenDialogToko = (action) => {
+    setDialogTokoState({
+      open: true,
+      action,
+    });
   };
 
   const handleCloseDialogToko = () => {
-    setOpenDialogToko(false);
+    setDialogTokoState({
+      open: false,
+      action: 'add',
+    });
   };
 
   const handleLogout = () => {
@@ -213,19 +223,27 @@ function BasicTabs({ onClose }) {
               { !identity.toko && (
                 <Box m={2} mt="30%">
                   <Typography fontSize={14} color="text.secondary" mb={2} textAlign="center">Anda belum memiliki Toko</Typography>
-                  <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={handleOpenDialogToko}>Buka Toko Gratis</Button>
-                  <DialogCreateToko open={openDialogToko} onClose={handleCloseDialogToko} />
+                  <Button variant="contained" fullWidth sx={{ fontSize: 12, fontWeight: 800 }} onClick={() => handleOpenDialogToko('add')}>Buka Toko Gratis</Button>
                 </Box>
               )}
               { identity.toko && (
-                <Box pt={4}>
-                  <Box display="flex" flexDirection="column" alignItems="center">
-                    <Avatar src={identity.toko.foto} alt={identity.toko.name} sx={{ width: 100, height: 100 }} />
-                    <Typography fontSize={16} fontWeight={800} mt={1.5}>{identity.toko.name}</Typography>
+                <Box pt={2}>
+                  <Box display="flex" alignItems="center" gap={1.5} mx={4}>
+                    <Avatar src={identity.toko.foto} variant="square" sx={{ borderRadius: 1 }} />
+                    <Box>
+                      <Typography fontSize={14} fontWeight={800}>{identity.toko.name}</Typography>
+                    </Box>
                   </Box>
-                  <List sx={{ mt: 2 }}>
+                  <List sx={{ mt: 1 }}>
                     {
                       [
+                        {
+                          title: 'Profil Toko',
+                          icon: <Storefront />,
+                          handleClick: () => {
+                            handleOpenDialogToko('edit');
+                          },
+                        },
                         {
                           title: 'Pesanan',
                           icon: <Assignment />,
@@ -265,6 +283,12 @@ function BasicTabs({ onClose }) {
                   </List>
                 </Box>
               )}
+              <DialogCreateToko
+                open={dialogTokoState.open}
+                onClose={handleCloseDialogToko}
+                action={dialogTokoState.action}
+                data={identity.toko}
+              />
               <List sx={{ mt: 2 }}>
                 <ListItem disablePadding>
                   <ListItemButton onClick={handleLogout}>
