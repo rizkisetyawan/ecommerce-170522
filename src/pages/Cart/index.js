@@ -101,18 +101,15 @@ function CartItem({ data, globalCart }) {
         />
         <Typography fontSize={14} fontWeight={600}>{data.name_umkm}</Typography>
       </Box>
-      {/* <Typography fontSize={12} color="text.secondary">{data.address_umkm}</Typography> */}
-      <Box display="flex" mt={2}>
-        <Box>
-          <img
-            src={data.foto}
-            style={{
-              height: 70, width: 70, borderRadius: 8, objectFit: 'cover',
-            }}
-            alt={data.name}
-          />
-        </Box>
-        <Box ml={2}>
+      <Box display="flex" mt={2} mb={1}>
+        <img
+          src={data.foto}
+          style={{
+            height: 70, width: 70, borderRadius: 8, objectFit: 'cover',
+          }}
+          alt={data.name}
+        />
+        <Box ml={2} mb={1}>
           <Typography fontSize={14} color="text.secondary" gutterBottom>{data.name}</Typography>
           <Typography fontSize={14} fontWeight={800}>{rp(data.price)}</Typography>
         </Box>

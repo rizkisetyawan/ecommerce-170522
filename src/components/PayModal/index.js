@@ -15,9 +15,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
+import { initCart } from '../../redux/sliceCart';
 import {
-  postTrx, getBank, rp, postTrxMulti,
+  postTrx, getBank, rp, postTrxMulti, getCart,
 } from '../../utils';
 
 const totalPrice = (data) => {
@@ -30,6 +32,7 @@ const totalPrice = (data) => {
 };
 
 function PayModal({ open, onClose, data }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dataIsArray = Array.isArray(data);
@@ -67,6 +70,18 @@ function PayModal({ open, onClose, data }) {
     }
   };
 
+  const fetchCart = async () => {
+    try {
+      const cart = await getCart();
+      if (cart.status !== 'success') {
+        throw new Error(cart.message);
+      }
+      dispatch(initCart(cart.data));
+    } catch (err) {
+      throw err.message;
+    }
+  };
+
   const handleSubmit = async () => {
     setFormState({ ...formState, loading: true });
     try {
@@ -81,6 +96,7 @@ function PayModal({ open, onClose, data }) {
           status: 'belum dibayar',
           price: +row.price * row.qty,
         })));
+        await fetchCart();
       } else {
         trx = await postTrx({
           id_item_order: `INV-${moment().format('YYYYMMDD')}-${Date.now()}`,

@@ -141,7 +141,7 @@ function OrderDetailDialog({ open, onClose, data }) {
                     <ArrowForwardIos sx={{ fontSize: 10 }} />
                   </Grid>
                   <Grid item xs={12}>
-                    <Box border={1} borderColor="divider" p={1} mb={1.2}>
+                    <Box border={1} borderColor="divider" p={1} mb={0}>
                       { toko.items.map((item, i) => (
                         <Box display="flex" gap={1.2} alignItems="center" mb={toko.items.length - 1 !== i ? 1 : 0}>
                           <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
@@ -169,6 +169,7 @@ function OrderDetailDialog({ open, onClose, data }) {
               flexDirection={{ xs: 'column', sm: 'row' }}
               alignItems={{ xs: 'flex-end', sm: 'center' }}
               gap={{ xs: 0.5, sm: 2 }}
+              mt={2}
               justifyContent="flex-end"
             >
               <Typography fontSize={14}>Total Harga</Typography>
@@ -222,7 +223,7 @@ function OrderItem({ onOpenReview, onOpenDetail, data }) {
         flexDirection={{ xs: 'column', md: 'row' }}
         justifyContent="space-between"
       >
-        <Box>
+        <Box width="100%" maxWidth={700}>
           {data.toko.map((toko) => (
             <Box key={toko.toko_name} mb={2}>
               <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
@@ -257,7 +258,7 @@ function OrderItem({ onOpenReview, onOpenDetail, data }) {
             </Box>
           ))}
         </Box>
-        <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} gap={{ xs: 1, lg: 2 }}>
+        <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} gap={1}>
           {data.status === 'selesai' && <Button fullWidth variant="contained" onClick={onOpenReview} sx={{ fontWeight: 800, fontSize: 12 }}>Beri Ulasan</Button>}
           <Button fullWidth variant="outlined" onClick={() => onOpenDetail(data)} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
         </Box>
