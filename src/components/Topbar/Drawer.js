@@ -120,7 +120,6 @@ function BasicTabs({ onClose }) {
           <Typography fontSize={14} color="text.secondary" textAlign="center">Anda belum Masuk</Typography>
           <Typography fontSize={14} color="text.secondary" textAlign="center">Silahkan masuk terlebih dahulu</Typography>
           <Button fullWidth variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600, mt: 2 }} onClick={() => navigate('login')}>Masuk</Button>
-          {/* <Button fullWidth variant="contained" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600 }} onClick={() => navigate('register')}>Daftar</Button> */}
         </Box>
       )}
       { identity.token && (

@@ -77,7 +77,7 @@ function Categories() {
 
   return (
     <Container sx={{ my: 6 }}>
-      <Typography variant="h5" fontWeight={700} mb={{ xs: 2, lg: 4 }} gutterBottom>Kategori</Typography>
+      <Typography variant="h5" fontSize={{ xs: 20, sm: 24 }} fontWeight={700} mb={{ xs: 2, lg: 4 }} gutterBottom>Kategori</Typography>
       { categoriesState.loading && (
         <Box py={6} display="flex" justifyContent="center">
           <Typography color="text.secondary">Loading ...</Typography>
@@ -91,7 +91,7 @@ function Categories() {
       { (!categoriesState.loading && categoriesState.data) && (
         <Grid container>
           { categoriesState.data.map((category) => (
-            <Grid item xs={4} sm={3} md={2} lg={1.5} border={1} borderColor="divider" onClick={() => navigate(`category/${category.name}`)} sx={{ cursor: 'pointer' }}>
+            <Grid item xs={4} sm={3} md={2} lg={1.333} border={1} borderColor="divider" onClick={() => navigate(`category/${category.name}`)} sx={{ cursor: 'pointer' }}>
               <Box
                 key={category.name}
                 sx={{
@@ -104,7 +104,7 @@ function Categories() {
                 }}
               >
                 <img src={category.foto} alt="testing" height={80} width={80} style={{ objectFit: 'contain' }} />
-                <Typography variant="subtitle2" textAlign="center">{category.name}</Typography>
+                <Typography variant="subtitle2" textAlign="center" textTransform="capitalize">{category.name}</Typography>
               </Box>
             </Grid>
           ))}
@@ -148,7 +148,7 @@ function Products({ title }) {
 
   return (
     <Container sx={{ my: 6 }}>
-      <Typography variant="h5" fontWeight={700} mb={4} gutterBottom>{title}</Typography>
+      <Typography variant="h5" fontSize={{ xs: 20, sm: 24 }} fontWeight={700} mb={4} gutterBottom>{title}</Typography>
       { productsState.loading && (
         <Box py={6} display="flex" justifyContent="center">
           <Typography color="text.secondary">Loading ...</Typography>
@@ -168,6 +168,13 @@ function Products({ title }) {
               </Grid>
             ))
           }
+          {productsState.data.length === 0 && (
+            <Grid item xs={12}>
+              <Box display="flex" justifyContent="center" py={6}>
+                <Typography color="text.secondary">Tidak ada produk</Typography>
+              </Box>
+            </Grid>
+          )}
         </Grid>
       )}
     </Container>

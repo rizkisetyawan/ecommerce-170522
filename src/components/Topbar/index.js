@@ -123,11 +123,6 @@ function Topbar() {
     }
   };
 
-  React.useEffect(() => {
-    checkToken();
-    fetchCart();
-  }, []);
-
   const handleClickCart = (event) => {
     setCartAnchorEl(event.currentTarget);
   };
@@ -176,6 +171,13 @@ function Topbar() {
     }
     setMobileDrawerState(false);
   };
+
+  React.useEffect(() => {
+    checkToken();
+    if (identity.user) {
+      fetchCart();
+    }
+  }, []);
 
   if (!identity.user && identity.token) {
     return (
@@ -287,8 +289,10 @@ function Topbar() {
                   </Box>
                 )}
                 {(globalCart.data.length === 0 && !loadingCart) && (
-                  <Box px={6} py={4}>
-                    <Typography color="text.secondary" fontSize={14}>Keranjangmu Kosong</Typography>
+                  <Box px={4} py={2}>
+                    <Typography fontSize={14} color="text.secondary" textAlign="center">Anda belum Masuk</Typography>
+                    <Typography fontSize={14} color="text.secondary" textAlign="center">Silahkan masuk terlebih dahulu</Typography>
+                    <Button fullWidth variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600, mt: 2 }} onClick={() => navigate('login')}>Masuk</Button>
                   </Box>
                 )}
               </Popover>
