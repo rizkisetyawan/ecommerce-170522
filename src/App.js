@@ -46,6 +46,7 @@ function App() {
               <Route path="settings" element={<Settings />} />
               <Route path="statistics" element={<Statistics />} />
               <Route path="category/:title" element={<Category />} />
+              <Route path="search/:title" element={<Category />} />
             </Route>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />

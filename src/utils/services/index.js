@@ -86,8 +86,10 @@ const DELETE = async (endpoint, options = {}) => {
 export const getIdentity = () => GET('/api/auth');
 export const getImageAuth = () => GET('/api/image/auth');
 export const getProducts = () => GET('/api/product');
+export const getProductsCategory = (name) => GET(`/api/product/category/${name}`);
 export const getProductsUmkm = () => GET('/api/product/umkm');
 export const getDetailProduct = (id) => GET(`/api/product/detail/${id}`);
+export const getProductsSearch = (name) => GET(`/api/product/search/${name}`);
 export const getCategory = () => GET('/api/product/category');
 export const getCart = () => GET('/api/cart');
 export const getTrx = () => GET('/api/trx');

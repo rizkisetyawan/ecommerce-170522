@@ -11,6 +11,7 @@ import Settings from './Settings';
 import Reviews from './Reviews';
 import Products from './Products';
 import Statistics from './Statistics';
+import Search from './Search';
 
 export {
   Home,
@@ -26,4 +27,5 @@ export {
   Reviews,
   Products,
   Statistics,
+  Search,
 };

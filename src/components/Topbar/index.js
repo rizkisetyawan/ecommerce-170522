@@ -213,7 +213,7 @@ function Topbar() {
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
               />
-              <Button variant="contained" aria-label="delete" size="small" sx={{ m: 0.5 }}>
+              <Button variant="contained" aria-label="delete" size="small" sx={{ m: 0.5 }} onClick={() => navigate('search/mantapp')}>
                 <SearchIcon fontSize="medium" />
               </Button>
             </Search>

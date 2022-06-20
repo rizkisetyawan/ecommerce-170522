@@ -4,9 +4,9 @@ import {
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { CardProduct } from '../../components';
-import { getProductsCategory } from '../../utils';
+import { getProductsSearch } from '../../utils';
 
-function Category() {
+function Search() {
   const { title } = useParams();
   const [productsState, setProductsState] = useState({
     loading: false,
@@ -17,7 +17,7 @@ function Category() {
   const fetchProducts = async () => {
     setProductsState({ ...productsState, loading: true });
     try {
-      const products = await getProductsCategory(title);
+      const products = await getProductsSearch(title);
       if (products.status !== 'success') {
         throw new Error(products.message);
       }
@@ -100,4 +100,4 @@ function Category() {
   );
 }
 
-export default Category;
+export default Search;
