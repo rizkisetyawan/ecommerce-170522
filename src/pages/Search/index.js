@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
 import {
   Box, Container, Grid, Typography,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { CardProduct } from '../../components';
 import { getProductsSearch } from '../../utils';
 
 function Search() {
   const { title } = useParams();
+  const location = useLocation();
   const [productsState, setProductsState] = useState({
     loading: false,
     data: null,
@@ -37,7 +39,7 @@ function Search() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [title]);
 
   return (
     <Container>
@@ -71,8 +73,8 @@ function Search() {
               <Grid container spacing={{ xs: 1, lg: 1.5 }}>
                 {
                   productsState.data.map((row) => (
-                    <Grid item xs={6} sm={3} lg={2}>
-                      <CardProduct key={row} data={productsState.data} />
+                    <Grid key={row.id_item} item xs={6} sm={3} lg={2}>
+                      <CardProduct data={row} />
                     </Grid>
                   ))
                 }

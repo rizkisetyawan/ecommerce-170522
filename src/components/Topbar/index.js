@@ -88,6 +88,7 @@ function Topbar() {
   const [userAnchorEl, setUserAnchorEl] = React.useState(null);
   const [tokoAnchorEl, setTokoAnchorEl] = React.useState(null);
   const [dialogTokoState, setDialogTokoState] = React.useState(false);
+  const [searchState, setSearchState] = React.useState('');
   const openCart = Boolean(cartAnchorEl);
   const openUser = Boolean(userAnchorEl);
   const openToko = Boolean(tokoAnchorEl);
@@ -211,9 +212,21 @@ function Topbar() {
             <Search>
               <StyledInputBase
                 placeholder="Search…"
+                value={searchState}
+                onChange={(e) => setSearchState(e.target.value)}
                 inputProps={{ 'aria-label': 'search' }}
               />
-              <Button variant="contained" aria-label="delete" size="small" sx={{ m: 0.5 }} onClick={() => navigate('search/mantapp')}>
+              <Button
+                variant="contained"
+                aria-label="delete"
+                size="small"
+                sx={{ m: 0.5 }}
+                onClick={() => {
+                  if (searchState) {
+                    navigate(`/search/${searchState}`);
+                  }
+                }}
+              >
                 <SearchIcon fontSize="medium" />
               </Button>
             </Search>

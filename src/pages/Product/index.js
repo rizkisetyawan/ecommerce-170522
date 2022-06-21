@@ -124,7 +124,7 @@ function Product() {
             <Grid container spacing={5}>
               <Grid item xs={12} lg={4}>
                 <Box>
-                  <img width="100%" src={productState.data.foto} alt="gambar produk" style={{ maxHeight: 300, objectFit: 'cover' }} />
+                  <img width="100%" src={productState.data.foto} alt="gambar produk" style={{ maxHeight: 300, objectFit: 'contain' }} />
                 </Box>
               </Grid>
               <Grid item xs={12} lg={5}>

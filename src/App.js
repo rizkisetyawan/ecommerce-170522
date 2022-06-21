@@ -18,6 +18,7 @@ import {
   Reviews,
   Products,
   Statistics,
+  Search,
 } from './pages';
 import { Topbar } from './components';
 
@@ -46,7 +47,7 @@ function App() {
               <Route path="settings" element={<Settings />} />
               <Route path="statistics" element={<Statistics />} />
               <Route path="category/:title" element={<Category />} />
-              <Route path="search/:title" element={<Category />} />
+              <Route path="search/:title" element={<Search />} />
             </Route>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
