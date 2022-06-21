@@ -24,10 +24,12 @@ import {
 
 const totalPrice = (data) => {
   let result = 0;
-  data.forEach((row) => {
-    const accPrice = row.qty * Number(row.price);
-    result += accPrice;
-  });
+  if (Array.isArray(data)) {
+    data.forEach((row) => {
+      const accPrice = row.qty * Number(row.price);
+      result += accPrice;
+    });
+  }
   return result;
 };
 

@@ -71,8 +71,8 @@ function Category() {
               <Grid container spacing={{ xs: 1, lg: 1.5 }}>
                 {
                   productsState.data.map((row) => (
-                    <Grid item xs={6} sm={3} lg={2}>
-                      <CardProduct key={row} data={productsState.data} />
+                    <Grid key={row.id_item} item xs={6} sm={3} lg={2}>
+                      <CardProduct data={row} />
                     </Grid>
                   ))
                 }

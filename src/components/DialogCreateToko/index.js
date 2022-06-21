@@ -62,7 +62,7 @@ function DialogCreateToko({
           signature: imageAuth.signature,
           expire: imageAuth.expire,
           token: imageAuth.token,
-          folder: '/user',
+          folder: '/toko',
           fileName: `img-${Date.now()}`,
         });
       }

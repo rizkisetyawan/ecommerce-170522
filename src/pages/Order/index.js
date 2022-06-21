@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   Container,
@@ -11,60 +12,154 @@ import {
   TextField,
   Grid,
 } from '@mui/material';
-import { ShoppingBag, ArrowForwardIos } from '@mui/icons-material';
+import { ShoppingBag, ArrowForwardIos, Edit } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
+import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { getTrx, rp, colorTrx } from '../../utils';
+import {
+  getTrx, rp, colorTrx, putReview,
+} from '../../utils';
 
-function ReviewDialog({ open, onClose }) {
+function InputReview({ item, onSuccess }) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [editState, setEditState] = useState(false);
+  const [formState, setFormState] = useState({
+    review: item.review,
+    rating: item.rating,
+  });
+  const [loadingState, setLoadingState] = useState(false);
+
+  const handleSubmit = async () => {
+    setLoadingState(true);
+    try {
+      if (!formState.rating) {
+        throw new Error('Rating tidak boleh kosong');
+      }
+      const dataReview = {
+        id_item: item.id_item,
+        review: formState.review,
+        rating: formState.rating,
+      };
+      const review = await putReview(item.id_item_order, dataReview);
+      setLoadingState(false);
+      if (review.status !== 'success') {
+        throw new Error(review.message);
+      }
+      onSuccess(dataReview);
+      setEditState(false);
+    } catch (err) {
+      setLoadingState(false);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
   return (
-    <Dialog onClose={onClose} open={open}>
-      <Box px={3} pb={2} pt={3}>
-        <Box display="flex" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection={{ xs: 'column', md: 'row' }}>
-          <Box display="flex" gap={1.25} alignItems="center">
-            <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
-            <Typography fontWeight={800} fontSize={12}>Belanja</Typography>
-            <Typography fontSize={12} color="text.secondary">22 Apr 2022</Typography>
-          </Box>
-        </Box>
-        <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>Pakaian Anak Grosir Bekasi</Typography>
-        <Box display="flex" gap={2} flexDirection={{ xs: 'column' }}>
-          <Box display="flex" gap={2} alignItems="center">
-            <Avatar src="https://source.unsplash.com/random" variant="square" alt="baju muslim" sx={{ width: 60, height: 60 }} />
-            <Box>
-              <Typography fontSize={14} fontWeight={800} gutterBottom>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </Typography>
-              <Rating value={4.5} precision={0.5} />
-            </Box>
-          </Box>
-          <Box>
-            <Typography fontSize={14} fontWeight={800} gutterBottom>Ulasan :</Typography>
-            <TextField
-              fullWidth
-              disabled
-              rows={4}
-              multiline
-              sx={
-                {
-                  '& textarea': {
-                    fontSize: 14,
-                  },
-                }
-              }
-              value="Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Explicabo, deleniti laborum neque sint quaerat consequuntur
-              excepturi voluptate porro placeat aliquam quam nulla omnis
-              tempore tempora adipisci officiis. Temporibus, officia doloribus!"
-            />
-          </Box>
-        </Box>
-        <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-          <Button sx={{ fontSize: 12, fontWeight: 800 }} onClick={onClose}>Cancel</Button>
-          <Button variant="contained" sx={{ fontSize: 12, fontWeight: 800 }}>Submit</Button>
+    <Box display="flex" gap={1} flexDirection={{ xs: 'column' }} mb={2}>
+      <Box display="flex" gap={2}>
+        <Avatar
+          src={item.foto}
+          variant="square"
+          alt={item.item_name}
+          sx={{
+            width: 60, height: 60, borderRadius: 1, mt: { xs: 1, sm: 0 },
+          }}
+        />
+        <Box>
+          <Typography fontSize={14} fontWeight={800} gutterBottom>
+            {item.item_name}
+          </Typography>
+          <Rating
+            precision={1}
+            readOnly={!editState}
+            value={formState.rating}
+            onChange={(e, newValue) => setFormState({ ...formState, rating: newValue })}
+          />
         </Box>
       </Box>
+      <Box>
+        <Box display="flex" justifyContent="space-between">
+          <Typography fontSize={14} fontWeight={800} gutterBottom>Ulasan :</Typography>
+          { (!editState) && (
+            <Button
+              sx={{ fontSize: 12, fontWeight: 800 }}
+              size="small"
+              onClick={() => setEditState(true)}
+              endIcon={<Edit />}
+            >
+              Tulis Ulasan
+            </Button>
+          )}
+        </Box>
+        <TextField
+          fullWidth
+          rows={2}
+          multiline
+          disabled={!editState}
+          value={formState.review}
+          onChange={(e) => setFormState({ ...formState, review: e.target.value })}
+          sx={
+            {
+              '& textarea': {
+                fontSize: 14,
+              },
+            }
+          }
+        />
+      </Box>
+      <Box display="flex" justifyContent="flex-end" mt={0.5} mb={1}>
+        { (editState) && (
+          <Button
+            sx={{ fontSize: 12, fontWeight: 800 }}
+            variant="contained"
+            size="small"
+            disabled={loadingState}
+            onClick={handleSubmit}
+          >
+            {loadingState ? 'Loading ...' : 'Beri Ulasan'}
+          </Button>
+        )}
+      </Box>
+    </Box>
+  );
+}
+
+function ReviewDialog({
+  open, onClose, data, onSuccess,
+}) {
+  return (
+    <Dialog onClose={onClose} open={open}>
+      { !data && (
+        <Box py={6} display="flex" justifyContent="center">
+          <Typography color="text.secondary">Loading ...</Typography>
+        </Box>
+      )}
+      { data && (
+        <Box px={3} pb={2} pt={3}>
+          <Box display="flex" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection={{ xs: 'column', md: 'row' }}>
+            <Box display="flex" gap={1.25} alignItems="center">
+              <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
+              <Typography fontWeight={800} fontSize={12}>Belanja</Typography>
+              <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
+            </Box>
+          </Box>
+          { data.toko.map((toko) => (
+            <React.Fragment key={toko.toko_name}>
+              <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
+              { toko.items.map((item) => (
+                <InputReview
+                  key={item.item_name}
+                  onSuccess={onSuccess}
+                  item={{
+                    ...item,
+                    id_item_order: data.id_item_order,
+                  }}
+                />
+              ))}
+            </React.Fragment>
+          ))}
+        </Box>
+      )}
     </Dialog>
   );
 }
@@ -80,7 +175,6 @@ const totalPrice = (data) => {
 };
 
 function OrderDetailDialog({ open, onClose, data }) {
-  // const colorStatus = colorTrx(data.status);
   const navigate = useNavigate();
   return (
     <Dialog maxWidth="xs" onClose={onClose} open={open}>
@@ -259,7 +353,7 @@ function OrderItem({ onOpenReview, onOpenDetail, data }) {
           ))}
         </Box>
         <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} gap={1}>
-          {data.status === 'selesai' && <Button fullWidth variant="contained" onClick={onOpenReview} sx={{ fontWeight: 800, fontSize: 12 }}>Beri Ulasan</Button>}
+          {data.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview(data)} sx={{ fontWeight: 800, fontSize: 12 }}>Beri Ulasan</Button>}
           <Button fullWidth variant="outlined" onClick={() => onOpenDetail(data)} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
         </Box>
       </Box>
@@ -268,7 +362,10 @@ function OrderItem({ onOpenReview, onOpenDetail, data }) {
 }
 
 function Order() {
-  const [dialogReview, setDialogReview] = React.useState(false);
+  const [dialogReview, setDialogReview] = React.useState({
+    open: false,
+    data: null,
+  });
   const [dialogDetail, setDialogDetail] = React.useState({
     open: false,
     data: null,
@@ -300,12 +397,39 @@ function Order() {
     }
   };
 
-  const handleOpenReview = () => {
-    setDialogReview(true);
+  const handleOpenReview = (data) => {
+    setDialogReview({
+      open: true,
+      data,
+    });
   };
 
   const handleCloseReview = () => {
-    setDialogReview(false);
+    setDialogReview({
+      open: false,
+      data: null,
+    });
+  };
+
+  const handleReviewSuccess = (data) => {
+    setOrderState((prevState) => ({
+      ...prevState,
+      data: prevState.data.map((row) => ({
+        ...row,
+        toko: row.toko.map((row2) => ({
+          ...row2,
+          items: row2.items.map((row3) => {
+            if (row3.id_item === data.id_item) {
+              return {
+                ...row3,
+                ...data,
+              };
+            }
+            return row3;
+          }),
+        })),
+      })),
+    }));
   };
 
   const handleOpenDetail = (data) => {
@@ -352,7 +476,12 @@ function Order() {
               ))
             }
           </Box>
-          <ReviewDialog open={dialogReview} onClose={handleCloseReview} />
+          <ReviewDialog
+            open={dialogReview.open}
+            onClose={handleCloseReview}
+            onSuccess={handleReviewSuccess}
+            data={dialogReview.data}
+          />
           <OrderDetailDialog
             open={dialogDetail.open}
             onClose={handleCloseDetail}

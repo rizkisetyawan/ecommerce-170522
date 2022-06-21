@@ -77,7 +77,7 @@ function Product() {
   const handleAddCart = async () => {
     setCartState({ ...cartState, loading: true });
     try {
-      const cart = await postCart({ id_item: productState.data.id_item, qty: qtyState });
+      const cart = await postCart({ id_item: productState.data.product.id_item, qty: qtyState });
       if (cart.status !== 'success') {
         throw new Error(cart.message);
       }
@@ -90,7 +90,7 @@ function Product() {
   };
 
   const handleAddQty = () => {
-    setQtyState((prevVal) => (productState.data.stock <= prevVal ? prevVal : prevVal + 1));
+    setQtyState((prevVal) => (productState.data.product.stock <= prevVal ? prevVal : prevVal + 1));
   };
 
   const handleRemoveQty = () => {
@@ -124,7 +124,7 @@ function Product() {
             <Grid container spacing={5}>
               <Grid item xs={12} lg={4}>
                 <Box>
-                  <img width="100%" src={productState.data.foto} alt="gambar produk" style={{ maxHeight: 300, objectFit: 'contain' }} />
+                  <img width="100%" src={productState.data.product.foto} alt="gambar produk" style={{ maxHeight: 300, objectFit: 'contain' }} />
                 </Box>
               </Grid>
               <Grid item xs={12} lg={5}>
@@ -134,7 +134,7 @@ function Product() {
                     fontWeight={800}
                     gutterBottom
                   >
-                    {productState.data.name}
+                    {productState.data.product.name}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 3 }}>
                     <Typography fontSize={14} fontWeight={400} color="text.secondary">Terjual 192</Typography>
@@ -149,14 +149,14 @@ function Product() {
                     </Box>
                   </Box>
                   <Box display="flex" alignItems="center" justifyContent="space-between">
-                    <Typography fontSize={28} fontWeight={800} my={2}>{rp(productState.data.price)}</Typography>
+                    <Typography fontSize={28} fontWeight={800} my={2}>{rp(productState.data.product.price)}</Typography>
                     <IconButton>
                       <FavoriteBorder sx={{ fontSize: 28, color: 'error.main' }} />
                     </IconButton>
                   </Box>
                   <Divider width="100%" sx={{ mb: 1 }} />
                   <Typography color="primary.main" fontWeight={600} gutterBottom>Keterangan</Typography>
-                  <Typography fontSize={14} component="pre" whiteSpace="pre-wrap">{productState.data.description}</Typography>
+                  <Typography fontSize={14} component="pre" whiteSpace="pre-wrap">{productState.data.product.description}</Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} lg={3}>
@@ -164,7 +164,7 @@ function Product() {
                   <Typography fontWeight={600} mb={2}>Atur jumlah</Typography>
                   <Box display="flex" gap={1.5} alignItems="center">
                     <Box borderRadius={0.5} border="1px solid #bfc9d9" display="flex" alignItems="center">
-                      <IconButton color={productState.data.stock <= qtyState ? 'default' : 'primary'} onClick={handleAddQty}>
+                      <IconButton color={productState.data.product.stock <= qtyState ? 'default' : 'primary'} onClick={handleAddQty}>
                         <AddCircle />
                       </IconButton>
                       <Typography color="text.secondary" mx={0.5} textAlign="center">{qtyState}</Typography>
@@ -175,12 +175,12 @@ function Product() {
                     <Typography fontSize={14}>
                       Stok
                       {' '}
-                      <strong>{productState.data.stock}</strong>
+                      <strong>{productState.data.product.stock}</strong>
                     </Typography>
                   </Box>
                   <Box display="flex" alignItems="center" gap={2} my={2}>
                     <Typography>Subtotal</Typography>
-                    <Typography fontSize={20} fontWeight={800}>{rp(+productState.data.price * qtyState)}</Typography>
+                    <Typography fontSize={20} fontWeight={800}>{rp(+productState.data.product.price * qtyState)}</Typography>
                   </Box>
                   <Grid container spacing={1}>
                     <Grid item xs={6}>
@@ -262,9 +262,9 @@ function Product() {
               open={openModalState}
               onClose={() => setOpenModalState(false)}
               data={{
-                id_item: productState.data.id_item,
+                id_item: productState.data.product.id_item,
                 qty: qtyState,
-                price: +productState.data.price * qtyState,
+                price: +productState.data.product.price * qtyState,
               }}
             />
           </>
