@@ -1,15 +1,13 @@
-/* eslint-disable no-unused-vars */
 import {
   Box, Container, Grid, Typography,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { CardProduct } from '../../components';
 import { getProductsSearch } from '../../utils';
 
 function Search() {
   const { title } = useParams();
-  const location = useLocation();
   const [productsState, setProductsState] = useState({
     loading: false,
     data: null,
