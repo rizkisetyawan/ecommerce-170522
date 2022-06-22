@@ -88,7 +88,7 @@ export const getImageAuth = () => GET('/api/image/auth');
 export const getProducts = () => GET('/api/product');
 export const getProductsCategory = (name) => GET(`/api/product/category/${name}`);
 export const getProductsUmkm = () => GET('/api/product/umkm');
-export const getDetailProduct = (id) => GET(`/api/product/detail/${id}`);
+export const getDetailProduct = (id, idUser = '') => GET(`/api/product/detail/${id}${idUser ? `?id_user=${idUser}` : ''}`);
 export const getProductsSearch = (name) => GET(`/api/product/search/${name}`);
 export const getCategory = () => GET('/api/product/category');
 export const getCart = () => GET('/api/cart');
@@ -104,6 +104,7 @@ export const postProduct = (body) => POST('/api/product', { body });
 export const postTrx = (body) => POST('/api/trx', { body });
 export const postTrxMulti = (body) => POST('/api/trx/multi', { body });
 export const postCart = (body) => POST('/api/cart', { body });
+export const postWishlist = (body) => POST('/api/product/wishlist', { body });
 
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });

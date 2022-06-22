@@ -19,18 +19,19 @@ import {
   AddCircle, Favorite, FavoriteBorder, RemoveCircle,
 } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { initCart } from '../../redux/sliceCart';
 import { PayModal } from '../../components';
 import {
-  getDetailProduct, rp, postCart, getCart,
+  getDetailProduct, rp, postCart, getCart, postWishlist,
 } from '../../utils';
 
 function Product() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
+  const user = useSelector(({ auth }) => auth.user);
   const [openModalState, setOpenModalState] = useState(false);
   const [productState, setProductState] = useState({
     loading: false,
@@ -45,7 +46,7 @@ function Product() {
   const fetchProduct = async () => {
     setProductState({ ...productState, loading: true });
     try {
-      const product = await getDetailProduct(id);
+      const product = await getDetailProduct(id, user?.id_user || null);
       if (product.status !== 'success') {
         throw new Error(product.message);
       }
@@ -98,6 +99,28 @@ function Product() {
     setQtyState((prevVal) => (prevVal <= 1 ? prevVal : prevVal - 1));
   };
 
+  const handleWishlist = async () => {
+    try {
+      const wishlist = await postWishlist({ id_item: productState.data.product.id_item });
+      if (wishlist.status !== 'success') {
+        throw new Error(wishlist.message);
+      }
+      setProductState((prevState) => ({
+        ...prevState,
+        data: {
+          ...prevState.data,
+          isFavorite: wishlist.data.isFavorite,
+          count: {
+            ...prevState.data.count,
+            favorite: wishlist.data.isFavorite ? +prevState.data.count.favorite + 1 : +prevState.data.count.favorite - 1,
+          },
+        },
+      }));
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchProduct();
@@ -122,7 +145,7 @@ function Product() {
       {
         (!productState.loading && productState.data) && (
           <>
-            <Grid container spacing={5}>
+            <Grid container spacing={5} justifyContent="center">
               <Grid item xs={12} lg={4}>
                 <Box>
                   <img width="100%" src={productState.data.product.foto} alt="gambar produk" style={{ maxHeight: 300, objectFit: 'contain' }} />
@@ -145,7 +168,7 @@ function Product() {
                     </Typography>
                     <Box display="flex" alignItems="center" gap={0.5}>
                       <Favorite sx={{ fontSize: 14, color: 'error.main' }} />
-                      <Typography fontSize={14} fontWeight={400} color="text.secondary">1145</Typography>
+                      <Typography fontSize={14} fontWeight={400} color="text.secondary">{productState.data.count.favorite}</Typography>
                     </Box>
                     { productState.data.reviews.length !== 0 && (
                       <Box display="flex" alignItems="center" gap={0.5}>
@@ -162,67 +185,72 @@ function Product() {
                   </Box>
                   <Box display="flex" alignItems="center" justifyContent="space-between">
                     <Typography fontSize={28} fontWeight={800} my={2}>{rp(productState.data.product.price)}</Typography>
-                    <IconButton>
-                      <FavoriteBorder sx={{ fontSize: 28, color: 'default' }} />
-                    </IconButton>
+                    { user && (
+                      <IconButton onClick={handleWishlist}>
+                        { !productState.data.isFavorite && (<FavoriteBorder sx={{ fontSize: 28, color: 'default' }} />)}
+                        { productState.data.isFavorite && (<Favorite sx={{ fontSize: 28, color: 'error.main' }} />)}
+                      </IconButton>
+                    )}
                   </Box>
                   <Divider width="100%" sx={{ mb: 1 }} />
                   <Typography color="primary.main" fontWeight={600} gutterBottom>Keterangan</Typography>
                   <Typography fontSize={14} component="pre" whiteSpace="pre-wrap">{productState.data.product.description}</Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12} lg={3}>
-                <Box border="1px solid #e5e7e9" borderRadius={2} p={2} py={4}>
-                  <Typography fontWeight={600} mb={2}>Atur jumlah</Typography>
-                  <Box display="flex" gap={1.5} alignItems="center">
-                    <Box borderRadius={0.5} border="1px solid #bfc9d9" display="flex" alignItems="center">
-                      <IconButton color={productState.data.product.stock <= qtyState ? 'default' : 'primary'} onClick={handleAddQty}>
-                        <AddCircle />
-                      </IconButton>
-                      <Typography color="text.secondary" mx={0.5} textAlign="center">{qtyState}</Typography>
-                      <IconButton color={qtyState <= 1 ? 'default' : 'error'} onClick={handleRemoveQty}>
-                        <RemoveCircle />
-                      </IconButton>
+              {user && (
+                <Grid item xs={12} lg={3}>
+                  <Box border="1px solid #e5e7e9" borderRadius={2} p={2} py={4}>
+                    <Typography fontWeight={600} mb={2}>Atur jumlah</Typography>
+                    <Box display="flex" gap={1.5} alignItems="center">
+                      <Box borderRadius={0.5} border="1px solid #bfc9d9" display="flex" alignItems="center">
+                        <IconButton color={productState.data.product.stock <= qtyState ? 'default' : 'primary'} onClick={handleAddQty}>
+                          <AddCircle />
+                        </IconButton>
+                        <Typography color="text.secondary" mx={0.5} textAlign="center">{qtyState}</Typography>
+                        <IconButton color={qtyState <= 1 ? 'default' : 'error'} onClick={handleRemoveQty}>
+                          <RemoveCircle />
+                        </IconButton>
+                      </Box>
+                      <Typography fontSize={14}>
+                        Stok
+                        {' '}
+                        <strong>{productState.data.product.stock}</strong>
+                      </Typography>
                     </Box>
-                    <Typography fontSize={14}>
-                      Stok
-                      {' '}
-                      <strong>{productState.data.product.stock}</strong>
-                    </Typography>
-                  </Box>
-                  <Box display="flex" alignItems="center" gap={2} my={2}>
-                    <Typography>Subtotal</Typography>
-                    <Typography fontSize={20} fontWeight={800}>{rp(+productState.data.product.price * qtyState)}</Typography>
-                  </Box>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
-                        }}
-                        onClick={() => setOpenModalState(true)}
-                      >
-                        Beli Langsung
-                      </Button>
+                    <Box display="flex" alignItems="center" gap={2} my={2}>
+                      <Typography>Subtotal</Typography>
+                      <Typography fontSize={20} fontWeight={800}>{rp(+productState.data.product.price * qtyState)}</Typography>
+                    </Box>
+                    <Grid container spacing={1}>
+                      <Grid item xs={6}>
+                        <Button
+                          fullWidth
+                          variant="outlined"
+                          sx={{
+                            fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
+                          }}
+                          onClick={() => setOpenModalState(true)}
+                        >
+                          Beli Langsung
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          sx={{
+                            fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
+                          }}
+                          onClick={handleAddCart}
+                          disabled={cartState.loading}
+                        >
+                          {cartState.loading ? 'Loading ...' : '+ Keranjang'}
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        sx={{
-                          fontSize: 13, whiteSpace: 'nowrap', px: 1, textTransform: 'capitalize', fontWeight: 800,
-                        }}
-                        onClick={handleAddCart}
-                        disabled={cartState.loading}
-                      >
-                        {cartState.loading ? 'Loading ...' : '+ Keranjang'}
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
+                  </Box>
+                </Grid>
+              )}
               { productState.data.reviews.length !== 0 && (
                 <>
                   <Grid item xs={12} lg={5}>
@@ -316,15 +344,17 @@ function Product() {
                 </Grid>
               )}
             </Grid>
-            <PayModal
-              open={openModalState}
-              onClose={() => setOpenModalState(false)}
-              data={{
-                id_item: productState.data.product.id_item,
-                qty: qtyState,
-                price: +productState.data.product.price * qtyState,
-              }}
-            />
+            { user && (
+              <PayModal
+                open={openModalState}
+                onClose={() => setOpenModalState(false)}
+                data={{
+                  id_item: productState.data.product.id_item,
+                  qty: qtyState,
+                  price: +productState.data.product.price * qtyState,
+                }}
+              />
+            )}
           </>
         )
       }
