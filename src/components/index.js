@@ -4,6 +4,7 @@ import PayModal from './PayModal';
 import Auth from './Auth';
 import DialogCreateToko from './DialogCreateToko';
 import DialogCreateProduct from './DialogCreateProduct';
+import DialogUploadStruk from './DialogUploadStruk';
 
 export {
   Topbar,
@@ -12,4 +13,5 @@ export {
   Auth,
   DialogCreateToko,
   DialogCreateProduct,
+  DialogUploadStruk,
 };

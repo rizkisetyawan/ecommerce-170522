@@ -246,12 +246,19 @@ function Topbar() {
                   horizontal: 'left',
                 }}
               >
-                {loadingCart && (
+                { !identity.user && (
+                  <Box px={4} py={2}>
+                    <Typography fontSize={14} color="text.secondary" textAlign="center">Anda belum masuk</Typography>
+                    <Typography fontSize={14} color="text.secondary" textAlign="center">Silahkan masuk terlebih dahulu</Typography>
+                    <Button fullWidth variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600, mt: 2 }} onClick={() => navigate('login')}>Masuk</Button>
+                  </Box>
+                )}
+                {(identity.user && loadingCart) && (
                   <Box px={6} py={4}>
                     <Typography color="text.secondary" fontSize={14}>Loading ...</Typography>
                   </Box>
                 )}
-                {(globalCart.data.length !== 0 && !loadingCart) && (
+                {(identity.user && globalCart.data.length !== 0 && !loadingCart) && (
                   <Box sx={{ p: 2 }}>
                     <Box mb={2} display="flex" justifyContent="space-between" alignItems="center" gap={4}>
                       <Typography fontWeight={600} fontSize={14} color="text.secondary">
@@ -301,11 +308,9 @@ function Topbar() {
                     ))}
                   </Box>
                 )}
-                {(globalCart.data.length === 0 && !loadingCart) && (
+                {(identity.user && globalCart.data.length === 0 && !loadingCart) && (
                   <Box px={4} py={2}>
-                    <Typography fontSize={14} color="text.secondary" textAlign="center">Anda belum Masuk</Typography>
-                    <Typography fontSize={14} color="text.secondary" textAlign="center">Silahkan masuk terlebih dahulu</Typography>
-                    <Button fullWidth variant="outlined" size="small" sx={{ textTransform: 'capitalize', fontWeight: 600, mt: 2 }} onClick={() => navigate('login')}>Masuk</Button>
+                    <Typography fontSize={14} color="text.secondary" textAlign="center">Keranjangmu Kosong</Typography>
                   </Box>
                 )}
               </Popover>

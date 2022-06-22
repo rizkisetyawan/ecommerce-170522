@@ -11,8 +11,16 @@ import {
   Rating,
   TextField,
   Grid,
+  IconButton,
+  Popover,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
 } from '@mui/material';
-import { ShoppingBag, ArrowForwardIos, Edit } from '@mui/icons-material';
+import {
+  ShoppingBag, ArrowForwardIos, Edit, MoreHoriz,
+} from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +28,7 @@ import moment from 'moment';
 import {
   getTrx, rp, colorTrx, putReview,
 } from '../../utils';
+import { DialogUploadStruk } from '../../components';
 
 function InputReview({ item, onSuccess }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -289,10 +298,25 @@ function OrderDetailDialog({ open, onClose, data }) {
   );
 }
 
-function OrderItem({ onOpenReview, onOpenDetail, data }) {
+function OrderItem({
+  onOpenReview, onOpenDetail, onOpenUpload, data,
+}) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   return (
     <Box boxShadow="0 1px 6px 0 var(--color-shadow,rgba(49,53,59,0.12))" p={2}>
-      <Box display="flex" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection={{ xs: 'column', md: 'row' }}>
+      <Box display="flex" justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection="row">
         <Box display="flex" gap={1.25} alignItems="center" flexWrap="wrap">
           <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
           <Typography fontWeight={800} fontSize={12}>Belanja</Typography>
@@ -307,8 +331,34 @@ function OrderItem({ onOpenReview, onOpenDetail, data }) {
               {data.status}
             </Typography>
           </Box>
+          <Typography fontSize={12} color="text.secondary">{data.id_item_order}</Typography>
         </Box>
-        <Typography fontSize={12} color="text.secondary">{data.id_item_order}</Typography>
+        <IconButton onClick={handleClick}>
+          <MoreHoriz />
+        </IconButton>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <List disablePadding>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => onOpenUpload(data)}>
+                <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Popover>
       </Box>
       <Box
         display="flex"
@@ -370,6 +420,10 @@ function Order() {
     open: false,
     data: null,
   });
+  const [dialogUpload, setDialogUpload] = React.useState({
+    open: false,
+    data: null,
+  });
   const [orderState, setOrderState] = useState({
     loading: false,
     data: null,
@@ -406,6 +460,20 @@ function Order() {
 
   const handleCloseReview = () => {
     setDialogReview({
+      open: false,
+      data: null,
+    });
+  };
+
+  const handleOpenUpload = (data) => {
+    setDialogUpload({
+      open: true,
+      data,
+    });
+  };
+
+  const handleCloseUpload = () => {
+    setDialogUpload({
       open: false,
       data: null,
     });
@@ -472,6 +540,7 @@ function Order() {
                   data={row}
                   onOpenReview={handleOpenReview}
                   onOpenDetail={handleOpenDetail}
+                  onOpenUpload={handleOpenUpload}
                 />
               ))
             }
@@ -486,6 +555,11 @@ function Order() {
             open={dialogDetail.open}
             onClose={handleCloseDetail}
             data={dialogDetail.data}
+          />
+          <DialogUploadStruk
+            open={dialogUpload.open}
+            onClose={handleCloseUpload}
+            data={dialogUpload.data}
           />
         </>
       )}
