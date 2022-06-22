@@ -13,6 +13,7 @@ import {
   Button,
   Avatar,
 } from '@mui/material';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import {
   AddCircle, Favorite, FavoriteBorder, RemoveCircle,
@@ -137,21 +138,32 @@ function Product() {
                     {productState.data.product.name}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 3 }}>
-                    <Typography fontSize={14} fontWeight={400} color="text.secondary">Terjual 192</Typography>
+                    <Typography fontSize={14} fontWeight={400} color="text.secondary">
+                      Terjual
+                      {' '}
+                      {productState.data.count.sold || 0}
+                    </Typography>
                     <Box display="flex" alignItems="center" gap={0.5}>
                       <Favorite sx={{ fontSize: 14, color: 'error.main' }} />
                       <Typography fontSize={14} fontWeight={400} color="text.secondary">1145</Typography>
                     </Box>
-                    <Box display="flex" alignItems="center" gap={0.5}>
-                      <Rating defaultValue={1} max={1} size="small" readOnly />
-                      <Typography fontSize={14} fontWeight={400}>4.6</Typography>
-                      <Typography fontSize={14} fontWeight={400} color="text.secondary">(156 ulasan)</Typography>
-                    </Box>
+                    { productState.data.reviews.length !== 0 && (
+                      <Box display="flex" alignItems="center" gap={0.5}>
+                        <Rating defaultValue={1} max={1} size="small" readOnly />
+                        <Typography fontSize={14} fontWeight={400}>{productState.data.reviews.reduce((acc, val) => acc + val.rating, 0) / productState.data.reviews.length}</Typography>
+                        <Typography fontSize={14} fontWeight={400} color="text.secondary">
+                          (
+                          {productState.data.reviews.length}
+                          {' '}
+                          ulasan)
+                        </Typography>
+                      </Box>
+                    )}
                   </Box>
                   <Box display="flex" alignItems="center" justifyContent="space-between">
                     <Typography fontSize={28} fontWeight={800} my={2}>{rp(productState.data.product.price)}</Typography>
                     <IconButton>
-                      <FavoriteBorder sx={{ fontSize: 28, color: 'error.main' }} />
+                      <FavoriteBorder sx={{ fontSize: 28, color: 'default' }} />
                     </IconButton>
                   </Box>
                   <Divider width="100%" sx={{ mb: 1 }} />
@@ -211,52 +223,98 @@ function Product() {
                   </Grid>
                 </Box>
               </Grid>
-              <Grid item xs={12} lg={5}>
-                <Typography fontWeight={800} gutterBottom>ULASAN (156)</Typography>
-                <Typography fontSize={14}>Pintar Facil Smart Paint Roll untuk cat tembok tanpa belepotan</Typography>
-                <Box display="flex" gap={{ xs: 2, sm: 7 }} alignItems="center" my={2} justifyContent={{ xs: 'center', sm: 'flex-start' }}>
-                  <Box>
-                    <Typography fontSize={60} textAlign="center">
-                      4.6
-                      <Typography display="inline-block" color="text.secondary" ml={0.5}>/5</Typography>
+              { productState.data.reviews.length !== 0 && (
+                <>
+                  <Grid item xs={12} lg={5}>
+                    <Typography fontWeight={800} gutterBottom>
+                      ULASAN (
+                      {productState.data.reviews.length}
+                      )
                     </Typography>
-                    <Rating defaultValue={5} readOnly size="large" sx={{ mt: -1 }} />
-                    <Typography fontSize={12} color="text.secondary" textAlign="center">(156) Ulasan</Typography>
-                  </Box>
-                  <Box>
-                    {[105, 81, 40, 10, 0].map((row, index) => {
-                      const result = [105, 81, 40, 10, 0].reduce((acc, val) => acc + val, 0);
-                      const formula = (row * 100) / result;
-                      return (
-                        <Box display="flex" alignItems="center" gap={0.5}>
-                          <Rating defaultValue={1} max={1} readOnly size="small" />
-                          <Typography fontSize={14} fontWeight={600} color="text.secondary">{index + 1}</Typography>
-                          <Box width={100} mx={{ xs: 0, sm: 1 }}>
-                            <LinearProgress variant="determinate" value={formula} />
-                          </Box>
-                          <Typography fontSize={14} color="text.secondary" justifySelf="flex-end">{row}</Typography>
+                    <Typography fontSize={14}>Pintar Facil Smart Paint Roll untuk cat tembok tanpa belepotan</Typography>
+                    <Box display="flex" gap={{ xs: 2, sm: 7 }} alignItems="center" my={2} justifyContent={{ xs: 'center', sm: 'flex-start' }}>
+                      <Box>
+                        <Typography fontSize={60} textAlign="center">
+                          {productState.data.reviews.reduce((acc, val) => acc + val.rating, 0) / productState.data.reviews.length}
+                          <Typography display="inline-block" color="text.secondary" ml={0.5}>/5</Typography>
+                        </Typography>
+                        <Rating defaultValue={5} readOnly size="large" sx={{ mt: -1 }} />
+                        <Typography fontSize={12} color="text.secondary" textAlign="center">
+                          (
+                          {productState.data.reviews.length}
+                          ) Ulasan
+                        </Typography>
+                      </Box>
+                      <Box>
+                        {[
+                          {
+                            rate: 5,
+                            count: productState.data.count.rate_five,
+                          },
+                          {
+                            rate: 4,
+                            count: productState.data.count.rate_four,
+                          },
+                          {
+                            rate: 3,
+                            count: productState.data.count.rate_three,
+                          },
+                          {
+                            rate: 2,
+                            count: productState.data.count.rate_two,
+                          },
+                          {
+                            rate: 1,
+                            count: productState.data.count.rate_one,
+                          },
+                        ].map((row) => {
+                          const {
+                            // eslint-disable-next-line camelcase
+                            rate_one, rate_two, rate_three, rate_four, rate_five,
+                          } = productState.data.count;
+                          const result = Number(rate_one) + Number(rate_two) + Number(rate_three) + Number(rate_four) + Number(rate_five);
+                          const formula = (row.count * 100) / result;
+                          return (
+                            <Box index={row.rate} display="flex" alignItems="center" gap={0.5}>
+                              <Rating defaultValue={1} max={1} readOnly size="small" />
+                              <Typography fontSize={14} fontWeight={600} color="text.secondary">{row.rate}</Typography>
+                              <Box width={100} mx={{ xs: 0, sm: 1 }}>
+                                <LinearProgress variant="determinate" value={formula} />
+                              </Box>
+                              <Typography fontSize={14} color="text.secondary" justifySelf="flex-end">{row.count}</Typography>
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} lg={6.5}>
+                    <Typography fontSize={12} fontWeight={800} color="text.secondary">
+                      SEMUA ULASAN (
+                      {productState.data.reviews.length}
+                      )
+                    </Typography>
+                    {productState.data.reviews.map((review) => (
+                      <Box key={review.name} display="flex" gap={2} my={3}>
+                        <Avatar alt={review.name} src={review.foto} />
+                        <Box>
+                          <Typography fontSize={12} color="primary.main" fontWeight={800}>{review.name || review.email}</Typography>
+                          <Typography fontSize={12} color="text.secondary" whiteSpace="nowrap">{moment(review.created_at).fromNow()}</Typography>
                         </Box>
-                      );
-                    })}
-                  </Box>
-                </Box>
-              </Grid>
-              <Grid item xs={12} lg={6.5}>
-                <Typography fontSize={12} fontWeight={800} color="text.secondary">SEMUA ULASAN (156)</Typography>
-                {[1, 2, 3, 4, 5].map(() => (
-                  <Box display="flex" gap={2} my={3}>
-                    <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random" />
-                    <Box>
-                      <Typography fontSize={12} color="primary.main" fontWeight={800}>Nunu</Typography>
-                      <Typography fontSize={12} color="text.secondary" whiteSpace="nowrap">2 minggu lalu</Typography>
-                    </Box>
-                    <Box>
-                      <Rating defaultValue={5} size="small" readOnly />
-                      <Typography fontSize={14}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium corporis dolorum omnis reiciendis, amet possimus, ipsum officia labore quam aut quas nemo recusandae vitae, obcaecati molestiae saepe? Velit, perspiciatis quae?</Typography>
-                    </Box>
-                  </Box>
-                ))}
-              </Grid>
+                        <Box>
+                          <Rating defaultValue={5} size="small" readOnly />
+                          <Typography fontSize={14} component="pre" whiteSpace="pre-wrap">{review.review}</Typography>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Grid>
+                </>
+              )}
+              { productState.data.reviews.length === 0 && (
+                <Grid item xs={12} display="flex" justifyContent="center">
+                  <Typography fontWeight={800} color="text.secondary" my={6}>Tidak ada Ulasan</Typography>
+                </Grid>
+              )}
             </Grid>
             <PayModal
               open={openModalState}
