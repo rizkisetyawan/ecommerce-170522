@@ -6,6 +6,7 @@ export const colorTrx = (status = '') => {
     result.color = 'rgb(3, 172, 14)';
     result.bgcolor = 'rgb(214, 255, 222)';
     break;
+  case 'ditolak':
   case 'dibatalkan':
     result.color = 'rgb(239, 20, 74)';
     result.bgcolor = 'rgb(255, 234, 239)';

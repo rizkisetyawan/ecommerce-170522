@@ -26,7 +26,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import {
-  getTrx, rp, colorTrx, putReview,
+  getTrx, rp, colorTrx, putReview, putTrxStatus,
 } from '../../utils';
 import { DialogUploadStruk } from '../../components';
 
@@ -299,7 +299,7 @@ function OrderDetailDialog({ open, onClose, data }) {
 }
 
 function OrderItem({
-  onOpenReview, onOpenDetail, onOpenUpload, data,
+  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -333,7 +333,10 @@ function OrderItem({
           </Box>
           <Typography fontSize={12} color="text.secondary">{data.id_item_order}</Typography>
         </Box>
-        <IconButton onClick={handleClick}>
+        <IconButton
+          disabled={data.status !== 'belum dibayar'}
+          onClick={handleClick}
+        >
           <MoreHoriz />
         </IconButton>
         <Popover
@@ -348,12 +351,20 @@ function OrderItem({
         >
           <List disablePadding>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => onOpenUpload(data)}>
+              <ListItemButton onClick={() => {
+                handleClose();
+                onOpenUpload(data);
+              }}
+              >
                 <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={() => {
+                handleClose();
+                onChangeStatus(data.id_item_order, 'dibatalkan');
+              }}
+              >
                 <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
               </ListItemButton>
             </ListItem>
@@ -412,6 +423,7 @@ function OrderItem({
 }
 
 function Order() {
+  const { enqueueSnackbar } = useSnackbar();
   const [dialogReview, setDialogReview] = React.useState({
     open: false,
     data: null,
@@ -514,6 +526,18 @@ function Order() {
     });
   };
 
+  const handleStatusTrx = async (idItemOrder, status) => {
+    try {
+      const trx = await putTrxStatus(idItemOrder, { status });
+      if (trx.status !== 'success') {
+        throw new Error(trx.message);
+      }
+      fetchTrx();
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
   useEffect(() => {
     fetchTrx();
   }, []);
@@ -541,6 +565,7 @@ function Order() {
                   onOpenReview={handleOpenReview}
                   onOpenDetail={handleOpenDetail}
                   onOpenUpload={handleOpenUpload}
+                  onChangeStatus={handleStatusTrx}
                 />
               ))
             }

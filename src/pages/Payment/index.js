@@ -110,14 +110,21 @@ function Payment() {
           </Box>
           <Grid container spacing={{ xs: 1, sm: 2 }}>
             <Grid item xs={12} sm={6}>
-              <Button fullWidth variant="outlined" sx={{ fontWeight: 800 }}>Cek Status Pembayaran</Button>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => navigate('/order')}
+                sx={{ fontWeight: 800, fontSize: 14 }}
+              >
+                Cek Status Pembayaran
+              </Button>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Button
                 fullWidth
                 variant="contained"
                 onClick={() => navigate('/')}
-                sx={{ fontWeight: 800 }}
+                sx={{ fontWeight: 800, fontSize: 14 }}
               >
                 Belanja Lagi
               </Button>

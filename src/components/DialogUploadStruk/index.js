@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Autocomplete,
   Avatar,
@@ -16,12 +16,20 @@ import {
   Typography,
 } from '@mui/material';
 import { Edit, PhotoCamera } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
+import { getImageAuth, postFoto, putTrxFoto } from '../../utils';
+
+const initForm = {
+  loading: false,
+  image: null,
+  imageRead: null,
+};
 
 function DialogUploadStruk({ open, onClose, data }) {
+  const { enqueueSnackbar } = useSnackbar();
   const [formState, setFormState] = useState({
-    loading: false,
-    image: null,
-    imageRead: null,
+    ...initForm,
+    imageRead: data?.foto_trx,
   });
 
   const handleImageChange = (event) => {
@@ -33,6 +41,39 @@ function DialogUploadStruk({ open, onClose, data }) {
       });
     }
   };
+
+  const handleSubmit = async () => {
+    setFormState({ ...formState, loading: true });
+    try {
+      const imageAuth = await getImageAuth();
+      const foto = await postFoto({
+        file: formState.image,
+        signature: imageAuth.signature,
+        expire: imageAuth.expire,
+        token: imageAuth.token,
+        folder: '/transaksi',
+        fileName: `img-${Date.now()}`,
+      });
+      const trx = await putTrxFoto(data.id_item_order, { foto_trx: foto.url });
+      if (trx.status !== 'success') {
+        throw new Error(trx.message);
+      }
+      setFormState(initForm);
+      onClose();
+    } catch (err) {
+      setFormState({ ...formState, loading: false });
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    if (data) {
+      setFormState({
+        ...formState,
+        imageRead: data.foto_trx,
+      });
+    }
+  }, [data]);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm">
@@ -93,8 +134,14 @@ function DialogUploadStruk({ open, onClose, data }) {
           <Button size="small" onClick={onClose} sx={{ fontSize: 12, fontWeight: 800, mr: 1 }}>
             Batal
           </Button>
-          <Button size="small" variant="contained" sx={{ fontSize: 12, fontWeight: 800 }}>
-            Kirim
+          <Button
+            size="small"
+            variant="contained"
+            sx={{ fontSize: 12, fontWeight: 800 }}
+            disabled={!formState.image || formState.loading}
+            onClick={handleSubmit}
+          >
+            { formState.loading ? 'Loading ...' : 'Kirim' }
           </Button>
         </Box>
       </DialogContent>

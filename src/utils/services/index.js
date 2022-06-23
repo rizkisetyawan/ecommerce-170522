@@ -112,5 +112,7 @@ export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
 export const putReview = (idItemOrder, body) => PUT(`/api/trx/review/${idItemOrder}`, { body });
 export const putToko = (idUmkm, body) => PUT(`/api/umkm/${idUmkm}`, { body });
+export const putTrxFoto = (idItemOrder, body) => PUT(`/api/trx/foto-trx/${idItemOrder}`, { body });
+export const putTrxStatus = (idItemOrder, body) => PUT(`/api/trx/status/${idItemOrder}`, { body });
 
 export const deleteCart = (idItem) => DELETE(`/api/cart/${idItem}`);
