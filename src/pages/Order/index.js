@@ -532,7 +532,18 @@ function Order() {
       if (trx.status !== 'success') {
         throw new Error(trx.message);
       }
-      fetchTrx();
+      setOrderState((prevState) => ({
+        ...prevState,
+        data: prevState.data.map((row) => {
+          if (row.id_item_order === idItemOrder) {
+            return {
+              ...row,
+              status,
+            };
+          }
+          return { ...row };
+        }),
+      }));
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
