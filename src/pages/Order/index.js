@@ -100,21 +100,27 @@ function InputReview({ item, onSuccess }) {
             </Button>
           )}
         </Box>
-        <TextField
-          fullWidth
-          rows={2}
-          multiline
-          disabled={!editState}
-          value={formState.review}
-          onChange={(e) => setFormState({ ...formState, review: e.target.value })}
-          sx={
-            {
-              '& textarea': {
-                fontSize: 14,
-              },
+        { !editState && (
+          <Typography fontSize={14} component="pre" whiteSpace="pre-wrap" color="text.secondary">
+            {formState.review}
+          </Typography>
+        )}
+        { editState && (
+          <TextField
+            fullWidth
+            rows={2}
+            multiline
+            value={formState.review}
+            onChange={(e) => setFormState({ ...formState, review: e.target.value })}
+            sx={
+              {
+                '& textarea': {
+                  fontSize: 14,
+                },
+              }
             }
-          }
-        />
+          />
+        )}
       </Box>
       <Box display="flex" justifyContent="flex-end" mt={0.5} mb={1}>
         { (editState) && (

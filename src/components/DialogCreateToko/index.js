@@ -23,7 +23,7 @@ import {
 const styledInput = { '& input': { fontSize: 14 } };
 
 function DialogCreateToko({
-  open, onClose, data, action,
+  open = false, onClose, data, action,
 }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();

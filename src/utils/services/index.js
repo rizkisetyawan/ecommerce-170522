@@ -94,6 +94,7 @@ export const getProductsSearch = (name) => GET(`/api/product/search/${name}`);
 export const getCategory = () => GET('/api/product/category');
 export const getCart = () => GET('/api/cart');
 export const getTrx = () => GET('/api/trx');
+export const getUserReviews = () => GET('/api/user/reviews');
 export const getBank = () => GET('/api/trx/bank');
 export const getInvoice = (noInvoice) => GET(`/api/trx/invoice/${noInvoice}`);
 

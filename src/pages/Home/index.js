@@ -91,7 +91,7 @@ function Categories() {
       { (!categoriesState.loading && categoriesState.data) && (
         <Grid container>
           { categoriesState.data.map((category) => (
-            <Grid item xs={4} sm={3} md={2} lg={1.333} border={1} borderColor="divider" onClick={() => navigate(`category/${category.name}`)} sx={{ cursor: 'pointer' }}>
+            <Grid key={category.name} item xs={4} sm={3} md={2} lg={1.333} border={1} borderColor="divider" onClick={() => navigate(`category/${category.name}`)} sx={{ cursor: 'pointer' }}>
               <Box
                 key={category.name}
                 sx={{
@@ -163,7 +163,7 @@ function Products({ title }) {
         <Grid container spacing={{ xs: 1, lg: 1.5 }}>
           {
             productsState.data.map((row) => (
-              <Grid item xs={6} sm={3} lg={2}>
+              <Grid key={row.name} item xs={6} sm={3} lg={2}>
                 <CardProduct key={row.name} data={row} />
               </Grid>
             ))
