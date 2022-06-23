@@ -1,18 +1,12 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
-  Autocomplete,
   Avatar,
   Box,
   Button,
   Dialog,
   DialogContent,
-  Grid,
   IconButton,
-  InputAdornment,
-  Switch,
-  TextField,
   Typography,
 } from '@mui/material';
 import { Edit, PhotoCamera } from '@mui/icons-material';
@@ -25,7 +19,9 @@ const initForm = {
   imageRead: null,
 };
 
-function DialogUploadStruk({ open, onClose, data }) {
+function DialogUploadStruk({
+  open, onClose, data, onSuccess,
+}) {
   const { enqueueSnackbar } = useSnackbar();
   const [formState, setFormState] = useState({
     ...initForm,
@@ -54,11 +50,13 @@ function DialogUploadStruk({ open, onClose, data }) {
         folder: '/transaksi',
         fileName: `img-${Date.now()}`,
       });
-      const trx = await putTrxFoto(data.id_item_order, { foto_trx: foto.url });
+      const trx = await putTrxFoto(data.id_item_order, data.items
+        .map((row) => ({ id_item: row.id_item, foto_trx: foto.url })));
       if (trx.status !== 'success') {
         throw new Error(trx.message);
       }
       setFormState(initForm);
+      onSuccess({ id_umkm: data.id_umkm, foto_trx: foto.url });
       onClose();
     } catch (err) {
       setFormState({ ...formState, loading: false });

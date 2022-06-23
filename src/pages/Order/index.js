@@ -158,36 +158,24 @@ function ReviewDialog({
               <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
             </Box>
           </Box>
-          { data.toko.map((toko) => (
-            <React.Fragment key={toko.toko_name}>
-              <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
-              { toko.items.map((item) => (
-                <InputReview
-                  key={item.item_name}
-                  onSuccess={onSuccess}
-                  item={{
-                    ...item,
-                    id_item_order: data.id_item_order,
-                  }}
-                />
-              ))}
-            </React.Fragment>
+
+          <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{data.toko_name}</Typography>
+          { data.items.map((item) => (
+            <InputReview
+              key={item.item_name}
+              onSuccess={onSuccess}
+              item={{
+                ...item,
+                id_item_order: data.id_item_order,
+              }}
+            />
           ))}
+
         </Box>
       )}
     </Dialog>
   );
 }
-
-const totalPrice = (data) => {
-  let result = 0;
-  data.toko.forEach((row) => {
-    row.items.forEach((row2) => {
-      result += Number(row2.price);
-    });
-  });
-  return result;
-};
 
 function OrderDetailDialog({ open, onClose, data }) {
   const navigate = useNavigate();
@@ -237,41 +225,39 @@ function OrderDetailDialog({ open, onClose, data }) {
               <Grid item xs={12}>
                 <Typography fontWeight={800} fontSize={14}>Detail Produk</Typography>
               </Grid>
-              {data.toko.map((toko) => (
-                <React.Fragment key={toko.toko_name}>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{
-                      display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end',
-                    }}
-                  >
-                    <Typography fontWeight={800} fontSize={12}>{toko.toko_name}</Typography>
-                    <ArrowForwardIos sx={{ fontSize: 10 }} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box border={1} borderColor="divider" p={1} mb={0}>
-                      { toko.items.map((item, i) => (
-                        <Box key={item.item_name} display="flex" gap={1.2} alignItems="center" mb={toko.items.length - 1 !== i ? 1 : 0}>
-                          <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
-                          <Box>
-                            <Typography fontSize={12} fontWeight={800} gutterBottom>
-                              {item.item_name}
-                            </Typography>
-                            <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                              {item.qty}
-                              {' '}
-                              x
-                              {' '}
-                              {rp(item.price / item.qty)}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      ))}
+
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end',
+                }}
+              >
+                <Typography fontWeight={800} fontSize={12}>{data.toko_name}</Typography>
+                <ArrowForwardIos sx={{ fontSize: 10 }} />
+              </Grid>
+              <Grid item xs={12}>
+                <Box border={1} borderColor="divider" p={1} mb={0}>
+                  { data.items.map((item, i) => (
+                    <Box key={item.item_name} display="flex" gap={1.2} alignItems="center" mb={data.items.length - 1 !== i ? 1 : 0}>
+                      <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
+                      <Box>
+                        <Typography fontSize={12} fontWeight={800} gutterBottom>
+                          {item.item_name}
+                        </Typography>
+                        <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                          {item.qty}
+                          {' '}
+                          x
+                          {' '}
+                          {rp(item.price / item.qty)}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Grid>
-                </React.Fragment>
-              ))}
+                  ))}
+                </Box>
+              </Grid>
+
             </Grid>
             <Box
               display="flex"
@@ -283,7 +269,7 @@ function OrderDetailDialog({ open, onClose, data }) {
             >
               <Typography fontSize={14}>Total Harga</Typography>
               <Typography fontSize={14} fontWeight={800}>
-                {rp(totalPrice(data))}
+                {rp(data.items.reduce((acc, val) => acc + Number(val.price), 0))}
               </Typography>
             </Box>
           </Box>
@@ -327,55 +313,8 @@ function OrderItem({
           <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
           <Typography fontWeight={800} fontSize={12}>Belanja</Typography>
           <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
-          <Box px={1} py={0.2} bgcolor={colorTrx(data.status).bgcolor}>
-            <Typography
-              fontSize={12}
-              fontWeight={800}
-              textTransform="capitalize"
-              sx={{ color: colorTrx(data.status).color }}
-            >
-              {data.status}
-            </Typography>
-          </Box>
           <Typography fontSize={12} color="text.secondary">{data.id_item_order}</Typography>
         </Box>
-        <IconButton
-          disabled={data.status !== 'belum dibayar'}
-          onClick={handleClick}
-        >
-          <MoreHoriz />
-        </IconButton>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-          <List disablePadding>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => {
-                handleClose();
-                onOpenUpload(data);
-              }}
-              >
-                <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => {
-                handleClose();
-                onChangeStatus(data.id_item_order, 'dibatalkan');
-              }}
-              >
-                <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Popover>
       </Box>
       <Box
         display="flex"
@@ -384,44 +323,96 @@ function OrderItem({
         flexDirection={{ xs: 'column', md: 'row' }}
         justifyContent="space-between"
       >
-        <Box width="100%" maxWidth={700}>
+        <Box width="100%">
           {data.toko.map((toko) => (
-            <Box key={toko.toko_name} mb={2}>
-              <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
-              {toko.items.map((item) => (
-                <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
-                  <Box display="flex" gap={2}>
-                    <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
-                    <Box>
-                      <Typography fontSize={14} fontWeight={800}>
-                        {item.item_name}
-                      </Typography>
-                      <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                        {item.qty}
-                        {' '}
-                        barang x
-                        {' '}
-                        {rp(item.price / item.qty)}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Box display="flex" gap={2}>
-                    <Divider orientation="vertical" sx={{ height: 50, display: { xs: 'none', md: 'block' } }} />
-                    <Box>
-                      <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
-                      <Typography fontSize={14} fontWeight={800}>
-                        {rp(item.price)}
-                      </Typography>
-                    </Box>
+            <Box key={toko.toko_name} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
+              <Box>
+                <Box display="flex" gap={2} mb={1} justifyContent={{ xs: 'space-between', sm: 'flex-start' }}>
+                  <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
+                  <Box px={1} py={0.2} bgcolor={colorTrx(toko.status).bgcolor}>
+                    <Typography
+                      fontSize={12}
+                      fontWeight={800}
+                      textTransform="capitalize"
+                      sx={{ color: colorTrx(toko.status).color }}
+                    >
+                      {toko.status}
+                    </Typography>
                   </Box>
                 </Box>
-              ))}
+                {toko.items.map((item) => (
+                  <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
+                    <Box display="flex" gap={2}>
+                      <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
+                      <Box>
+                        <Typography fontSize={14} fontWeight={800}>
+                          {item.item_name}
+                        </Typography>
+                        <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                          {item.qty}
+                          {' '}
+                          barang x
+                          {' '}
+                          {rp(item.price / item.qty)}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                  </Box>
+                ))}
+              </Box>
+              <Box display="flex" gap={2}>
+                <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
+                <Box>
+                  <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
+                  <Typography fontSize={14} fontWeight={800}>
+                    {rp(toko.items.reduce((acc, val) => acc + Number(val.price), 0))}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end" mt={-4}>
+                <IconButton
+                  disabled={toko.status !== 'belum dibayar'}
+                  onClick={handleClick}
+                >
+                  <MoreHoriz />
+                </IconButton>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                >
+                  <List disablePadding>
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => {
+                        handleClose();
+                        onOpenUpload({ ...toko, id_item_order: data.id_item_order });
+                      }}
+                      >
+                        <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => {
+                        handleClose();
+                        onChangeStatus(data.id_item_order, 'dibatalkan');
+                      }}
+                      >
+                        <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
+                      </ListItemButton>
+                    </ListItem>
+                  </List>
+                </Popover>
+                {toko.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview({ ...toko, created_at: data.created_at })} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Beri Ulasan</Button>}
+                <Button fullWidth variant="outlined" onClick={() => onOpenDetail({ ...toko, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
+              </Box>
             </Box>
           ))}
-        </Box>
-        <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} gap={1}>
-          {data.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview(data)} sx={{ fontWeight: 800, fontSize: 12 }}>Beri Ulasan</Button>}
-          <Button fullWidth variant="outlined" onClick={() => onOpenDetail(data)} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
         </Box>
       </Box>
     </Box>
@@ -495,6 +486,24 @@ function Order() {
       open: false,
       data: null,
     });
+  };
+
+  const handleUploadSuccess = (data) => {
+    setOrderState((prevState) => ({
+      ...prevState,
+      data: prevState.data.map((row) => ({
+        ...row,
+        toko: row.toko.map((row2) => {
+          if (row2.id_umkm === data.id_umkm) {
+            return {
+              ...row2,
+              foto_trx: data.foto_trx,
+            };
+          }
+          return row2;
+        }),
+      })),
+    }));
   };
 
   const handleReviewSuccess = (data) => {
@@ -601,6 +610,7 @@ function Order() {
           <DialogUploadStruk
             open={dialogUpload.open}
             onClose={handleCloseUpload}
+            onSuccess={handleUploadSuccess}
             data={dialogUpload.data}
           />
         </>
