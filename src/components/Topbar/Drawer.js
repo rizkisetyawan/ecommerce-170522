@@ -182,6 +182,7 @@ function BasicTabs({ onClose }) {
                       },
                     ].map((row, i) => (
                       <ListItem
+                        key={row.title}
                         disablePadding
                         sx={{
                           borderBottom: i === 4 ? 1 : 0,
@@ -263,6 +264,7 @@ function BasicTabs({ onClose }) {
                         },
                       ].map((row, i) => (
                         <ListItem
+                          key={row.title}
                           disablePadding
                           sx={{
                             borderBottom: i === 2 ? 1 : 0,

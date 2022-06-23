@@ -213,7 +213,7 @@ function Product() {
                       <Typography fontSize={14}>
                         Stok
                         {' '}
-                        <strong>{productState.data.product.stock}</strong>
+                        <Typography fontSize={14} fontWeight={800}>{productState.data.product.stock}</Typography>
                       </Typography>
                     </Box>
                     <Box display="flex" alignItems="center" gap={2} my={2}>
@@ -302,7 +302,7 @@ function Product() {
                           const result = Number(rate_one) + Number(rate_two) + Number(rate_three) + Number(rate_four) + Number(rate_five);
                           const formula = (row.count * 100) / result;
                           return (
-                            <Box index={row.rate} display="flex" alignItems="center" gap={0.5}>
+                            <Box key={row.rate} index={row.rate} display="flex" alignItems="center" gap={0.5}>
                               <Rating defaultValue={1} max={1} readOnly size="small" />
                               <Typography fontSize={14} fontWeight={600} color="text.secondary">{row.rate}</Typography>
                               <Box width={100} mx={{ xs: 0, sm: 1 }}>
@@ -322,7 +322,7 @@ function Product() {
                       )
                     </Typography>
                     {productState.data.reviews.map((review) => (
-                      <Box key={review.name} display="flex" gap={2} my={3}>
+                      <Box key={review.email} display="flex" gap={2} my={3}>
                         <Avatar alt={review.name} src={review.foto} />
                         <Box>
                           <Typography fontSize={12} color="primary.main" fontWeight={800}>{review.name || review.email}</Typography>

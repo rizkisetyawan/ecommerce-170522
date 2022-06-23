@@ -252,7 +252,7 @@ function OrderDetailDialog({ open, onClose, data }) {
                   <Grid item xs={12}>
                     <Box border={1} borderColor="divider" p={1} mb={0}>
                       { toko.items.map((item, i) => (
-                        <Box display="flex" gap={1.2} alignItems="center" mb={toko.items.length - 1 !== i ? 1 : 0}>
+                        <Box key={item.item_name} display="flex" gap={1.2} alignItems="center" mb={toko.items.length - 1 !== i ? 1 : 0}>
                           <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
                           <Box>
                             <Typography fontSize={12} fontWeight={800} gutterBottom>
@@ -389,7 +389,7 @@ function OrderItem({
             <Box key={toko.toko_name} mb={2}>
               <Typography fontSize={12} fontWeight={800} mb={1.25} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
               {toko.items.map((item) => (
-                <Box display="flex" gap={2} mb={1.2} justifyContent="space-between">
+                <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
                   <Box display="flex" gap={2}>
                     <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
                     <Box>
