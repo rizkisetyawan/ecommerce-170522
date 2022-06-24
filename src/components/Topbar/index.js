@@ -371,6 +371,10 @@ function Topbar() {
                                   {
                                     title: 'Pesanan',
                                     icon: <Assignment />,
+                                    handleClick: () => {
+                                      handleCloseToko();
+                                      navigate('/order');
+                                    },
                                   },
                                   {
                                     title: 'Produk',
@@ -458,7 +462,7 @@ function Topbar() {
                             {
                               title: 'Pembelian',
                               icon: <ShoppingBag />,
-                              handleClick: () => navigate('/order'),
+                              handleClick: () => navigate('/purchase'),
                             },
                             {
                               title: 'Wishlist',

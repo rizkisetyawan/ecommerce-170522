@@ -153,7 +153,7 @@ function BasicTabs({ onClose }) {
                         icon: <ShoppingBag />,
                         handleClick: (e) => {
                           onClose(e);
-                          navigate('/order');
+                          navigate('/purchase');
                         },
                       },
                       {
@@ -247,7 +247,10 @@ function BasicTabs({ onClose }) {
                         {
                           title: 'Pesanan',
                           icon: <Assignment />,
-                          handleClick: () => {},
+                          handleClick: (e) => {
+                            onClose(e);
+                            navigate('/order');
+                          },
                         },
                         {
                           title: 'Produk',

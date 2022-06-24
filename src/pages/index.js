@@ -6,12 +6,13 @@ import Cart from './Cart';
 import Payment from './Payment';
 import Wishlist from './Wishlist';
 import Category from './Category';
-import Order from './Order';
+import Purchase from './Purchase';
 import Settings from './Settings';
 import Reviews from './Reviews';
 import Products from './Products';
 import Statistics from './Statistics';
 import Search from './Search';
+import Order from './Order';
 
 export {
   Home,
@@ -22,10 +23,11 @@ export {
   Wishlist,
   Payment,
   Category,
-  Order,
+  Purchase,
   Settings,
   Reviews,
   Products,
   Statistics,
   Search,
+  Order,
 };

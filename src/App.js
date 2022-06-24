@@ -13,12 +13,13 @@ import {
   Payment,
   Wishlist,
   Category,
-  Order,
+  Purchase,
   Settings,
   Reviews,
   Products,
   Statistics,
   Search,
+  Order,
 } from './pages';
 import { Topbar } from './components';
 
@@ -42,6 +43,7 @@ function App() {
               <Route path="cart" element={<Cart />} />
               <Route path="payment/:noInvoice" element={<Payment />} />
               <Route path="wishlist" element={<Wishlist />} />
+              <Route path="purchase" element={<Purchase />} />
               <Route path="order" element={<Order />} />
               <Route path="reviews" element={<Reviews />} />
               <Route path="settings" element={<Settings />} />

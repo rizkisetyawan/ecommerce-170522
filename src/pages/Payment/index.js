@@ -113,7 +113,7 @@ function Payment() {
               <Button
                 fullWidth
                 variant="outlined"
-                onClick={() => navigate('/order')}
+                onClick={() => navigate('/purchase')}
                 sx={{ fontWeight: 800, fontSize: 14 }}
               >
                 Cek Status Pembayaran
