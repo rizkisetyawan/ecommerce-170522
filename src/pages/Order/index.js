@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   Container,
@@ -55,7 +54,7 @@ function InputReview({ item, onSuccess }) {
       if (review.status !== 'success') {
         throw new Error(review.message);
       }
-      onSuccess(dataReview);
+      onSuccess();
       setEditState(false);
     } catch (err) {
       setLoadingState(false);
@@ -290,8 +289,8 @@ function OrderDetailDialog({ open, onClose, data }) {
   );
 }
 
-function OrderItem({
-  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus,
+function ListToko({
+  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus, toko,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -305,7 +304,107 @@ function OrderItem({
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
+  return (
+    <Box key={toko.toko_name} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
+      <Box>
+        <Box display="flex" gap={2} mb={1} justifyContent={{ xs: 'space-between', sm: 'flex-start' }}>
+          <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
+          <Box px={1} py={0.2} bgcolor={colorTrx(toko.status).bgcolor}>
+            <Typography
+              fontSize={12}
+              fontWeight={800}
+              textTransform="capitalize"
+              sx={{ color: colorTrx(toko.status).color }}
+            >
+              {toko.status}
+            </Typography>
+          </Box>
+        </Box>
+        {toko.items.map((item) => (
+          <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
+            <Box display="flex" gap={2}>
+              <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
+              <Box>
+                <Typography fontSize={14} fontWeight={800}>
+                  {item.item_name}
+                </Typography>
+                <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                  {item.qty}
+                  {' '}
+                  barang x
+                  {' '}
+                  {rp(item.price / item.qty)}
+                </Typography>
+              </Box>
+            </Box>
 
+          </Box>
+        ))}
+      </Box>
+      <Box display="flex" gap={2}>
+        <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
+        <Box>
+          <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
+          <Typography fontSize={14} fontWeight={800}>
+            {rp(toko.items.reduce((acc, val) => acc + Number(val.price), 0))}
+          </Typography>
+        </Box>
+      </Box>
+      <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end" mt={-4}>
+        <IconButton
+          disabled={toko.status !== 'belum dibayar'}
+          onClick={handleClick}
+        >
+          <MoreHoriz />
+        </IconButton>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <List disablePadding>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => {
+                handleClose();
+                onOpenUpload({
+                  ...toko,
+                  id_item_order: data.id_item_order,
+                });
+              }}
+              >
+                <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => {
+                handleClose();
+                onChangeStatus(
+                  data.id_item_order,
+                  'dibatalkan',
+                  toko.id_umkm,
+                );
+              }}
+              >
+                <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Popover>
+        {toko.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview({ ...toko, created_at: data.created_at, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Beri Ulasan</Button>}
+        <Button fullWidth variant="outlined" onClick={() => onOpenDetail({ ...toko, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
+      </Box>
+    </Box>
+  );
+}
+
+function OrderItem({
+  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus,
+}) {
   return (
     <Box boxShadow="0 1px 6px 0 var(--color-shadow,rgba(49,53,59,0.12))" p={2}>
       <Box display="flex" justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection="row">
@@ -325,93 +424,14 @@ function OrderItem({
       >
         <Box width="100%">
           {data.toko.map((toko) => (
-            <Box key={toko.toko_name} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
-              <Box>
-                <Box display="flex" gap={2} mb={1} justifyContent={{ xs: 'space-between', sm: 'flex-start' }}>
-                  <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
-                  <Box px={1} py={0.2} bgcolor={colorTrx(toko.status).bgcolor}>
-                    <Typography
-                      fontSize={12}
-                      fontWeight={800}
-                      textTransform="capitalize"
-                      sx={{ color: colorTrx(toko.status).color }}
-                    >
-                      {toko.status}
-                    </Typography>
-                  </Box>
-                </Box>
-                {toko.items.map((item) => (
-                  <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
-                    <Box display="flex" gap={2}>
-                      <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
-                      <Box>
-                        <Typography fontSize={14} fontWeight={800}>
-                          {item.item_name}
-                        </Typography>
-                        <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                          {item.qty}
-                          {' '}
-                          barang x
-                          {' '}
-                          {rp(item.price / item.qty)}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                  </Box>
-                ))}
-              </Box>
-              <Box display="flex" gap={2}>
-                <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
-                <Box>
-                  <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
-                  <Typography fontSize={14} fontWeight={800}>
-                    {rp(toko.items.reduce((acc, val) => acc + Number(val.price), 0))}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end" mt={-4}>
-                <IconButton
-                  disabled={toko.status !== 'belum dibayar'}
-                  onClick={handleClick}
-                >
-                  <MoreHoriz />
-                </IconButton>
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                >
-                  <List disablePadding>
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => {
-                        handleClose();
-                        onOpenUpload({ ...toko, id_item_order: data.id_item_order });
-                      }}
-                      >
-                        <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => {
-                        handleClose();
-                        onChangeStatus(data.id_item_order, 'dibatalkan');
-                      }}
-                      >
-                        <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
-                      </ListItemButton>
-                    </ListItem>
-                  </List>
-                </Popover>
-                {toko.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview({ ...toko, created_at: data.created_at })} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Beri Ulasan</Button>}
-                <Button fullWidth variant="outlined" onClick={() => onOpenDetail({ ...toko, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
-              </Box>
-            </Box>
+            <ListToko
+              toko={toko}
+              onOpenReview={onOpenReview}
+              onOpenDetail={onOpenDetail}
+              onOpenUpload={onOpenUpload}
+              data={data}
+              onChangeStatus={onChangeStatus}
+            />
           ))}
         </Box>
       </Box>
@@ -460,6 +480,24 @@ function Order() {
     }
   };
 
+  const fetchTrxWithoutLoading = async () => {
+    try {
+      const invoice = await getTrx();
+      if (invoice.status !== 'success') {
+        throw new Error(invoice.message);
+      }
+      setOrderState({
+        ...orderState,
+        data: invoice.data,
+      });
+    } catch (err) {
+      setOrderState({
+        ...orderState,
+        message: err.message,
+      });
+    }
+  };
+
   const handleOpenReview = (data) => {
     setDialogReview({
       open: true,
@@ -488,43 +526,12 @@ function Order() {
     });
   };
 
-  const handleUploadSuccess = (data) => {
-    setOrderState((prevState) => ({
-      ...prevState,
-      data: prevState.data.map((row) => ({
-        ...row,
-        toko: row.toko.map((row2) => {
-          if (row2.id_umkm === data.id_umkm) {
-            return {
-              ...row2,
-              foto_trx: data.foto_trx,
-            };
-          }
-          return row2;
-        }),
-      })),
-    }));
+  const handleUploadSuccess = () => {
+    fetchTrxWithoutLoading();
   };
 
-  const handleReviewSuccess = (data) => {
-    setOrderState((prevState) => ({
-      ...prevState,
-      data: prevState.data.map((row) => ({
-        ...row,
-        toko: row.toko.map((row2) => ({
-          ...row2,
-          items: row2.items.map((row3) => {
-            if (row3.id_item === data.id_item) {
-              return {
-                ...row3,
-                ...data,
-              };
-            }
-            return row3;
-          }),
-        })),
-      })),
-    }));
+  const handleReviewSuccess = () => {
+    fetchTrxWithoutLoading();
   };
 
   const handleOpenDetail = (data) => {
@@ -541,24 +548,13 @@ function Order() {
     });
   };
 
-  const handleStatusTrx = async (idItemOrder, status) => {
+  const handleStatusTrx = async (idItemOrder, status, idUmkm) => {
     try {
-      const trx = await putTrxStatus(idItemOrder, { status });
+      const trx = await putTrxStatus(idItemOrder, { status, idUmkm });
       if (trx.status !== 'success') {
         throw new Error(trx.message);
       }
-      setOrderState((prevState) => ({
-        ...prevState,
-        data: prevState.data.map((row) => {
-          if (row.id_item_order === idItemOrder) {
-            return {
-              ...row,
-              status,
-            };
-          }
-          return { ...row };
-        }),
-      }));
+      fetchTrxWithoutLoading();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }

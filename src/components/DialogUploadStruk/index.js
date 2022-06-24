@@ -56,7 +56,7 @@ function DialogUploadStruk({
         throw new Error(trx.message);
       }
       setFormState(initForm);
-      onSuccess({ id_umkm: data.id_umkm, foto_trx: foto.url });
+      onSuccess();
       onClose();
     } catch (err) {
       setFormState({ ...formState, loading: false });
