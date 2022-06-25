@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   Container,
@@ -11,69 +12,32 @@ import { ShoppingBag } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { getTrxToko, rp, colorTrx } from '../../utils';
-
-function ListUser({ user }) {
-  return (
-    <Box key={user.id_user} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
-      <Box>
-        <Box display="flex" gap={2} mb={1.2} justifyContent={{ xs: 'space-between', sm: 'flex-start' }} alignItems="center">
-          <Box display="flex" gap={1} alignItems="center">
-            <Avatar src={user.user_foto} sx={{ width: 20, height: 20 }} />
-            <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{user.user_name || user.email}</Typography>
-          </Box>
-          <Box px={1} py={0.2} bgcolor={colorTrx(user.status).bgcolor}>
-            <Typography
-              fontSize={12}
-              fontWeight={800}
-              textTransform="capitalize"
-              sx={{ color: colorTrx(user.status).color }}
-            >
-              {user.status}
-            </Typography>
-          </Box>
-        </Box>
-        {user.items.map((item) => (
-          <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
-            <Box display="flex" gap={2}>
-              <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
-              <Box>
-                <Typography fontSize={14} fontWeight={800}>
-                  {item.item_name}
-                </Typography>
-                <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                  {item.qty}
-                  {' '}
-                  barang x
-                  {' '}
-                  {rp(item.price / item.qty)}
-                </Typography>
-              </Box>
-            </Box>
-
-          </Box>
-        ))}
-      </Box>
-      <Box display="flex" gap={2}>
-        <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
-        <Box>
-          <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
-          <Typography fontSize={14} fontWeight={800}>
-            {rp(user.items.reduce((acc, val) => acc + Number(val.price), 0))}
-          </Typography>
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
-        <Button fullWidth variant="contained" sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Terima</Button>
-        <Button fullWidth variant="outlined" color="error" sx={{ fontWeight: 800, fontSize: 12 }}>Tolak</Button>
-      </Box>
-    </Box>
-  );
-}
+import { useSnackbar } from 'notistack';
+import {
+  getTrxToko, rp, colorTrx, putTrxStatus,
+} from '../../utils';
 
 function OrderItem({
-  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus,
+  data, idUmkm, onSuccess,
 }) {
+  const [loadingState, setLoadingState] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleStatusTrx = async (status) => {
+    setLoadingState(true);
+    try {
+      const trx = await putTrxStatus(data.id_item_order, { status, idUmkm });
+      if (trx.status !== 'success') {
+        throw new Error(trx.message);
+      }
+      setLoadingState(false);
+      onSuccess();
+    } catch (err) {
+      setLoadingState(false);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
   return (
     <Box boxShadow="0 1px 6px 0 var(--color-shadow,rgba(49,53,59,0.12))" p={2}>
       <Box display="flex" justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection="row">
@@ -93,14 +57,76 @@ function OrderItem({
       >
         <Box width="100%">
           {data.user.map((user) => (
-            <ListUser
-              user={user}
-              onOpenReview={onOpenReview}
-              onOpenDetail={onOpenDetail}
-              onOpenUpload={onOpenUpload}
-              data={data}
-              onChangeStatus={onChangeStatus}
-            />
+            <Box key={user.id_user} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
+              <Box>
+                <Box display="flex" gap={2} mb={1.2} justifyContent={{ xs: 'space-between', sm: 'flex-start' }} alignItems="center">
+                  <Box display="flex" gap={1} alignItems="center">
+                    <Avatar src={user.user_foto} sx={{ width: 20, height: 20 }} />
+                    <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{user.user_name || user.email}</Typography>
+                  </Box>
+                  <Box px={1} py={0.2} bgcolor={colorTrx(user.status).bgcolor}>
+                    <Typography
+                      fontSize={12}
+                      fontWeight={800}
+                      textTransform="capitalize"
+                      sx={{ color: colorTrx(user.status).color }}
+                    >
+                      {user.status}
+                    </Typography>
+                  </Box>
+                </Box>
+                {user.items.map((item) => (
+                  <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
+                    <Box display="flex" gap={2}>
+                      <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
+                      <Box>
+                        <Typography fontSize={14} fontWeight={800}>
+                          {item.item_name}
+                        </Typography>
+                        <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                          {item.qty}
+                          {' '}
+                          barang x
+                          {' '}
+                          {rp(item.price / item.qty)}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                  </Box>
+                ))}
+              </Box>
+              <Box display="flex" gap={2}>
+                <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
+                <Box>
+                  <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
+                  <Typography fontSize={14} fontWeight={800}>
+                    {rp(user.items.reduce((acc, val) => acc + Number(val.price), 0))}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  disabled={loadingState}
+                  onClick={() => handleStatusTrx('dikirim')}
+                  sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}
+                >
+                  Kirim Pesanan
+                </Button>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  color="error"
+                  disabled={loadingState}
+                  onClick={() => handleStatusTrx('ditolak')}
+                  sx={{ fontWeight: 800, fontSize: 12 }}
+                >
+                  Tolak
+                </Button>
+              </Box>
+            </Box>
           ))}
         </Box>
       </Box>
@@ -116,8 +142,11 @@ function Order() {
     message: null,
   });
 
-  const fetchTrxToko = async () => {
-    setOrderState({ ...orderState, loading: true });
+  const fetchTrxToko = async (option = {}) => {
+    const { loading = true } = option;
+    if (loading) {
+      setOrderState({ ...orderState, loading: true });
+    }
     try {
       const invoice = await getTrxToko(identity.toko.id_umkm);
       if (invoice.status !== 'success') {
@@ -135,6 +164,10 @@ function Order() {
         message: err.message,
       });
     }
+  };
+
+  const handleStatusSuccess = () => {
+    fetchTrxToko({ loading: false });
   };
 
   useEffect(() => {
@@ -164,7 +197,12 @@ function Order() {
             <Box display="flex" flexDirection="column" gap={2}>
               {
                 orderState.data.map((row) => (
-                  <OrderItem key={row.id_item_order} data={row} />
+                  <OrderItem
+                    key={row.id_item_order}
+                    data={row}
+                    idUmkm={identity.toko.id_umkm}
+                    onSuccess={handleStatusSuccess}
+                  />
                 ))
               }
             </Box>
