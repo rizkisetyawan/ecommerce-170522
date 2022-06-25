@@ -22,7 +22,7 @@ import {
   Logout,
   Assignment,
   ShoppingBasket,
-  DonutSmall,
+  // DonutSmall,
   Star,
   ShoppingBag,
   Storefront,
@@ -260,11 +260,11 @@ function BasicTabs({ onClose }) {
                             navigate('/products');
                           },
                         },
-                        {
+                        {/* {
                           title: 'Statistik',
                           icon: <DonutSmall />,
                           handleClick: () => {},
-                        },
+                        }, */},
                       ].map((row, i) => (
                         <ListItem
                           key={row.title}
