@@ -24,7 +24,7 @@ function Statistics() {
     options: {
       chart: {
         height: 400,
-        type: 'line',
+        type: 'bar',
         zoom: {
           enabled: false,
         },
@@ -102,7 +102,7 @@ function Statistics() {
               <Chart
                 options={chart.options}
                 series={chart.series}
-                type="line"
+                type="bar"
                 height={400}
                 // width="100%"
               />
