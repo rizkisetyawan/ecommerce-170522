@@ -20,8 +20,10 @@ import {
   Statistics,
   Search,
   Order,
+  AdminUser,
+  AdminDashboard,
 } from './pages';
-import { Topbar } from './components';
+import { Topbar, Drawer } from './components';
 
 function App() {
   return (
@@ -50,6 +52,10 @@ function App() {
               <Route path="statistics" element={<Statistics />} />
               <Route path="category/:title" element={<Category />} />
               <Route path="search/:title" element={<Search />} />
+            </Route>
+            <Route path="/admin" element={<Drawer />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="user" element={<AdminUser />} />
             </Route>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />

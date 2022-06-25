@@ -35,7 +35,7 @@ import {
   Logout,
   Assignment,
   ShoppingBasket,
-  // DonutSmall,
+  DonutSmall,
   Storefront,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
@@ -384,10 +384,14 @@ function Topbar() {
                                       navigate('/products');
                                     },
                                   },
-                                  {/* {
+                                  {
                                     title: 'Statistik',
                                     icon: <DonutSmall />,
-                                  }, */},
+                                    handleClick: () => {
+                                      handleCloseToko();
+                                      navigate('/statistics');
+                                    },
+                                  },
                                 ].map((row, i) => (
                                   <ListItem
                                     key={row.title}

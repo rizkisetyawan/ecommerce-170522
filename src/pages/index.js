@@ -13,6 +13,8 @@ import Products from './Products';
 import Statistics from './Statistics';
 import Search from './Search';
 import Order from './Order';
+import AdminUser from './AdminUser';
+import AdminDashboard from './AdminDashboard';
 
 export {
   Home,
@@ -30,4 +32,6 @@ export {
   Statistics,
   Search,
   Order,
+  AdminUser,
+  AdminDashboard,
 };

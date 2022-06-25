@@ -5,9 +5,11 @@ import Auth from './Auth';
 import DialogCreateToko from './DialogCreateToko';
 import DialogCreateProduct from './DialogCreateProduct';
 import DialogUploadStruk from './DialogUploadStruk';
+import Drawer from './Drawer';
 
 export {
   Topbar,
+  Drawer,
   CardProduct,
   PayModal,
   Auth,
