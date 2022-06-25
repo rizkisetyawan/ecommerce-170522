@@ -79,8 +79,8 @@ function AdminUser() {
     setPage(0);
   };
   return (
-    <Box sx={{ boxShadow: 'rgb(0 0 0 / 12%) 0px 1px 6px 0px' }}>
-      <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
+    <Box>
+      <TableContainer component={Paper} sx={{ boxShadow: 'rgb(0 0 0 / 12%) 0px 1px 6px 0px' }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -165,18 +165,20 @@ function AdminUser() {
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                component="div"
+                count={100}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
-      <Box borderTop={1} borderColor="divider">
-        <TablePagination
-          component="div"
-          count={100}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Box>
     </Box>
   );
 }
