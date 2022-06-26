@@ -22,6 +22,8 @@ import {
   Order,
   AdminUser,
   AdminDashboard,
+  AdminProduct,
+  AdminTransaction,
 } from './pages';
 import { Topbar, Drawer } from './components';
 
@@ -55,7 +57,9 @@ function App() {
             </Route>
             <Route path="/admin" element={<Drawer />}>
               <Route index element={<AdminDashboard />} />
-              <Route path="user" element={<AdminUser />} />
+              <Route path="users" element={<AdminUser />} />
+              <Route path="products" element={<AdminProduct />} />
+              <Route path="transactions" element={<AdminTransaction />} />
             </Route>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />

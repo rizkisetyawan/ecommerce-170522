@@ -18,11 +18,12 @@ import {
 import {
   Group, Dashboard, Receipt, ShoppingBag, Menu,
 } from '@mui/icons-material';
-import { Outlet } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
+  const navigate = useNavigate();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -36,13 +37,29 @@ function ResponsiveDrawer(props) {
       <Divider />
       <List>
         {[
-          { title: 'Dasboard', icon: <Dashboard /> },
-          { title: 'User', icon: <Group /> },
-          { title: 'Produk', icon: <ShoppingBag /> },
-          { title: 'Transaksi', icon: <Receipt /> },
+          {
+            title: 'Dasboard',
+            icon: <Dashboard />,
+            handleClick: () => navigate('/admin'),
+          },
+          {
+            title: 'User',
+            icon: <Group />,
+            handleClick: () => navigate('/admin/users'),
+          },
+          {
+            title: 'Produk',
+            icon: <ShoppingBag />,
+            handleClick: () => navigate('/admin/products'),
+          },
+          {
+            title: 'Transaksi',
+            icon: <Receipt />,
+            handleClick: () => navigate('/admin/transactions'),
+          },
         ].map((row) => (
           <ListItem key={row.title} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={row.handleClick}>
               <ListItemIcon>
                 {row.icon}
               </ListItemIcon>

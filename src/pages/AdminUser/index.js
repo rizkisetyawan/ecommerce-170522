@@ -83,6 +83,12 @@ function AdminUser() {
 
   const columns = [
     {
+      field: 'email',
+      headerName: 'Email',
+      minWidth: 200,
+      flex: 1,
+    },
+    {
       field: 'foto',
       headerName: '',
       renderCell: (params) => <Avatar src={params.row.foto} />,
@@ -95,11 +101,6 @@ function AdminUser() {
     {
       field: 'name',
       headerName: 'Nama',
-      width: 200,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
       width: 200,
     },
     {

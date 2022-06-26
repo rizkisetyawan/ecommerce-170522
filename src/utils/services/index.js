@@ -99,6 +99,8 @@ export const getTrxToko = (idToko) => GET(`/api/trx/toko/${idToko}`);
 export const getUserReviews = () => GET('/api/user/reviews');
 export const getAllUsersWithPageLimit = ({ limit, page, search = '' }) => GET(`/api/user/all?limit=${limit}&page=${page}&search=${search}`);
 export const getAllUsers = () => GET('/api/user/all');
+export const getAllProduct = () => GET('/api/product/all');
+export const getAllTrx = () => GET('/api/trx/all');
 export const getBank = () => GET('/api/trx/bank');
 export const getInvoice = (noInvoice) => GET(`/api/trx/invoice/${noInvoice}`);
 

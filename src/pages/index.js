@@ -14,6 +14,8 @@ import Statistics from './Statistics';
 import Search from './Search';
 import Order from './Order';
 import AdminUser from './AdminUser';
+import AdminProduct from './AdminProduct';
+import AdminTransaction from './AdminTransaction';
 import AdminDashboard from './AdminDashboard';
 
 export {
@@ -34,4 +36,6 @@ export {
   Order,
   AdminUser,
   AdminDashboard,
+  AdminProduct,
+  AdminTransaction,
 };
