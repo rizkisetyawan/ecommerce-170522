@@ -46,7 +46,7 @@ function Register() {
         email,
         password,
         role: 'user',
-        status: 'active',
+        status: 'aktif',
       });
       setRegisterState({ ...registerState, loading: false });
       if (user.status === 'success') {

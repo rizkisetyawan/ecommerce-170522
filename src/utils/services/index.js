@@ -97,7 +97,8 @@ export const getTrx = () => GET('/api/trx');
 export const getTrxStatistics = (day, idUmkm) => GET(`/api/trx/statistics/${day}/${idUmkm}`);
 export const getTrxToko = (idToko) => GET(`/api/trx/toko/${idToko}`);
 export const getUserReviews = () => GET('/api/user/reviews');
-export const getAllUsers = ({ limit, page, search = '' }) => GET(`/api/user/all?limit=${limit}&page=${page}&search=${search}`);
+export const getAllUsersWithPageLimit = ({ limit, page, search = '' }) => GET(`/api/user/all?limit=${limit}&page=${page}&search=${search}`);
+export const getAllUsers = () => GET('/api/user/all');
 export const getBank = () => GET('/api/trx/bank');
 export const getInvoice = (noInvoice) => GET(`/api/trx/invoice/${noInvoice}`);
 
@@ -114,6 +115,7 @@ export const postWishlist = (body) => POST('/api/product/wishlist', { body });
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
+export const putStatusUser = (id, body) => PUT(`/api/user/status/${id}`, { body });
 export const putReview = (idItemOrder, body) => PUT(`/api/trx/review/${idItemOrder}`, { body });
 export const putToko = (idUmkm, body) => PUT(`/api/umkm/${idUmkm}`, { body });
 export const putTrxFoto = (idItemOrder, body) => PUT(`/api/trx/foto-trx/${idItemOrder}`, { body });
