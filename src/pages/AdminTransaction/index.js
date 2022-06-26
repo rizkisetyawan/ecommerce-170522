@@ -7,18 +7,65 @@ import {
   Box, Button, Container, Typography,
 } from '@mui/material';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 
-import { getAllTrx, rp } from '../../utils';
+import { getAllTrx, putTrxStatusAll, rp } from '../../utils';
+
+function ActionButton({ enqueueSnackbar, idItemOrder, onSuccess }) {
+  const [loadingState, setLoadingState] = useState(false);
+
+  const handleButton = async (status) => {
+    setLoadingState(true);
+    try {
+      const updated = await putTrxStatusAll(idItemOrder, { status });
+      if (updated.status !== 'success') {
+        throw new Error(updated.message);
+      }
+      setLoadingState(false);
+      onSuccess();
+    } catch (err) {
+      setLoadingState(false);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
+  return (
+    <>
+      <Button
+        size="small"
+        variant="outlined"
+        disabled={loadingState}
+        onClick={() => handleButton('diproses')}
+        sx={{ textTransform: 'capitalize', fontSize: 12, mr: 1 }}
+      >
+        Proses
+      </Button>
+      <Button
+        size="small"
+        variant="outlined"
+        color="error"
+        disabled={loadingState}
+        onClick={() => handleButton('dibatalkan')}
+        sx={{ textTransform: 'capitalize', fontSize: 12 }}
+      >
+        Batalkan
+      </Button>
+    </>
+  );
+}
 
 function AdminTransactions() {
+  const { enqueueSnackbar } = useSnackbar();
   const [transactionsState, setTransactionsState] = useState({
     loading: false,
     data: null,
     message: null,
   });
 
-  const fetchTransactions = async () => {
-    setTransactionsState({ ...transactionsState, loading: true });
+  const fetchTransactions = async (withLoading = true) => {
+    if (withLoading) {
+      setTransactionsState({ ...transactionsState, loading: true });
+    }
     try {
       const transactions = await getAllTrx();
       if (transactions.status !== 'success') {
@@ -36,6 +83,10 @@ function AdminTransactions() {
         message: err.message,
       });
     }
+  };
+
+  const handleSuccess = () => {
+    fetchTransactions(false);
   };
 
   useEffect(() => {
@@ -89,23 +140,11 @@ function AdminTransactions() {
       renderCell: (params) => (
         <Box>
           {params.row.total_status.includes('belum dibayar') && (
-            <>
-              <Button
-                size="small"
-                variant="outlined"
-                sx={{ textTransform: 'capitalize', fontSize: 12, mr: 1 }}
-              >
-                Proses
-              </Button>
-              <Button
-                size="small"
-                variant="outlined"
-                color="error"
-                sx={{ textTransform: 'capitalize', fontSize: 12 }}
-              >
-                Batalkan
-              </Button>
-            </>
+            <ActionButton
+              enqueueSnackbar={enqueueSnackbar}
+              idItemOrder={params.row.id_item_order}
+              onSuccess={handleSuccess}
+            />
           )}
         </Box>
       ),

@@ -122,5 +122,6 @@ export const putReview = (idItemOrder, body) => PUT(`/api/trx/review/${idItemOrd
 export const putToko = (idUmkm, body) => PUT(`/api/umkm/${idUmkm}`, { body });
 export const putTrxFoto = (idItemOrder, body) => PUT(`/api/trx/foto-trx/${idItemOrder}`, { body });
 export const putTrxStatus = (idItemOrder, body) => PUT(`/api/trx/status/${idItemOrder}`, { body });
+export const putTrxStatusAll = (idItemOrder, body) => PUT(`/api/trx/status-all/${idItemOrder}`, { body });
 
 export const deleteCart = (idItem) => DELETE(`/api/cart/${idItem}`);

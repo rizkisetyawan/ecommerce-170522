@@ -396,6 +396,7 @@ function ListToko({
           </List>
         </Popover>
         {toko.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview({ ...toko, created_at: data.created_at, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Beri Ulasan</Button>}
+        {toko.status === 'dikirim' && <Button fullWidth variant="contained" onClick={() => onChangeStatus(data.id_item_order, 'selesai', toko.id_umkm)} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Selesai</Button>}
         <Button fullWidth variant="outlined" onClick={() => onOpenDetail({ ...toko, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
       </Box>
     </Box>

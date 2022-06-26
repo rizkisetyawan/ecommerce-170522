@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   Container,
@@ -56,78 +55,84 @@ function OrderItem({
         justifyContent="space-between"
       >
         <Box width="100%">
-          {data.user.map((user) => (
-            <Box key={user.id_user} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
-              <Box>
-                <Box display="flex" gap={2} mb={1.2} justifyContent={{ xs: 'space-between', sm: 'flex-start' }} alignItems="center">
-                  <Box display="flex" gap={1} alignItems="center">
-                    <Avatar src={user.user_foto} sx={{ width: 20, height: 20 }} />
-                    <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{user.user_name || user.email}</Typography>
+          {data.user.map((user) => {
+            const status = user.status === 'diproses' ? 'pesanan baru' : user.status;
+            return (
+              <Box key={user.id_user} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
+                <Box>
+                  <Box display="flex" gap={2} mb={1.2} justifyContent={{ xs: 'space-between', sm: 'flex-start' }} alignItems="center">
+                    <Box display="flex" gap={1} alignItems="center">
+                      <Avatar src={user.user_foto} sx={{ width: 20, height: 20 }} />
+                      <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{user.user_name || user.email}</Typography>
+                    </Box>
+                    <Box px={1} py={0.2} bgcolor={colorTrx(status).bgcolor}>
+                      <Typography
+                        fontSize={12}
+                        fontWeight={800}
+                        textTransform="capitalize"
+                        sx={{ color: colorTrx(status).color }}
+                      >
+                        {status}
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Box px={1} py={0.2} bgcolor={colorTrx(user.status).bgcolor}>
-                    <Typography
-                      fontSize={12}
-                      fontWeight={800}
-                      textTransform="capitalize"
-                      sx={{ color: colorTrx(user.status).color }}
-                    >
-                      {user.status}
+                  {user.items.map((item) => (
+                    <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
+                      <Box display="flex" gap={2}>
+                        <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
+                        <Box>
+                          <Typography fontSize={14} fontWeight={800}>
+                            {item.item_name}
+                          </Typography>
+                          <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                            {item.qty}
+                            {' '}
+                            barang x
+                            {' '}
+                            {rp(item.price / item.qty)}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+                <Box display="flex" gap={2}>
+                  <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
+                  <Box>
+                    <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
+                    <Typography fontSize={14} fontWeight={800}>
+                      {rp(user.items.reduce((acc, val) => acc + Number(val.price), 0))}
                     </Typography>
                   </Box>
                 </Box>
-                {user.items.map((item) => (
-                  <Box key={item.item_name} display="flex" gap={2} mb={1.2} justifyContent="space-between">
-                    <Box display="flex" gap={2}>
-                      <Avatar src={item.foto} variant="square" alt={item.item_name} sx={{ width: 60, height: 60, borderRadius: 1 }} />
-                      <Box>
-                        <Typography fontSize={14} fontWeight={800}>
-                          {item.item_name}
-                        </Typography>
-                        <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                          {item.qty}
-                          {' '}
-                          barang x
-                          {' '}
-                          {rp(item.price / item.qty)}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                  </Box>
-                ))}
-              </Box>
-              <Box display="flex" gap={2}>
-                <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
-                <Box>
-                  <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
-                  <Typography fontSize={14} fontWeight={800}>
-                    {rp(user.items.reduce((acc, val) => acc + Number(val.price), 0))}
-                  </Typography>
+                <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
+                  { user.status === 'diproses' && (
+                    <>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        disabled={loadingState}
+                        onClick={() => handleStatusTrx('dikirim')}
+                        sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}
+                      >
+                        Kirim Pesanan
+                      </Button>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        color="error"
+                        disabled={loadingState}
+                        onClick={() => handleStatusTrx('ditolak')}
+                        sx={{ fontWeight: 800, fontSize: 12 }}
+                      >
+                        Tolak
+                      </Button>
+                    </>
+                  )}
                 </Box>
               </Box>
-              <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
-                <Button
-                  fullWidth
-                  variant="contained"
-                  disabled={loadingState}
-                  onClick={() => handleStatusTrx('dikirim')}
-                  sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}
-                >
-                  Kirim Pesanan
-                </Button>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  color="error"
-                  disabled={loadingState}
-                  onClick={() => handleStatusTrx('ditolak')}
-                  sx={{ fontWeight: 800, fontSize: 12 }}
-                >
-                  Tolak
-                </Button>
-              </Box>
-            </Box>
-          ))}
+            );
+          })}
         </Box>
       </Box>
     </Box>
