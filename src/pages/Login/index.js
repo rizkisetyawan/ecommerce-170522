@@ -41,7 +41,7 @@ function Login() {
         enqueueSnackbar('Login Berhasil', { variant: 'success' });
         dispatch(updateAuth(user.data.token));
         if (user.data.role === 'user') { navigate('/'); }
-        if (user.data.role === 'admin') { navigate('/admin/users'); }
+        if (user.data.role === 'admin') { navigate('/admin'); }
       } else {
         enqueueSnackbar(user.message, { variant: 'error' });
       }

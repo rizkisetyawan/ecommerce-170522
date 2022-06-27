@@ -16,6 +16,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Stack,
+  Chip,
 } from '@mui/material';
 import {
   ShoppingBag, ArrowForwardIos, Edit, MoreHoriz,
@@ -442,15 +444,15 @@ function PurchaseItem({
 
 function Purchase() {
   const { enqueueSnackbar } = useSnackbar();
-  const [dialogReview, setDialogReview] = React.useState({
+  const [dialogReview, setDialogReview] = useState({
     open: false,
     data: null,
   });
-  const [dialogDetail, setDialogDetail] = React.useState({
+  const [dialogDetail, setDialogDetail] = useState({
     open: false,
     data: null,
   });
-  const [dialogUpload, setDialogUpload] = React.useState({
+  const [dialogUpload, setDialogUpload] = useState({
     open: false,
     data: null,
   });
@@ -459,6 +461,8 @@ function Purchase() {
     data: null,
     message: null,
   });
+  const [chipState, setChipState] = useState('semua');
+  const [chipDataState, setChipDataState] = useState([]);
 
   const fetchTrx = async () => {
     setPurchaseState({ ...purchaseState, loading: true });
@@ -472,6 +476,7 @@ function Purchase() {
         loading: false,
         data: invoice.data,
       });
+      setChipDataState(invoice.data);
     } catch (err) {
       setPurchaseState({
         ...purchaseState,
@@ -579,9 +584,53 @@ function Purchase() {
       )}
       { (!purchaseState.loading && purchaseState.data) && (
         <>
+          <Box mb={2}>
+            <Stack direction="row" flexWrap="wrap" gap={1}>
+              {[{
+                status: 'semua',
+              },
+              {
+                status: 'belum dibayar',
+              },
+              {
+                status: 'diproses',
+              },
+              {
+                status: 'dikirim',
+              },
+              {
+                status: 'selesai',
+              },
+              {
+                status: 'dibatalkan',
+              },
+              {
+                status: 'ditolak',
+              },
+              ].map((row) => (
+                <Chip
+                  label={row.status}
+                  variant={row.status === chipState ? 'contained' : 'outlined'}
+                  color={row.status === chipState ? 'primary' : 'default'}
+                  onClick={() => {
+                    setChipState(row.status);
+                    if (row.status === 'semua') {
+                      setChipDataState(purchaseState.data);
+                    } else {
+                      const newData = purchaseState.data.map((rowPs) => ({
+                        ...rowPs,
+                        toko: rowPs.toko.filter((rowToko) => rowToko.status === row.status),
+                      })).filter((rowToko2) => rowToko2.toko.length !== 0);
+                      setChipDataState(newData);
+                    }
+                  }}
+                />
+              ))}
+            </Stack>
+          </Box>
           <Box display="flex" flexDirection="column" gap={2}>
             {
-              purchaseState.data.map((row) => (
+              chipDataState.map((row) => (
                 <PurchaseItem
                   key={row.id_item_order}
                   data={row}

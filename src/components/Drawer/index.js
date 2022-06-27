@@ -16,10 +16,10 @@ import {
   Toolbar,
 } from '@mui/material';
 import {
-  Group, Dashboard, Receipt, ShoppingBag, Menu,
+  Group, Dashboard, Receipt, ShoppingBag, Menu, ShoppingCart, Logout,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { getIdentity } from '../../utils';
@@ -28,11 +28,23 @@ import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
+  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const headTitle = () => {
+    let title;
+    if (location.pathname === '/admin') {
+      title = 'Dashboard';
+    } else {
+      // eslint-disable-next-line prefer-destructuring
+      title = location.pathname.split('/')[2];
+    }
+    return title;
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -68,22 +80,50 @@ function ResponsiveDrawer(props) {
           {
             title: 'Dasboard',
             icon: <Dashboard />,
-            handleClick: () => navigate('/admin'),
+            handleClick: () => {
+              handleDrawerToggle();
+              navigate('/admin');
+            },
           },
           {
             title: 'User',
             icon: <Group />,
-            handleClick: () => navigate('/admin/users'),
+            handleClick: () => {
+              handleDrawerToggle();
+              navigate('/admin/users');
+            },
           },
           {
             title: 'Produk',
             icon: <ShoppingBag />,
-            handleClick: () => navigate('/admin/products'),
+            handleClick: () => {
+              handleDrawerToggle();
+              navigate('/admin/products');
+            },
           },
           {
             title: 'Transaksi',
             icon: <Receipt />,
-            handleClick: () => navigate('/admin/transactions'),
+            handleClick: () => {
+              handleDrawerToggle();
+              navigate('/admin/transactions');
+            },
+          },
+          {
+            title: 'Belanja',
+            icon: <ShoppingCart />,
+            handleClick: () => {
+              handleDrawerToggle();
+              navigate('/');
+            },
+          },
+          {
+            title: 'Keluar',
+            icon: <Logout />,
+            handleClick: () => {
+              dispatch(removeAuthIdentity());
+              navigate('/login');
+            },
           },
         ].map((row) => (
           <ListItem key={row.title} disablePadding>
@@ -115,8 +155,8 @@ function ResponsiveDrawer(props) {
           >
             <Menu />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+          <Typography variant="h6" noWrap component="div" textTransform="capitalize">
+            {headTitle()}
           </Typography>
         </Toolbar>
       </AppBar>

@@ -6,6 +6,8 @@ import {
   Avatar,
   Divider,
   Button,
+  Stack,
+  Chip,
 } from '@mui/material';
 import { ShoppingBag } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -164,6 +166,8 @@ function Order() {
     data: null,
     message: null,
   });
+  const [chipState, setChipState] = useState('semua');
+  const [chipDataState, setChipDataState] = useState([]);
 
   const fetchTrxToko = async (option = {}) => {
     const { loading = true } = option;
@@ -180,6 +184,7 @@ function Order() {
         loading: false,
         data: invoice.data,
       });
+      setChipDataState(invoice.data);
     } catch (err) {
       setOrderState({
         ...orderState,
@@ -211,25 +216,58 @@ function Order() {
       )}
       { (!orderState.loading && orderState.data) && (
         <>
-          { orderState.data.length === 0 && (
-            <Box py={6} display="flex" justifyContent="center">
-              <Typography color="text.secondary">Tidak ada pesanan</Typography>
-            </Box>
-          )}
-          { orderState.data.length !== 0 && (
-            <Box display="flex" flexDirection="column" gap={2}>
+          <Box mb={2}>
+            <Stack direction="row" flexWrap="wrap" gap={1}>
+              {[{
+                status: 'semua',
+              },
               {
-                orderState.data.map((row) => (
-                  <OrderItem
-                    key={row.id_item_order}
-                    data={row}
-                    idUmkm={identity.toko.id_umkm}
-                    onSuccess={handleStatusSuccess}
-                  />
-                ))
-              }
-            </Box>
-          )}
+                status: 'pesanan baru',
+                field: 'diproses',
+              },
+              {
+                status: 'dikirim',
+              },
+              {
+                status: 'ditolak',
+              },
+              {
+                status: 'selesai',
+              },
+              ].map((row) => (
+                <Chip
+                  label={row.status}
+                  variant={row.status === chipState ? 'contained' : 'outlined'}
+                  color={row.status === chipState ? 'primary' : 'default'}
+                  onClick={() => {
+                    setChipState(row.status);
+                    if (row.status === 'semua') {
+                      setChipDataState(orderState.data);
+                    } else {
+                      const newData = orderState.data.map((rowPs) => ({
+                        ...rowPs,
+                        user: rowPs.user
+                          .filter((rowUser) => rowUser.status === (row?.field || row.status)),
+                      })).filter((rowUser2) => rowUser2.user.length !== 0);
+                      setChipDataState(newData);
+                    }
+                  }}
+                />
+              ))}
+            </Stack>
+          </Box>
+          <Box display="flex" flexDirection="column" gap={2}>
+            {
+              chipDataState.map((row) => (
+                <OrderItem
+                  key={row.id_item_order}
+                  data={row}
+                  idUmkm={identity.toko.id_umkm}
+                  onSuccess={handleStatusSuccess}
+                />
+              ))
+            }
+          </Box>
         </>
       )}
     </Container>
