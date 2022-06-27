@@ -99,7 +99,6 @@ function CardTopSelling() {
             mb={1.2}
           >
             <Box display="flex" alignItems="center" gap={2}>
-              <Box><Typography fontWeight={600}>{row}</Typography></Box>
               <Avatar variant="square" sx={{ width: 50, height: 50, borderRadius: 1 }} />
               <Box>
                 <Typography fontSize={14}>Lorem ipsum dolor sit amet.</Typography>
