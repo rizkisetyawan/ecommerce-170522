@@ -132,7 +132,6 @@ function AdminUser() {
     {
       field: 'status',
       headerName: 'Aktif',
-      sortable: false,
       disableColumnMenu: true,
       align: 'center',
       headerAlign: 'center',

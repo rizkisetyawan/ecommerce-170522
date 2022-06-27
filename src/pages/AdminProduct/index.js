@@ -45,7 +45,7 @@ function AdminUser() {
     {
       field: 'foto',
       headerName: '',
-      renderCell: (params) => <Avatar src={params.row.foto} variant="square" />,
+      renderCell: (params) => <Avatar src={params.row.foto} sx={{ borderRadius: 1 }} variant="square" />,
       sortable: false,
       disableColumnMenu: true,
       width: 70,
