@@ -167,9 +167,9 @@ function DialogCreateProduct({
       }
       setFormState({
         ...formState,
-        ...product.data,
+        ...product.data.product,
         loading: false,
-        imageRead: product.data.foto,
+        imageRead: product.data.product.foto,
       });
     } catch (err) {
       setFormState({

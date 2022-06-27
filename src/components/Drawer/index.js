@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -18,18 +18,46 @@ import {
 import {
   Group, Dashboard, Receipt, ShoppingBag, Menu,
 } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 import { useNavigate, Outlet } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+import { getIdentity } from '../../utils';
+import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
 
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const checkToken = async () => {
+    const tokenFromStorage = localStorage.getItem('token');
+    if (tokenFromStorage) {
+      try {
+        const detailUser = await getIdentity();
+        if (detailUser.status !== 'success') {
+          throw new Error(detailUser.message);
+        }
+        dispatch(updateIdentity(detailUser.data));
+      } catch (err) {
+        dispatch(removeAuthIdentity());
+        navigate('/login');
+        enqueueSnackbar(err.message, { variant: 'error' });
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   const drawer = (
     <div>

@@ -117,7 +117,7 @@ function Topbar() {
     if (tokenFromStorage) {
       const detailUser = await getIdentity();
       if (detailUser.status !== 'success') {
-        dispatch(removeAuthIdentity(detailUser.data));
+        dispatch(removeAuthIdentity());
         navigate('/');
       }
       dispatch(updateIdentity(detailUser.data));

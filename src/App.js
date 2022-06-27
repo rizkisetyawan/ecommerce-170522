@@ -25,7 +25,7 @@ import {
   AdminProduct,
   AdminTransaction,
 } from './pages';
-import { Topbar, Drawer } from './components';
+import { Topbar, Drawer, Auth } from './components';
 
 function App() {
   return (
@@ -56,10 +56,10 @@ function App() {
               <Route path="search/:title" element={<Search />} />
             </Route>
             <Route path="/admin" element={<Drawer />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="users" element={<AdminUser />} />
-              <Route path="products" element={<AdminProduct />} />
-              <Route path="transactions" element={<AdminTransaction />} />
+              <Route index element={<Auth><AdminDashboard /></Auth>} />
+              <Route path="users" element={<Auth><AdminUser /></Auth>} />
+              <Route path="products" element={<Auth><AdminProduct /></Auth>} />
+              <Route path="transactions" element={<Auth><AdminTransaction /></Auth>} />
             </Route>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
