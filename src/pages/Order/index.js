@@ -12,8 +12,11 @@ import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
+
 import {
-  getTrxToko, rp, colorTrx, putTrxStatus,
+  getTrxToko,
+  rp, colorTrx, putTrxStatus,
+  postItemStock, postCheckStock,
 } from '../../utils';
 
 function OrderItem({
@@ -25,6 +28,21 @@ function OrderItem({
   const handleStatusTrx = async (status) => {
     setLoadingState(true);
     try {
+      if (status === 'dikirim') {
+        const dataStock = data.user[0].items.map((row) => ({ idItem: row.id_item, qty: row.qty }));
+        const checkStock = await postCheckStock(dataStock);
+        if (checkStock.status !== 'success') {
+          throw new Error(checkStock.message);
+        }
+        const itemNull = checkStock.data.some((row) => row === null);
+        if (itemNull) {
+          throw new Error('Stok produk yang anda miliki tidak cukup');
+        }
+        const reduceStock = await postItemStock(dataStock);
+        if (reduceStock.status !== 'success') {
+          throw new Error(reduceStock.message);
+        }
+      }
       const trx = await putTrxStatus(data.id_item_order, { status, idUmkm });
       if (trx.status !== 'success') {
         throw new Error(trx.message);

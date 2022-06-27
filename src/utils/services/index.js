@@ -110,9 +110,11 @@ export const postFoto = (body) => POST('/', { body, isFormData: true });
 export const postToko = (body) => POST('/api/umkm', { body });
 export const postProduct = (body) => POST('/api/product', { body });
 export const postTrx = (body) => POST('/api/trx', { body });
+export const postCheckStock = (body) => POST('/api/trx/check-stock', { body });
 export const postTrxMulti = (body) => POST('/api/trx/multi', { body });
 export const postCart = (body) => POST('/api/cart', { body });
 export const postWishlist = (body) => POST('/api/product/wishlist', { body });
+export const postItemStock = (body) => POST('/api/product/stock', { body });
 
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
