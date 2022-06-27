@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
-  Box, Container, Typography, Avatar,
+  Box, Container, Typography, Avatar, Rating,
 } from '@mui/material';
 import moment from 'moment';
 
@@ -71,6 +71,15 @@ function AdminUser() {
       headerName: 'Rating',
       align: 'center',
       headerAlign: 'center',
+      width: 150,
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" gap={1}>
+          <Rating size="small" value={params.row.rating} readOnly />
+          <Typography color="text.secondary" fontSize={14} fontWeight={700}>
+            {params.row.rating}
+          </Typography>
+        </Box>
+      ),
     },
     {
       field: 'sold',

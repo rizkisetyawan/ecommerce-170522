@@ -1,26 +1,19 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import { Edit, Search } from '@mui/icons-material';
+import { Edit } from '@mui/icons-material';
+import moment from 'moment';
 import {
   Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
   Button,
   Avatar,
   Typography,
   Switch,
-  TextField,
-  InputAdornment,
   Grid,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
+import { DataGrid } from '@mui/x-data-grid';
 import { DialogCreateProduct } from '../../components';
 import { getProductsUmkm, putStatusProduct, rp } from '../../utils';
 
@@ -76,7 +69,6 @@ function Products() {
     data: null,
     message: null,
   });
-  const [searchState, setSearchState] = useState(null);
 
   const fetchProducts = async () => {
     setProductsState({ ...productsState, loading: true });
@@ -100,18 +92,79 @@ function Products() {
     }
   };
 
-  const handleSearchProduct = (e) => {
-    const { value } = e.target;
-    if (!value) {
-      setSearchState(null);
-    } else {
-      setSearchState(productsState.data.filter((row) => row.name.includes(e.target.value)));
-    }
-  };
-
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const columns = [
+    {
+      field: 'foto',
+      headerName: '',
+      renderCell: (params) => <Avatar src={params.row.foto} />,
+      sortable: false,
+      disableColumnMenu: true,
+      width: 70,
+      align: 'right',
+      headerAlign: 'right',
+    },
+    {
+      field: 'name',
+      headerName: 'Produk',
+      minWidth: 400,
+      flex: 1,
+    },
+    {
+      field: 'price',
+      headerName: 'Harga(Rp)',
+      width: 150,
+      renderCell: (params) => rp(params.row.price),
+    },
+    {
+      field: 'stock',
+      headerName: 'Stok',
+      width: 100,
+      align: 'center',
+      headerAlign: 'center',
+    },
+    {
+      field: 'created_at',
+      headerName: 'Created',
+      width: 150,
+      align: 'center',
+      headerAlign: 'center',
+    },
+    {
+      field: 'status',
+      headerName: 'Aktif',
+      disableColumnMenu: true,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: (params) => <StatusSwitch id={params.id} isActive={params.row.status === 'aktif'} />,
+    },
+    {
+      field: 'id',
+      headerName: '',
+      disableColumnMenu: true,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: (params) => (
+        <Button
+          color="success"
+          onClick={() => {
+            setOpenDialogProduct({ open: true, data: params.row, action: 'edit' });
+          }}
+          startIcon={<Edit />}
+          sx={{
+            textTransform: 'capitalize',
+            fontWeight: 800,
+            fontSize: 12,
+          }}
+        >
+          Ubah
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <Container>
@@ -128,29 +181,6 @@ function Products() {
           >
             Tambah Produk
           </Button>
-        </Grid>
-        <Grid item xs={6}>
-          <Box display="flex" justifyContent="flex-end">
-            <TextField
-              sx={{
-                '& input, & input::placeholder': {
-                  fontSize: 14,
-                },
-                width: 150,
-              }}
-              id="input-with-icon-textfield"
-              placeholder="Search ..."
-              onChange={handleSearchProduct}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              variant="standard"
-            />
-          </Box>
         </Grid>
       </Grid>
       {
@@ -169,74 +199,15 @@ function Products() {
       }
       {
         (!productsState.loading && productsState.data) && (
-          <>
-            <TableContainer component={Paper} sx={{ boxShadow: 'rgb(0 0 0 / 12%) 0px 1px 6px 0px' }}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 800 }}>Info Produk</TableCell>
-                    <TableCell sx={{ fontWeight: 800 }} align="center">Harga(Rp)</TableCell>
-                    <TableCell sx={{ fontWeight: 800 }} align="center">Stok</TableCell>
-                    <TableCell sx={{ fontWeight: 800 }} align="center">Aktif</TableCell>
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {(searchState || productsState.data).map((row) => (
-                    <TableRow
-                      key={row.name}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        <Box display="flex" gap={1.5} alignItems="center">
-                          <Avatar
-                            variant="square"
-                            src={row.foto}
-                            sx={{
-                              width: 40,
-                              height: 40,
-                              borderRadius: 1,
-                            }}
-                          />
-                          <Typography fontSize={14} fontWeight={800} color="text.secondary">
-                            {row.name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell align="center">{rp(row.price)}</TableCell>
-                      <TableCell align="center">{row.stock}</TableCell>
-                      <TableCell align="center">
-                        <StatusSwitch
-                          id={row.id_item}
-                          isActive={row.status === 'aktif'}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Button
-                          color="inherit"
-                          onClick={() => {
-                            setOpenDialogProduct({ open: true, data: row, action: 'edit' });
-                          }}
-                          startIcon={<Edit />}
-                          sx={{
-                            textTransform: 'capitalize',
-                            fontWeight: 800,
-                          }}
-                        >
-                          Ubah
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {(productsState.data.length === 0) && (
-              <Box display="grid" justifyContent="center" py={6}>
-                <Typography color="text.secondary">Tidak ada produk</Typography>
-              </Box>
-            )}
-          </>
+          <Box height={500}>
+            <DataGrid
+              rows={productsState.data.map((row) => ({
+                ...row,
+                created_at: moment(row.created_at).format('YYYY-MM-DD HH:mm'),
+              }))}
+              columns={columns}
+            />
+          </Box>
         )
       }
       <DialogCreateProduct

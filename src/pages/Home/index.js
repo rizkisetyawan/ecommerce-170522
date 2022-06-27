@@ -114,7 +114,7 @@ function Categories() {
   );
 }
 
-function Products({ title }) {
+function Products({ title, type }) {
   const [productsState, setProductsState] = useState({
     loading: false,
     data: null,
@@ -124,7 +124,7 @@ function Products({ title }) {
   const fetchProducts = async () => {
     setProductsState({ ...productsState, loading: true });
     try {
-      const products = await getProducts();
+      const products = await getProducts(type);
       if (products.status !== 'success') {
         throw new Error(products.message);
       }
@@ -186,8 +186,8 @@ function Home() {
     <>
       {/* <SimpleSlider /> */}
       <Categories />
-      <Products title="Produk Terlaris" />
-      <Products title="Semua Produk" />
+      <Products title="Produk Terlaris" type="top-product" />
+      <Products title="Semua Produk" type="all-product" />
     </>
   );
 }
