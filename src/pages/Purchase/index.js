@@ -80,7 +80,6 @@ function InputReview({ item, onSuccess }) {
             {item.item_name}
           </Typography>
           <Rating
-            precision={1}
             readOnly={!editState}
             value={formState.rating}
             onChange={(e, newValue) => setFormState({ ...formState, rating: newValue })}

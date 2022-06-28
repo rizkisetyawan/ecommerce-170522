@@ -79,12 +79,14 @@ function Login() {
         </Box>
         <TextField onChange={handleChange} label="Email" variant="outlined" name="email" fullWidth sx={{ mt: 5, mb: 2 }} type="email" />
         <TextField onChange={handleChange} label="Password" variant="outlined" name="password" fullWidth type="password" />
-        <Typography fontSize={13} color="primary.main" textAlign="right" my={1}>Lupa kata sandi?</Typography>
+        {/* <Typography fontSize={13} color="primary.main"
+        textAlign="right" my={1}>Lupa kata sandi?</Typography> */}
         <Button
           variant="contained"
           fullWidth
           onClick={handleLogin}
           disabled={loginState.loading}
+          sx={{ mt: 4 }}
         >
           {loginState.loading ? 'Loading ...' : 'Login'}
         </Button>

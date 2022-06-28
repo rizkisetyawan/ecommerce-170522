@@ -74,7 +74,7 @@ function AdminUser() {
       width: 150,
       renderCell: (params) => (
         <Box display="flex" alignItems="center" gap={1}>
-          <Rating size="small" value={params.row.rating} readOnly />
+          <Rating precision={0.5} size="small" value={params.row.rating} readOnly />
           <Typography color="text.secondary" fontSize={14} fontWeight={700}>
             {params.row.rating}
           </Typography>

@@ -44,7 +44,7 @@ function CardProduct({ data }) {
             {rp(data.price)}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.3 }}>
-            <Rating defaultValue={1} max={1} size="small" readOnly />
+            <Rating precision={0.5} defaultValue={1} max={1} size="small" readOnly />
             <Typography variant="subtitle2" color="textSecondary">{+data.rating || 0}</Typography>
             <Divider sx={{ height: 20, mx: 1 }} orientation="vertical" />
             <Typography variant="subtitle2" color="textSecondary">

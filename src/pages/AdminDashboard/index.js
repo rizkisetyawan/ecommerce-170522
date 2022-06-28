@@ -103,12 +103,12 @@ function CardTopSelling({ data }) {
             <Box display="flex" alignItems="center" gap={2}>
               <Avatar src={row.foto} variant="square" sx={{ width: 50, height: 50, borderRadius: 1 }} />
               <Box>
-                <Typography fontSize={12} fontWeight={800} color="text.secondary">
+                <Typography fontSize={12} color="text.secondary">
                   {row.name_toko}
                 </Typography>
                 <Typography fontSize={{ xs: 12, sm: 14 }}>{row.name}</Typography>
                 <Box display="flex" gap={1} alignItems="center">
-                  <Rating value={+row.rating} size="small" readOnly />
+                  <Rating precision={0.5} value={+row.rating} size="small" readOnly />
                   <Typography textAlign="right" fontSize={14} color="success.main" fontWeight={800}>{row.rating}</Typography>
                 </Box>
               </Box>
