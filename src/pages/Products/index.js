@@ -138,7 +138,7 @@ function Products() {
     {
       field: 'foto',
       headerName: '',
-      renderCell: (params) => <Avatar src={params.row.foto} />,
+      renderCell: (params) => <Avatar src={params.row.foto} variant="square" sx={{ borderRadius: 1 }} />,
       sortable: false,
       disableColumnMenu: true,
       width: 70,

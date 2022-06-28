@@ -419,10 +419,7 @@ function Topbar() {
                                   display="flex"
                                   gap={1}
                                   alignItems="center"
-                                  onClick={() => {
-                                    dispatch(removeAuthIdentity());
-                                    navigate('login');
-                                  }}
+                                  onClick={() => navigate('/admin')}
                                   sx={{ cursor: 'pointer' }}
                                 >
                                   <Dashboard color="disabled" />
@@ -527,10 +524,7 @@ function Topbar() {
                               display="flex"
                               gap={1}
                               alignItems="center"
-                              onClick={() => {
-                                dispatch(removeAuthIdentity());
-                                navigate('login');
-                              }}
+                              onClick={() => navigate('/admin')}
                               sx={{ cursor: 'pointer' }}
                             >
                               <Dashboard color="disabled" />
