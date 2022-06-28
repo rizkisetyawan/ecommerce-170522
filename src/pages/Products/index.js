@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import { Edit } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 import moment from 'moment';
 import {
   Container,
@@ -10,12 +10,50 @@ import {
   Typography,
   Switch,
   Grid,
+  IconButton,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { DataGrid } from '@mui/x-data-grid';
 import { DialogCreateProduct } from '../../components';
-import { getProductsUmkm, putStatusProduct, rp } from '../../utils';
+import {
+  getProductsUmkm, putStatusProduct, rp, deleteProduct,
+} from '../../utils';
+
+function DeleteButtonProduct({ idItem, onSuccess, enqueueSnackbar }) {
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const handleDeleteCategory = async () => {
+    try {
+      setLoadingDelete(true);
+      const product = await deleteProduct(idItem);
+      if (product.status !== 'success') {
+        throw new Error(product.message);
+      }
+      setLoadingDelete(false);
+      onSuccess();
+    } catch (err) {
+      setLoadingDelete(false);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+  return (
+    <Box display="flex" alignItems="center">
+      { loadingDelete && <Typography color="text.secondary" fontSize={10}>Loading..</Typography>}
+      { !loadingDelete && (
+        <IconButton
+          color="error"
+          aria-label="delete category"
+          component="span"
+          size="small"
+          onClick={handleDeleteCategory}
+        >
+          <Delete size="small" />
+        </IconButton>
+      )}
+    </Box>
+  );
+}
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -148,20 +186,27 @@ function Products() {
       align: 'center',
       headerAlign: 'center',
       renderCell: (params) => (
-        <Button
-          color="success"
-          onClick={() => {
-            setOpenDialogProduct({ open: true, data: params.row, action: 'edit' });
-          }}
-          startIcon={<Edit />}
-          sx={{
-            textTransform: 'capitalize',
-            fontWeight: 800,
-            fontSize: 12,
-          }}
-        >
-          Ubah
-        </Button>
+        <Box display="flex" gap={1}>
+          <IconButton
+            color="primary"
+            aria-label="edit category"
+            component="span"
+            size="small"
+            onClick={() => setOpenDialogProduct({ open: true, data: params.row, action: 'edit' })}
+          >
+            <Edit size="small" />
+          </IconButton>
+          <DeleteButtonProduct
+            idItem={params.row.id_item}
+            enqueueSnackbar={enqueueSnackbar}
+            onSuccess={() => {
+              setProductsState({
+                ...productsState,
+                data: productsState.data.filter((row) => row.id_item !== params.row.id_item),
+              });
+            }}
+          />
+        </Box>
       ),
     },
   ];
