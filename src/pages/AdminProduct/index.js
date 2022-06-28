@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
-  Box, Container, Typography, Avatar, Rating,
+  Box, Container, Typography, Avatar, Rating, Grid,
 } from '@mui/material';
 import moment from 'moment';
 
+import Category from './Category';
 import { getAllProduct, rp } from '../../utils';
 
-function AdminUser() {
+function AdminProduct() {
   const [productsState, setProductsState] = useState({
     loading: false,
     data: null,
@@ -75,7 +76,7 @@ function AdminUser() {
       renderCell: (params) => (
         <Box display="flex" alignItems="center" gap={1}>
           <Rating precision={0.5} size="small" value={params.row.rating} readOnly />
-          <Typography color="text.secondary" fontSize={14} fontWeight={700}>
+          <Typography color="success" fontSize={14} fontWeight={700}>
             {params.row.rating}
           </Typography>
         </Box>
@@ -107,7 +108,7 @@ function AdminUser() {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ width: '100%', height: 'calc(100vh - 112px)', padding: '0 !important' }}>
+    <Container maxWidth="lg" sx={{ width: '100%', padding: '0 !important' }}>
       { productsState.loading && (
         <Box py={6} display="flex" justifyContent="center">
           <Typography color="text.secondary">Loading ...</Typography>
@@ -119,17 +120,24 @@ function AdminUser() {
         </Box>
       )}
       { (!productsState.loading && productsState.data) && (
-        <DataGrid
-          rows={productsState.data.map((row) => ({
-            ...row,
-            price: rp(row.price),
-            created_at: moment(row.created_at).format('YYYY-MM-DD HH:mm'),
-          }))}
-          columns={columns}
-        />
+        <Grid container spacing={2}>
+          <Grid item xs={12} lg={8} height="calc(100vh - 112px)">
+            <DataGrid
+              rows={productsState.data.map((row) => ({
+                ...row,
+                price: rp(row.price),
+                created_at: moment(row.created_at).format('YYYY-MM-DD HH:mm'),
+              }))}
+              columns={columns}
+            />
+          </Grid>
+          <Grid item xs={12} lg={4} height={500} mt={{ xs: 4, lg: 0 }}>
+            <Category />
+          </Grid>
+        </Grid>
       )}
     </Container>
   );
 }
 
-export default AdminUser;
+export default AdminProduct;

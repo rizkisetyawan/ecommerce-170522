@@ -116,10 +116,12 @@ export const postTrxMulti = (body) => POST('/api/trx/multi', { body });
 export const postCart = (body) => POST('/api/cart', { body });
 export const postWishlist = (body) => POST('/api/product/wishlist', { body });
 export const postItemStock = (body) => POST('/api/product/stock', { body });
+export const postCategory = (body) => POST('/api/product/category', { body });
 
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
+export const putCategory = (name, body) => PUT(`/api/product/category/${name}`, { body });
 export const putStatusUser = (id, body) => PUT(`/api/user/status/${id}`, { body });
 export const putReview = (idItemOrder, body) => PUT(`/api/trx/review/${idItemOrder}`, { body });
 export const putToko = (idUmkm, body) => PUT(`/api/umkm/${idUmkm}`, { body });
@@ -128,3 +130,4 @@ export const putTrxStatus = (idItemOrder, body) => PUT(`/api/trx/status/${idItem
 export const putTrxStatusAll = (idItemOrder, body) => PUT(`/api/trx/status-all/${idItemOrder}`, { body });
 
 export const deleteCart = (idItem) => DELETE(`/api/cart/${idItem}`);
+export const deleteCategory = (name) => DELETE(`/api/product/category/${name}`);
