@@ -37,6 +37,7 @@ import {
   ShoppingBasket,
   DonutSmall,
   Storefront,
+  Dashboard,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
@@ -412,22 +413,39 @@ function Topbar() {
                                 ))
                               }
                             </List>
-                            <Box
-                              display="flex"
-                              alignItems="center"
-                              gap={1}
-                              m={2}
-                              alignSelf="flex-end"
-                              onClick={() => {
-                                dispatch(removeAuthIdentity());
-                                navigate('login');
-                              }}
-                              sx={{ cursor: 'pointer' }}
-                            >
-                              <Logout />
-                              <Typography fontSize={14} color="text.secondary">
-                                Keluar
-                              </Typography>
+                            <Box display="flex" justifyContent="space-between" px={2} py={4} gap={6}>
+                              { identity.user.role === 'admin' && (
+                                <Box
+                                  display="flex"
+                                  gap={1}
+                                  alignItems="center"
+                                  onClick={() => {
+                                    dispatch(removeAuthIdentity());
+                                    navigate('login');
+                                  }}
+                                  sx={{ cursor: 'pointer' }}
+                                >
+                                  <Dashboard color="disabled" />
+                                  <Typography fontSize={14} color="text.secondary">
+                                    Dashboard
+                                  </Typography>
+                                </Box>
+                              )}
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                gap={1}
+                                onClick={() => {
+                                  dispatch(removeAuthIdentity());
+                                  navigate('login');
+                                }}
+                                sx={{ cursor: 'pointer' }}
+                              >
+                                <Logout color="disabled" />
+                                <Typography fontSize={14} color="text.secondary">
+                                  Keluar
+                                </Typography>
+                              </Box>
                             </Box>
                           </Box>
                         )
@@ -439,7 +457,7 @@ function Topbar() {
                       onClose={handleCloseDialogToko}
                       data={identity.toko}
                     />
-                    <Box display="flex" alignItems="center" gap={0.5} onClick={handleClickUser} sx={{ cursor: 'pointer' }}>
+                    <Box display="flex" alignItems="center" gap={1} onClick={handleClickUser} sx={{ cursor: 'pointer' }}>
                       <Avatar src={identity.user.foto} sx={{ width: 30, height: 30 }} />
                       <Typography fontSize={14} color="text.secondary" fontWeight={800}>{identity.user.name}</Typography>
                     </Box>
@@ -503,22 +521,39 @@ function Topbar() {
                           ))}
                         </List>
                         <Divider />
-                        <Box
-                          display="flex"
-                          alignItems="center"
-                          gap={1}
-                          m={2}
-                          alignSelf="flex-end"
-                          onClick={() => {
-                            dispatch(removeAuthIdentity());
-                            navigate('login');
-                          }}
-                          sx={{ cursor: 'pointer' }}
-                        >
-                          <Logout />
-                          <Typography fontSize={14} color="text.secondary">
-                            Keluar
-                          </Typography>
+                        <Box display="flex" justifyContent="space-between" px={2} py={4} gap={6}>
+                          { identity.user.role === 'admin' && (
+                            <Box
+                              display="flex"
+                              gap={1}
+                              alignItems="center"
+                              onClick={() => {
+                                dispatch(removeAuthIdentity());
+                                navigate('login');
+                              }}
+                              sx={{ cursor: 'pointer' }}
+                            >
+                              <Dashboard color="disabled" />
+                              <Typography fontSize={14} color="text.secondary">
+                                Dashboard
+                              </Typography>
+                            </Box>
+                          )}
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            onClick={() => {
+                              dispatch(removeAuthIdentity());
+                              navigate('login');
+                            }}
+                            sx={{ cursor: 'pointer' }}
+                          >
+                            <Logout color="disabled" />
+                            <Typography fontSize={14} color="text.secondary">
+                              Keluar
+                            </Typography>
+                          </Box>
                         </Box>
                       </Box>
                     </Popover>
