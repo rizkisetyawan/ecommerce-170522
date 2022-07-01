@@ -123,6 +123,7 @@ export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });
 export const putStatusProduct = (id, body) => PUT(`/api/product/status/${id}`, { body });
 export const putCategory = (name, body) => PUT(`/api/product/category/${name}`, { body });
 export const putStatusUser = (id, body) => PUT(`/api/user/status/${id}`, { body });
+export const putRoleUser = (id, body) => PUT(`/api/user/role/${id}`, { body });
 export const putReview = (idItemOrder, body) => PUT(`/api/trx/review/${idItemOrder}`, { body });
 export const putToko = (idUmkm, body) => PUT(`/api/umkm/${idUmkm}`, { body });
 export const putTrxFoto = (idItemOrder, body) => PUT(`/api/trx/foto-trx/${idItemOrder}`, { body });

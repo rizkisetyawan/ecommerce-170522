@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
@@ -7,11 +8,11 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 
-import { getAllUsers, putStatusUser } from '../../utils';
+import { getAllUsers, putStatusUser, putRoleUser } from '../../utils';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
-function StatusSwitch({ id, isActive }) {
+function StatusSwitch({ id, isActive, type }) {
   const [checkedState, setCheckedState] = useState({
     isActive,
     loading: false,
@@ -22,9 +23,15 @@ function StatusSwitch({ id, isActive }) {
     const { checked } = e.target;
     setCheckedState({ ...checkedState, loading: true });
     try {
-      const product = await putStatusUser(id, { status: checked ? 'aktif' : 'tidak aktif' });
-      if (product.status !== 'success') {
-        throw new Error(product.message);
+      let user;
+      if (type === 'status') {
+        user = await putStatusUser(id, { status: checked ? 'aktif' : 'tidak aktif' });
+      }
+      if (type === 'role') {
+        user = await putRoleUser(id, { role: checked ? 'admin' : 'user' });
+      }
+      if (user.status !== 'success') {
+        throw new Error(user.message);
       }
       setCheckedState({ ...checkedState, loading: false, isActive: checked });
     } catch (err) {
@@ -45,6 +52,7 @@ function StatusSwitch({ id, isActive }) {
       {...label}
       checked={checkedState.isActive}
       onChange={handleChecked}
+      color={type === 'status' ? 'primary' : 'success'}
     />
   );
 }
@@ -135,7 +143,15 @@ function AdminUser() {
       disableColumnMenu: true,
       align: 'center',
       headerAlign: 'center',
-      renderCell: (params) => <StatusSwitch id={params.id} isActive={params.row.status === 'aktif'} />,
+      renderCell: (params) => <StatusSwitch id={params.id} isActive={params.row.status === 'aktif'} type="status" />,
+    },
+    {
+      field: 'role',
+      headerName: 'Admin',
+      disableColumnMenu: true,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: (params) => <StatusSwitch id={params.id} isActive={params.row.role === 'admin'} type="role" />,
     },
   ];
 
