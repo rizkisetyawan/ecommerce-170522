@@ -67,6 +67,12 @@ function DialogCreateCategory({
         });
       }
       if (action === 'add') {
+        if (!formState.image) {
+          throw new Error('Foto tidak boleh kosong');
+        }
+        if (!formState.name) {
+          throw new Error('Nama kategori harus diisi');
+        }
         category = await postCategory({ name: formState.name, foto: foto.url });
       }
       if (action === 'edit') {

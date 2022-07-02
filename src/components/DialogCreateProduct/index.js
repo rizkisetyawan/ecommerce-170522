@@ -76,9 +76,6 @@ function DialogCreateProduct({
   const handleSubmit = async () => {
     setFormState({ ...formState, loading: true });
     try {
-      if (!formState.imageRead) {
-        throw new Error('Foto tidak boleh kosong');
-      }
       let foto;
       let product;
       if (formState.image) {
@@ -93,6 +90,21 @@ function DialogCreateProduct({
         });
       }
       if (action === 'add') {
+        if (!formState.image) {
+          throw new Error('Foto tidak boleh kosong');
+        }
+        if (!formState.name) {
+          throw new Error('Nama produk harus diisi');
+        }
+        if (!formState.category) {
+          throw new Error('Pilih kategori terlebih dahulu');
+        }
+        if (!formState.price) {
+          throw new Error('Harga harus diisi');
+        }
+        if (!formState.stock) {
+          throw new Error('Stok harus diisi');
+        }
         product = await postProduct({
           id_umkm: toko.id_umkm,
           category: formState.category,

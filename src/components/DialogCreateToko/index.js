@@ -67,6 +67,15 @@ function DialogCreateToko({
         });
       }
       if (action === 'add') {
+        if (!formState.image) {
+          throw new Error('Foto toko harus diupload');
+        }
+        if (!formState.name) {
+          throw new Error('Nama toko harus diisi');
+        }
+        if (!formState.address) {
+          throw new Error('Alamat harus diisi');
+        }
         toko = await postToko({
           name: formState.name,
           address: formState.address,
