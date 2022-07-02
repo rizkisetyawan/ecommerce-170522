@@ -76,6 +76,9 @@ function DialogCreateProduct({
   const handleSubmit = async () => {
     setFormState({ ...formState, loading: true });
     try {
+      if (!formState.imageRead) {
+        throw new Error('Foto tidak boleh kosong');
+      }
       let foto;
       let product;
       if (formState.image) {

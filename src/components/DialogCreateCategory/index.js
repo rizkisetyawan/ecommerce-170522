@@ -183,7 +183,7 @@ function DialogCreateCategory({
             variant="contained"
             sx={{ fontSize: 14, textTransform: 'capitalize', fontWeight: 800 }}
             onClick={handleSubmit}
-            disabled={formState.loading}
+            disabled={formState.loading || !formState.image}
           >
             { formState.loading && 'Loading ...' }
             { (!data && !formState.loading) && 'Simpan' }
