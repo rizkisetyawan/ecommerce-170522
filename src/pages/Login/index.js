@@ -92,6 +92,7 @@ function Login() {
           sx={{ mt: 5, mb: 2 }}
           type="email"
           onKeyDown={handlePressEnter}
+          autoFocus
         />
         <TextField
           onChange={handleChange}
