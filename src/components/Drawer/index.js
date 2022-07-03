@@ -16,7 +16,7 @@ import {
   Toolbar,
 } from '@mui/material';
 import {
-  Group, Dashboard, Receipt, ShoppingBag, Menu, ShoppingCart, Logout,
+  Group, Dashboard, Receipt, ShoppingBag, Menu, Logout,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
@@ -107,14 +107,6 @@ function ResponsiveDrawer(props) {
             handleClick: () => {
               handleDrawerToggle();
               navigate('/admin/transactions');
-            },
-          },
-          {
-            title: 'Belanja',
-            icon: <ShoppingCart />,
-            handleClick: () => {
-              handleDrawerToggle();
-              navigate('/');
             },
           },
           {

@@ -93,17 +93,12 @@ function Register() {
         <Button
           variant="contained"
           fullWidth
-          sx={{ mt: 3 }}
+          sx={{ my: 3 }}
           onClick={handleRegister}
           disabled={registerState.loading}
         >
           {registerState.loading ? 'Loading ...' : 'Register'}
         </Button>
-        <Typography fontSize={13} textAlign="center" my={1}>
-          Butuh bantuan? Hubungi
-          {' '}
-          <Typography fontSize={13} color="primary.main" display="inline">Admin</Typography>
-        </Typography>
       </Box>
     </Box>
   );

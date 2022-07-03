@@ -111,15 +111,10 @@ function Login() {
           onClick={handleLogin}
           onKeyDown={handlePressEnter}
           disabled={loginState.loading}
-          sx={{ mt: 4 }}
+          sx={{ mt: 4, mb: 3 }}
         >
           {loginState.loading ? 'Loading ...' : 'Login'}
         </Button>
-        <Typography fontSize={13} textAlign="center" my={1}>
-          Butuh bantuan? Hubungi
-          {' '}
-          <Typography fontSize={13} color="primary.main" display="inline">Admin</Typography>
-        </Typography>
       </Box>
     </Box>
   );
