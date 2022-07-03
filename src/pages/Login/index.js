@@ -51,6 +51,12 @@ function Login() {
     }
   };
 
+  const handlePressEnter = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -77,14 +83,32 @@ function Login() {
             <Typography fontSize={13} color="primary.main">Daftar</Typography>
           </Link>
         </Box>
-        <TextField onChange={handleChange} label="Email" variant="outlined" name="email" fullWidth sx={{ mt: 5, mb: 2 }} type="email" />
-        <TextField onChange={handleChange} label="Password" variant="outlined" name="password" fullWidth type="password" />
+        <TextField
+          onChange={handleChange}
+          label="Email"
+          variant="outlined"
+          name="email"
+          fullWidth
+          sx={{ mt: 5, mb: 2 }}
+          type="email"
+          onKeyDown={handlePressEnter}
+        />
+        <TextField
+          onChange={handleChange}
+          label="Password"
+          variant="outlined"
+          name="password"
+          fullWidth
+          type="password"
+          onKeyDown={handlePressEnter}
+        />
         {/* <Typography fontSize={13} color="primary.main"
         textAlign="right" my={1}>Lupa kata sandi?</Typography> */}
         <Button
           variant="contained"
           fullWidth
           onClick={handleLogin}
+          onKeyDown={handlePressEnter}
           disabled={loginState.loading}
           sx={{ mt: 4 }}
         >
