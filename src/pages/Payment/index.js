@@ -8,10 +8,13 @@ import {
   Button,
 } from '@mui/material';
 import { ContentCopy, Info } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getInvoice, rp } from '../../utils';
 
 function Payment() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { noInvoice } = useParams();
   const [invoiceState, setInvoiceState] = useState({
@@ -77,10 +80,15 @@ function Payment() {
                 <Typography fontSize={18} fontWeight={800}>{invoiceState.data.no_rek}</Typography>
                 <Typography fontSize={14} color="text.secondary">{invoiceState.data.name}</Typography>
               </Box>
-              <Box display="flex" gap={0.5} alignItems="center">
-                <Typography fontWeight={800} color="success.light">Salin</Typography>
-                <ContentCopy fontSize="small" sx={(theme) => ({ color: theme.palette.success.light })} />
-              </Box>
+              <CopyToClipboard
+                text={invoiceState.data.no_rek}
+                onCopy={() => enqueueSnackbar('No Rekening di salin', { variant: 'success' })}
+              >
+                <Box display="flex" gap={0.5} alignItems="center" sx={{ cursor: 'pointer' }}>
+                  <Typography fontWeight={800} color="success.light">Salin</Typography>
+                  <ContentCopy fontSize="small" sx={(theme) => ({ color: theme.palette.success.light })} />
+                </Box>
+              </CopyToClipboard>
             </Box>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
               <Box>
@@ -89,7 +97,7 @@ function Payment() {
                   {rp(invoiceState.data.price)}
                 </Typography>
               </Box>
-              <Typography fontWeight={800} color="success.light">Lihat Detail</Typography>
+              {/* <Typography fontWeight={800} color="success.light">Lihat Detail</Typography> */}
             </Box>
             <Box
               p={2}

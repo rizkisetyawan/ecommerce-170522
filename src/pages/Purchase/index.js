@@ -293,6 +293,7 @@ function PurchaseDetailDialog({ open, onClose, data }) {
 function ListToko({
   onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus, toko,
 }) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -369,6 +370,15 @@ function ListToko({
           }}
         >
           <List disablePadding>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => {
+                handleClose();
+                navigate(`/payment/${data.id_item_order}`);
+              }}
+              >
+                <ListItemText primary="Cara Pembayaran" sx={{ '& span': { fontSize: 14 } }} />
+              </ListItemButton>
+            </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={() => {
                 handleClose();

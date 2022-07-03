@@ -258,7 +258,7 @@ function Product() {
                       {productState.data.reviews.length}
                       )
                     </Typography>
-                    <Typography fontSize={14}>Pintar Facil Smart Paint Roll untuk cat tembok tanpa belepotan</Typography>
+                    <Typography fontSize={14}>{productState.data.product.name}</Typography>
                     <Box display="flex" gap={{ xs: 2, sm: 7 }} alignItems="center" my={2} justifyContent={{ xs: 'center', sm: 'flex-start' }}>
                       <Box>
                         <Typography fontSize={60} textAlign="center">
