@@ -20,7 +20,7 @@ import {
   Chip,
 } from '@mui/material';
 import {
-  ShoppingBag, ArrowForwardIos, Edit, MoreHoriz,
+  ShoppingBag, ArrowForwardIos, Edit, MoreHoriz, Add,
 } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
@@ -79,11 +79,19 @@ function InputReview({ item, onSuccess }) {
           <Typography fontSize={14} fontWeight={800} gutterBottom>
             {item.item_name}
           </Typography>
-          <Rating
-            readOnly={!editState}
-            value={formState.rating}
-            onChange={(e, newValue) => setFormState({ ...formState, rating: newValue })}
-          />
+          { editState && (
+            <Rating
+              readOnly={!editState}
+              value={formState.rating}
+              onChange={(e, newValue) => setFormState({ ...formState, rating: newValue })}
+            />
+          )}
+          { (!editState && formState.rating) && (
+            <Rating
+              readOnly={!editState}
+              value={formState.rating}
+            />
+          )}
         </Box>
       </Box>
       <Box>
@@ -94,9 +102,9 @@ function InputReview({ item, onSuccess }) {
               sx={{ fontSize: 12, fontWeight: 800 }}
               size="small"
               onClick={() => setEditState(true)}
-              endIcon={<Edit />}
+              endIcon={formState.rating ? <Edit /> : <Add />}
             >
-              Tulis Ulasan
+              { formState.rating ? 'Ubah Ulasan' : 'Tulis Ulasan'}
             </Button>
           )}
         </Box>
@@ -145,7 +153,7 @@ function ReviewDialog({
   return (
     <Dialog onClose={onClose} open={open}>
       { !data && (
-        <Box py={6} display="flex" justifyContent="center">
+        <Box p={6} display="flex" justifyContent="center">
           <Typography color="text.secondary">Loading ...</Typography>
         </Box>
       )}
@@ -522,10 +530,10 @@ function Purchase() {
   };
 
   const handleCloseReview = () => {
-    setDialogReview({
-      open: false,
-      data: null,
-    });
+    setDialogReview((prevState) => ({ ...prevState, open: false }));
+    setTimeout(() => {
+      setDialogReview((prevState) => ({ ...prevState, data: null }));
+    }, 200);
   };
 
   const handleOpenUpload = (data) => {

@@ -24,6 +24,7 @@ import {
   AdminDashboard,
   AdminProduct,
   AdminTransaction,
+  Toko,
 } from './pages';
 import { Topbar, Drawer, Auth } from './components';
 
@@ -53,6 +54,7 @@ function App() {
               <Route path="settings" element={<Settings />} />
               <Route path="statistics" element={<Statistics />} />
               <Route path="category/:title" element={<Category />} />
+              <Route path="toko/:idToko" element={<Toko />} />
               <Route path="search/:title" element={<Search />} />
             </Route>
             <Route path="/admin" element={<Drawer />}>

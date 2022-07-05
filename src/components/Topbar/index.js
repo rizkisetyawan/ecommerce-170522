@@ -216,6 +216,13 @@ function Topbar() {
                 value={searchState}
                 onChange={(e) => setSearchState(e.target.value)}
                 inputProps={{ 'aria-label': 'search' }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (searchState) {
+                      navigate(`/search/${searchState}`);
+                    }
+                  }
+                }}
               />
               <Button
                 variant="contained"

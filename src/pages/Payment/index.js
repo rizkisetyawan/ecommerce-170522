@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getInvoice, rp } from '../../utils';
+import { DialogUploadStruk } from '../../components';
 
 function Payment() {
   const { enqueueSnackbar } = useSnackbar();
@@ -22,6 +23,24 @@ function Payment() {
     data: null,
     message: null,
   });
+  const [dialogUpload, setDialogUpload] = useState({
+    open: false,
+  });
+
+  // eslint-disable-next-line no-unused-vars
+  const handleOpenUpload = (data) => {
+    setDialogUpload({
+      open: true,
+      data,
+    });
+  };
+
+  const handleCloseUpload = () => {
+    setDialogUpload({
+      open: false,
+      data: null,
+    });
+  };
 
   const fetchInvoice = async () => {
     setInvoiceState({ ...invoiceState, loading: true });
@@ -137,7 +156,29 @@ function Payment() {
                 Belanja Lagi
               </Button>
             </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="warning"
+                onClick={() => navigate('/')}
+                sx={{ fontWeight: 800, fontSize: 14 }}
+              >
+                Upload bukti pembayaran
+              </Button>
+            </Grid>
           </Grid>
+          <DialogUploadStruk
+            open={dialogUpload.open}
+            onClose={handleCloseUpload}
+            onSuccess={() => navigate('/purchase')}
+            data={{
+              id_item_order: invoiceState.data.detail[0].id_item_order,
+              foto_trx: invoiceState.data.detail[0].toko[0].foto_trx,
+              // items : invoiceState.data.detail[0].toko.map(row => ({
+              // }))
+            }}
+          />
         </>
       )}
     </Container>

@@ -17,10 +17,12 @@ import AdminUser from './AdminUser';
 import AdminProduct from './AdminProduct';
 import AdminTransaction from './AdminTransaction';
 import AdminDashboard from './AdminDashboard';
+import Toko from './Toko';
 
 export {
   Home,
   Login,
+  Toko,
   Register,
   Product,
   Cart,

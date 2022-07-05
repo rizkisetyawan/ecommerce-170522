@@ -76,8 +76,8 @@ function AdminProduct() {
       renderCell: (params) => (
         <Box display="flex" alignItems="center" gap={1}>
           <Rating precision={0.5} size="small" value={params.row.rating} readOnly />
-          <Typography color="success" fontSize={14} fontWeight={700}>
-            {params.row.rating}
+          <Typography color="success.light" fontSize={14} fontWeight={700}>
+            {params.row.rating?.toFixed(1)}
           </Typography>
         </Box>
       ),

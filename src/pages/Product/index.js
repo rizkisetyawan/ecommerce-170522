@@ -180,7 +180,7 @@ function Product() {
                     { productState.data.reviews.length !== 0 && (
                       <Box display="flex" alignItems="center" gap={0.5}>
                         <Rating defaultValue={1} max={1} size="small" readOnly />
-                        <Typography fontSize={14} fontWeight={400}>{productState.data.reviews.reduce((acc, val) => acc + val.rating, 0) / productState.data.reviews.length}</Typography>
+                        <Typography fontSize={14} fontWeight={400}>{(productState.data.reviews.reduce((acc, val) => acc + val.rating, 0) / productState.data.reviews.length).toFixed(1)}</Typography>
                         <Typography fontSize={14} fontWeight={400} color="text.secondary">
                           (
                           {productState.data.reviews.length}
@@ -270,10 +270,16 @@ function Product() {
                     <Box display="flex" gap={{ xs: 2, sm: 7 }} alignItems="center" my={2} justifyContent={{ xs: 'center', sm: 'flex-start' }}>
                       <Box>
                         <Typography fontSize={60} textAlign="center">
-                          {productState.data.reviews.reduce((acc, val) => acc + val.rating, 0) / productState.data.reviews.length}
+                          {(productState.data.reviews.reduce((acc, val) => acc + val.rating, 0) / productState.data.reviews.length).toFixed(1)}
                           <Typography display="inline-block" color="text.secondary" ml={0.5}>/5</Typography>
                         </Typography>
-                        <Rating defaultValue={5} readOnly size="large" sx={{ mt: -1 }} />
+                        <Rating
+                          defaultValue={(productState.data.reviews.reduce((acc, val) => acc + val.rating, 0) / productState.data.reviews.length).toFixed(1)}
+                          readOnly
+                          precision={0.5}
+                          size="large"
+                          sx={{ mt: -1 }}
+                        />
                         <Typography fontSize={12} color="text.secondary" textAlign="center">
                           (
                           {productState.data.reviews.length}
@@ -337,7 +343,7 @@ function Product() {
                           <Typography fontSize={12} color="text.secondary" whiteSpace="nowrap">{moment(review.created_at).fromNow()}</Typography>
                         </Box>
                         <Box>
-                          <Rating defaultValue={5} size="small" readOnly />
+                          <Rating defaultValue={review.rating} size="small" readOnly />
                           <Typography fontSize={14} component="pre" whiteSpace="pre-wrap">{review.review}</Typography>
                         </Box>
                       </Box>

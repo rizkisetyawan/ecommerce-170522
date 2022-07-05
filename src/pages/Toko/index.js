@@ -3,10 +3,10 @@ import {
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { CardProduct, CardToko } from '../../components';
-import { getProductsSearch } from '../../utils';
+import { CardProduct } from '../../components';
+import { getProductsToko } from '../../utils';
 
-function Search() {
+function Toko() {
   const { title } = useParams();
   const [productsState, setProductsState] = useState({
     loading: false,
@@ -17,7 +17,7 @@ function Search() {
   const fetchProducts = async () => {
     setProductsState({ ...productsState, loading: true });
     try {
-      const products = await getProductsSearch(title);
+      const products = await getProductsToko(title);
       if (products.status !== 'success') {
         throw new Error(products.message);
       }
@@ -37,7 +37,7 @@ function Search() {
 
   useEffect(() => {
     fetchProducts();
-  }, [title]);
+  }, []);
 
   return (
     <Container>
@@ -53,38 +53,12 @@ function Search() {
       )}
       { (!productsState.loading && productsState.data) && (
         <>
-          {productsState.data.toko.length !== 0 && (
-            <Box mb={4}>
-              <Typography color="text.secondary" mb={2}>
-                Menampilkan
-                {' '}
-                {productsState.data.toko.length}
-                {' '}
-                toko untuk
-                {' '}
-                <strong>
-                  &#34;
-                  {title}
-                  &#34;
-                </strong>
-              </Typography>
-              <Grid container spacing={{ xs: 1, lg: 1.5 }}>
-                {
-                  productsState.data.toko.map((row) => (
-                    <Grid key={row.id_item} item xs={6} sm={3} lg={2}>
-                      <CardToko data={row} />
-                    </Grid>
-                  ))
-                }
-              </Grid>
-            </Box>
-          )}
-          {productsState.data.products.length !== 0 && (
+          {productsState.data.length !== 0 && (
             <>
               <Typography color="text.secondary" mb={2}>
                 Menampilkan
                 {' '}
-                {productsState.data.products.length}
+                {productsState.data.length}
                 {' '}
                 produk untuk
                 {' '}
@@ -96,7 +70,7 @@ function Search() {
               </Typography>
               <Grid container spacing={{ xs: 1, lg: 1.5 }}>
                 {
-                  productsState.data.products.map((row) => (
+                  productsState.data.map((row) => (
                     <Grid key={row.id_item} item xs={6} sm={3} lg={2}>
                       <CardProduct data={row} />
                     </Grid>
@@ -105,11 +79,11 @@ function Search() {
               </Grid>
             </>
           )}
-          {(productsState.data.products.length === 0 && productsState.data.toko.length === 0) && (
+          {productsState.data.length === 0 && (
             <Grid item xs={12}>
               <Box display="flex" justifyContent="center" py={6}>
                 <Typography color="text.secondary">
-                  Tidak ada produk atau toko
+                  Tidak ada produk
                   {' '}
                   <strong>
                     &#34;
@@ -126,4 +100,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default Toko;

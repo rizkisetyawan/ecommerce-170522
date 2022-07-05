@@ -88,6 +88,7 @@ export const getImageAuth = () => GET('/api/image/auth');
 export const getProducts = (type) => GET(`/api/product?type=${type}`);
 export const getProductsWishlist = () => GET('/api/product/wishlist');
 export const getProductsCategory = (name) => GET(`/api/product/category/${name}`);
+export const getProductsToko = (idUmkm) => GET(`/api/product/umkm/${idUmkm}`);
 export const getProductsUmkm = () => GET('/api/product/umkm');
 export const getDetailProduct = (id, idUser = '') => GET(`/api/product/detail/${id}${idUser ? `?id_user=${idUser}` : ''}`);
 export const getProductsSearch = (name) => GET(`/api/product/search/${name}`);
