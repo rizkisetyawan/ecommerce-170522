@@ -505,6 +505,7 @@ function Purchase() {
         ...purchaseState,
         data: invoice.data,
       });
+      setChipDataState(invoice.data);
     } catch (err) {
       setPurchaseState({
         ...purchaseState,
