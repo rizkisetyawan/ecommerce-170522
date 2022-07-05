@@ -79,7 +79,7 @@ function OrderItem({
             const status = user.status === 'diproses' ? 'pesanan baru' : user.status;
             return (
               <Box key={user.id_user} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
-                <Box>
+                <Box maxWidth={700}>
                   <Box display="flex" gap={2} mb={1.2} justifyContent={{ xs: 'space-between', sm: 'flex-start' }} alignItems="center">
                     <Box display="flex" gap={1} alignItems="center">
                       <Avatar src={user.user_foto} sx={{ width: 20, height: 20 }} />

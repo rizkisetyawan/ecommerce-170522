@@ -308,7 +308,7 @@ function ListToko({
   const id = open ? 'simple-popover' : undefined;
   return (
     <Box key={toko.toko_name} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
-      <Box>
+      <Box maxWidth={500}>
         <Box display="flex" gap={2} mb={1} justifyContent={{ xs: 'space-between', sm: 'flex-start' }}>
           <Typography fontSize={12} fontWeight={800} textAlign={{ xs: 'left', sm: 'center', md: 'left' }}>{toko.toko_name}</Typography>
           <Box px={1} py={0.2} bgcolor={colorTrx(toko.status).bgcolor}>
