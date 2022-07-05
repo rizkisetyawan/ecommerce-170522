@@ -17,6 +17,7 @@ function CardProduct({ data }) {
           component="img"
           height="180"
           image={data.foto}
+          sx={{ objectFit: 'contain' }}
         />
         <CardContent
           sx={{
