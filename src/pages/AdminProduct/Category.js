@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import { DeleteOutlined, Edit } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 import moment from 'moment';
 import {
   Container,
@@ -9,6 +9,7 @@ import {
   Avatar,
   Typography,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
@@ -33,19 +34,21 @@ function DeleteButton({ name, onSuccess, enqueueSnackbar }) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
   };
+
   return (
     <Box display="flex" alignItems="center">
       { loadingDelete && <Typography color="text.secondary" fontSize={10}>Loading..</Typography>}
       { !loadingDelete && (
-        <IconButton
-          color="error"
-          aria-label="delete category"
-          component="span"
-          size="small"
-          onClick={handleDeleteCategory}
-        >
-          <DeleteOutlined size="small" />
-        </IconButton>
+        <Tooltip title="Hapus">
+          <IconButton
+            aria-label="delete category"
+            component="span"
+            size="small"
+            onClick={handleDeleteCategory}
+          >
+            <Delete size="small" />
+          </IconButton>
+        </Tooltip>
       )}
     </Box>
   );
@@ -132,15 +135,17 @@ function Category() {
       minWidth: 70,
       renderCell: (params) => (
         <Box display="flex" gap={1}>
-          <IconButton
-            color="primary"
-            aria-label="edit category"
-            component="span"
-            size="small"
-            onClick={() => setOpenDialogCategory({ open: true, data: params.row, action: 'edit' })}
-          >
-            <Edit size="small" />
-          </IconButton>
+          <Tooltip title="ubah">
+            <IconButton
+              color="primary"
+              aria-label="edit category"
+              component="span"
+              size="small"
+              onClick={() => setOpenDialogCategory({ open: true, data: params.row, action: 'edit' })}
+            >
+              <Edit size="small" />
+            </IconButton>
+          </Tooltip>
           <DeleteButton
             name={params.row.name}
             enqueueSnackbar={enqueueSnackbar}

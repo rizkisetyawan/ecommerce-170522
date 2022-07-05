@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 import {
   Box,
@@ -34,7 +33,7 @@ function Product() {
   const [openModalState, setOpenModalState] = useState(false);
   const [productState, setProductState] = useState({
     loading: false,
-    data: null,
+    data: {},
     message: null,
   });
   const [cartState, setCartState] = useState({
@@ -142,7 +141,16 @@ function Product() {
         )
       }
       {
-        (!productState.loading && productState.data) && (
+        // eslint-disable-next-line no-prototype-builtins
+        (!productState.loading && !productState.data.hasOwnProperty('product')) && (
+          <Box py={6} display="flex" justifyContent="center">
+            <Typography color="text.secondary">Produk yang anda cari tidak ditemukan</Typography>
+          </Box>
+        )
+      }
+      {
+        // eslint-disable-next-line no-prototype-builtins
+        (!productState.loading && productState.data.hasOwnProperty('product')) && (
           <>
             <Grid container spacing={5} justifyContent="center">
               <Grid item xs={12} lg={4}>

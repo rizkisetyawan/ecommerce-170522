@@ -131,5 +131,6 @@ export const putTrxStatus = (idItemOrder, body) => PUT(`/api/trx/status/${idItem
 export const putTrxStatusAll = (idItemOrder, body) => PUT(`/api/trx/status-all/${idItemOrder}`, { body });
 
 export const deleteCart = (idItem) => DELETE(`/api/cart/${idItem}`);
+export const deleteUser = (idUser) => DELETE(`/api/user/${idUser}`);
 export const deleteProduct = (idItem) => DELETE(`/api/product/${idItem}`);
 export const deleteCategory = (name) => DELETE(`/api/product/category/${name}`);

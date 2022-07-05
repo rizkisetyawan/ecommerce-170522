@@ -4,11 +4,15 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
-  Box, Container, Typography, Switch, Avatar,
+  Box, Container, Typography, Switch, Avatar, IconButton, Tooltip,
 } from '@mui/material';
 import moment from 'moment';
+import { Delete } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 
-import { getAllUsers, putStatusUser, putRoleUser } from '../../utils';
+import {
+  getAllUsers, putStatusUser, putRoleUser, deleteUser,
+} from '../../utils';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -57,7 +61,45 @@ function StatusSwitch({ id, isActive, type }) {
   );
 }
 
+function DeleteButton({ idUser, onSuccess, enqueueSnackbar }) {
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const handleDeleteUser = async () => {
+    try {
+      setLoadingDelete(true);
+      const categories = await deleteUser(idUser);
+      if (categories.status !== 'success') {
+        throw new Error(categories.message);
+      }
+      setLoadingDelete(false);
+      onSuccess();
+    } catch (err) {
+      setLoadingDelete(false);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
+  return (
+    <Box display="flex" alignItems="center">
+      { loadingDelete && <Typography color="text.secondary" fontSize={10}>Loading ...</Typography>}
+      { !loadingDelete && (
+        <IconButton
+          aria-label="delete user"
+          component="span"
+          size="small"
+          onClick={handleDeleteUser}
+        >
+          <Tooltip title="Hapus">
+            <Delete size="small" />
+          </Tooltip>
+        </IconButton>
+      )}
+    </Box>
+  );
+}
+
 function AdminUser() {
+  const { enqueueSnackbar } = useSnackbar();
   const [usersState, setUsersState] = useState({
     loading: false,
     data: null,
@@ -153,6 +195,23 @@ function AdminUser() {
       headerAlign: 'center',
       renderCell: (params) => <StatusSwitch id={params.id} isActive={params.row.role === 'admin'} type="role" />,
     },
+    {
+      field: 'deleteRow',
+      headerName: '',
+      width: 70,
+      renderCell: (params) => (
+        <DeleteButton
+          idUser={params.row.id}
+          enqueueSnackbar={enqueueSnackbar}
+          onSuccess={() => {
+            setUsersState({
+              ...usersState,
+              data: usersState.data.filter((row) => row.id !== params.row.id),
+            });
+          }}
+        />
+      ),
+    },
   ];
 
   return (
@@ -175,6 +234,7 @@ function AdminUser() {
             name: row.name || '-',
             hp: row.hp || '-',
             gender: row.gender || '-',
+            deleteRow: true,
             created_at: moment(row.created_at).format('YYYY-MM-DD HH:mm'),
           }))}
           columns={columns}
