@@ -31,6 +31,9 @@ function DialogCreateToko({
     name: '',
     address: '',
     description: '',
+    rek_no: '',
+    rek_bank: '',
+    rek_name: '',
     image: null,
     imageRead: null,
     loading: false,
@@ -53,6 +56,26 @@ function DialogCreateToko({
   const handleSubmit = async () => {
     setFormState({ ...formState, loading: true });
     try {
+      if (action === 'add') {
+        if (!formState.image) {
+          throw new Error('Foto toko tidak boleh kosong');
+        }
+        if (!formState.name) {
+          throw new Error('Nama toko tidak boleh kosong');
+        }
+        if (!formState.address) {
+          throw new Error('Alamat tidak boleh kosong');
+        }
+        if (!formState.rek_no) {
+          throw new Error('No. Rekening tidak boleh kosong');
+        }
+        if (!formState.rek_bank) {
+          throw new Error('Bank penerima tidak boleh kosong');
+        }
+        if (!formState.rek_name) {
+          throw new Error('Nama penerima tidak boleh kosong');
+        }
+      }
       let foto;
       let toko;
       if (formState.image) {
@@ -67,21 +90,15 @@ function DialogCreateToko({
         });
       }
       if (action === 'add') {
-        if (!formState.image) {
-          throw new Error('Foto toko harus diupload');
-        }
-        if (!formState.name) {
-          throw new Error('Nama toko harus diisi');
-        }
-        if (!formState.address) {
-          throw new Error('Alamat harus diisi');
-        }
         toko = await postToko({
           name: formState.name,
           address: formState.address,
           description: formState.description,
           image: foto.url,
           status: 'aktif',
+          rek_no: formState.rek_no,
+          rek_bank: formState.rek_bank,
+          rek_name: formState.rek_name,
         });
       }
       if (action === 'edit') {
@@ -90,6 +107,9 @@ function DialogCreateToko({
           address: formState.address,
           description: formState.description,
           image: foto ? foto.url : formState.foto,
+          rek_no: formState.rek_no,
+          rek_bank: formState.rek_bank,
+          rek_name: formState.rek_name,
         });
       }
       setFormState({ ...formState, loading: false });
@@ -178,12 +198,20 @@ function DialogCreateToko({
           )}
         </Box>
         <Grid container spacing={2}>
+          <Grid item xs={12}><Typography fontSize={14} fontWeight={800}>Info Toko : </Typography></Grid>
           <Grid item xs={3} display="flex" alignItems="center"><Typography fontSize={14}>Nama Toko</Typography></Grid>
           <Grid item xs={9}><TextField name="name" onChange={handleChange} value={formState.name} fullWidth variant="outlined" size="small" sx={styledInput} /></Grid>
           <Grid item xs={3} display="flex" alignItems="center"><Typography fontSize={14}>Alamat</Typography></Grid>
           <Grid item xs={9}><TextField name="address" onChange={handleChange} value={formState.address} fullWidth variant="outlined" size="small" sx={styledInput} /></Grid>
           <Grid item xs={3}><Typography fontSize={14}>Deskripsi</Typography></Grid>
           <Grid item xs={9}><TextField name="description" onChange={handleChange} value={formState.description} fullWidth variant="outlined" size="small" multiline rows={4} sx={styledInput} /></Grid>
+          <Grid item xs={12}><Typography fontSize={14} fontWeight={800}>Pencairan Saldo : </Typography></Grid>
+          <Grid item xs={3} display="flex" alignItems="center"><Typography fontSize={14}>No. Rekening</Typography></Grid>
+          <Grid item xs={9}><TextField name="rek_no" onChange={handleChange} value={formState.rek_no} fullWidth variant="outlined" size="small" sx={styledInput} /></Grid>
+          <Grid item xs={3} display="flex" alignItems="center"><Typography fontSize={14}>Bank</Typography></Grid>
+          <Grid item xs={9}><TextField name="rek_bank" onChange={handleChange} value={formState.rek_bank} fullWidth variant="outlined" size="small" sx={styledInput} /></Grid>
+          <Grid item xs={3}><Typography fontSize={14}>Nama Penerima</Typography></Grid>
+          <Grid item xs={9}><TextField name="rek_name" onChange={handleChange} value={formState.rek_name} fullWidth variant="outlined" size="small" sx={styledInput} /></Grid>
         </Grid>
         <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
           <Button

@@ -32,6 +32,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { removeAuthIdentity } from '../../redux/sliceAuth';
 import DialogCreateToko from '../DialogCreateToko';
+import { rp } from '../../utils';
 
 function TabHeadToko() {
   return (
@@ -232,6 +233,10 @@ function BasicTabs({ onClose }) {
                     <Avatar src={identity.toko.foto} variant="square" sx={{ borderRadius: 1 }} />
                     <Box>
                       <Typography fontSize={14} fontWeight={800}>{identity.toko.name}</Typography>
+                      <Box display="flex" gap={0.5}>
+                        <Typography fontSize={14} sx={{ color: 'text.secondary' }}>Saldo : </Typography>
+                        <Typography fontSize={14} sx={{ color: 'success.main' }} fontWeight={800}>{rp(identity.toko.saldo || 0)}</Typography>
+                      </Box>
                     </Box>
                   </Box>
                   <List sx={{ mt: 1 }}>

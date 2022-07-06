@@ -415,7 +415,7 @@ function ListToko({
           </List>
         </Popover>
         {toko.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview({ ...toko, created_at: data.created_at, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Beri Ulasan</Button>}
-        {toko.status === 'dikirim' && <Button fullWidth variant="contained" onClick={() => onChangeStatus(data.id_item_order, 'selesai', toko.id_umkm)} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Selesai</Button>}
+        {toko.status === 'dikirim' && <Button fullWidth variant="contained" onClick={() => onChangeStatus(data.id_item_order, 'selesai', toko.id_umkm, toko.items.reduce((acc, val) => acc + Number(val.price), 0))} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Selesai</Button>}
         <Button fullWidth variant="outlined" onClick={() => onOpenDetail({ ...toko, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
       </Box>
     </Box>
@@ -572,9 +572,9 @@ function Purchase() {
     });
   };
 
-  const handleStatusTrx = async (idItemPurchase, status, idUmkm) => {
+  const handleStatusTrx = async (idItemPurchase, status, idUmkm, price) => {
     try {
-      const trx = await putTrxStatus(idItemPurchase, { status, idUmkm });
+      const trx = await putTrxStatus(idItemPurchase, { status, idUmkm, price });
       if (trx.status !== 'success') {
         throw new Error(trx.message);
       }
