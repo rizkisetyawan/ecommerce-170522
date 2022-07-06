@@ -20,11 +20,12 @@ import {
   Statistics,
   Search,
   Order,
+  Toko,
+  AdminLogin,
   AdminUser,
   AdminDashboard,
   AdminProduct,
   AdminTransaction,
-  Toko,
 } from './pages';
 import { Topbar, Drawer, Auth } from './components';
 
@@ -65,6 +66,7 @@ function App() {
             </Route>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
+            <Route path="login/admin" element={<AdminLogin />} />
           </Routes>
         </BrowserRouter>
       </SnackbarProvider>

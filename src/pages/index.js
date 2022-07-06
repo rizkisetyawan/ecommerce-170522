@@ -18,6 +18,7 @@ import AdminProduct from './AdminProduct';
 import AdminTransaction from './AdminTransaction';
 import AdminDashboard from './AdminDashboard';
 import Toko from './Toko';
+import AdminLogin from './AdminLogin';
 
 export {
   Home,
@@ -36,6 +37,7 @@ export {
   Statistics,
   Search,
   Order,
+  AdminLogin,
   AdminUser,
   AdminDashboard,
   AdminProduct,

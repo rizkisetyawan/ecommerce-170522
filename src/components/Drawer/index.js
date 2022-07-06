@@ -114,7 +114,7 @@ function ResponsiveDrawer(props) {
             icon: <Logout />,
             handleClick: () => {
               dispatch(removeAuthIdentity());
-              navigate('/login');
+              navigate('/login/admin');
             },
           },
         ].map((row) => (

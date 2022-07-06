@@ -26,7 +26,6 @@ import {
   Star,
   ShoppingBag,
   Storefront,
-  Dashboard,
 } from '@mui/icons-material';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -203,16 +202,6 @@ function BasicTabs({ onClose }) {
                 </List>
               </Box>
               <List sx={{ mt: 2 }}>
-                { identity.user.role === 'admin' && (
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigate('/admin')}>
-                      <ListItemIcon>
-                        <Dashboard />
-                      </ListItemIcon>
-                      <ListItemText sx={{ '& span': { fontSize: 14 } }} primary="Dashboard" />
-                    </ListItemButton>
-                  </ListItem>
-                )}
                 <ListItem disablePadding>
                   <ListItemButton onClick={handleLogout}>
                     <ListItemIcon>
@@ -308,16 +297,6 @@ function BasicTabs({ onClose }) {
                 data={identity.toko}
               />
               <List sx={{ mt: 2 }}>
-                { identity.user.role === 'admin' && (
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigate('/admin')}>
-                      <ListItemIcon>
-                        <Dashboard />
-                      </ListItemIcon>
-                      <ListItemText sx={{ '& span': { fontSize: 14 } }} primary="Dashboard" />
-                    </ListItemButton>
-                  </ListItem>
-                )}
                 <ListItem disablePadding>
                   <ListItemButton onClick={handleLogout}>
                     <ListItemIcon>

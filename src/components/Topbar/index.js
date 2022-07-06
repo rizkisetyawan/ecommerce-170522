@@ -37,7 +37,6 @@ import {
   ShoppingBasket,
   DonutSmall,
   Storefront,
-  Dashboard,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
@@ -421,20 +420,6 @@ function Topbar() {
                               }
                             </List>
                             <Box display="flex" justifyContent="space-between" px={2} py={4} gap={6}>
-                              { identity.user.role === 'admin' && (
-                                <Box
-                                  display="flex"
-                                  gap={1}
-                                  alignItems="center"
-                                  onClick={() => navigate('/admin')}
-                                  sx={{ cursor: 'pointer' }}
-                                >
-                                  <Dashboard color="disabled" />
-                                  <Typography fontSize={14} color="text.secondary">
-                                    Dashboard
-                                  </Typography>
-                                </Box>
-                              )}
                               <Box
                                 display="flex"
                                 alignItems="center"
@@ -526,20 +511,6 @@ function Topbar() {
                         </List>
                         <Divider />
                         <Box display="flex" justifyContent="space-between" px={2} py={4} gap={6}>
-                          { identity.user.role === 'admin' && (
-                            <Box
-                              display="flex"
-                              gap={1}
-                              alignItems="center"
-                              onClick={() => navigate('/admin')}
-                              sx={{ cursor: 'pointer' }}
-                            >
-                              <Dashboard color="disabled" />
-                              <Typography fontSize={14} color="text.secondary">
-                                Dashboard
-                              </Typography>
-                            </Box>
-                          )}
                           <Box
                             display="flex"
                             alignItems="center"
