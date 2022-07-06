@@ -28,17 +28,15 @@ function Payment() {
   });
 
   // eslint-disable-next-line no-unused-vars
-  const handleOpenUpload = (data) => {
+  const handleOpenUpload = () => {
     setDialogUpload({
       open: true,
-      data,
     });
   };
 
   const handleCloseUpload = () => {
     setDialogUpload({
       open: false,
-      data: null,
     });
   };
 
@@ -161,7 +159,7 @@ function Payment() {
                 fullWidth
                 variant="outlined"
                 color="warning"
-                onClick={() => navigate('/')}
+                onClick={handleOpenUpload}
                 sx={{ fontWeight: 800, fontSize: 14 }}
               >
                 Upload bukti pembayaran
@@ -175,8 +173,6 @@ function Payment() {
             data={{
               id_item_order: invoiceState.data.detail[0].id_item_order,
               foto_trx: invoiceState.data.detail[0].toko[0].foto_trx,
-              // items : invoiceState.data.detail[0].toko.map(row => ({
-              // }))
             }}
           />
         </>

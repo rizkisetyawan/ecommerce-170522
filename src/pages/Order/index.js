@@ -116,39 +116,41 @@ function OrderItem({
                     </Box>
                   ))}
                 </Box>
-                <Box display="flex" gap={2}>
-                  <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
-                  <Box>
-                    <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
-                    <Typography fontSize={14} fontWeight={800}>
-                      {rp(user.items.reduce((acc, val) => acc + Number(val.price), 0))}
-                    </Typography>
+                <Box flex={1} maxWidth={400} display="flex" justifyContent="space-between" gap={2} flexWrap="wrap">
+                  <Box display="flex" gap={2}>
+                    <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
+                    <Box>
+                      <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
+                      <Typography fontSize={14} fontWeight={800}>
+                        {rp(user.items.reduce((acc, val) => acc + Number(val.price), 0))}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-                <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
-                  { user.status === 'diproses' && (
-                    <>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        disabled={loadingState}
-                        onClick={() => handleStatusTrx('dikirim')}
-                        sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}
-                      >
-                        Kirim Pesanan
-                      </Button>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        color="error"
-                        disabled={loadingState}
-                        onClick={() => handleStatusTrx('ditolak')}
-                        sx={{ fontWeight: 800, fontSize: 12 }}
-                      >
-                        Tolak
-                      </Button>
-                    </>
-                  )}
+                  <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
+                    { user.status === 'diproses' && (
+                      <>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          disabled={loadingState}
+                          onClick={() => handleStatusTrx('dikirim')}
+                          sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}
+                        >
+                          Kirim Pesanan
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="outlined"
+                          color="error"
+                          disabled={loadingState}
+                          onClick={() => handleStatusTrx('ditolak')}
+                          sx={{ fontWeight: 800, fontSize: 12 }}
+                        >
+                          Tolak
+                        </Button>
+                      </>
+                    )}
+                  </Box>
                 </Box>
               </Box>
             );

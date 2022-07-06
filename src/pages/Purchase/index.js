@@ -27,7 +27,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import {
-  getTrx, rp, colorTrx, putReview, putTrxStatus,
+  getTrx, rp, colorTrx, putReview, putTrxStatus, putTrxStatusAll,
 } from '../../utils';
 import { DialogUploadStruk } from '../../components';
 
@@ -186,7 +186,7 @@ function ReviewDialog({
 }
 
 function PurchaseDetailDialog({ open, onClose, data }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <Dialog maxWidth="xs" onClose={onClose} open={open}>
       { !data && (
@@ -281,7 +281,7 @@ function PurchaseDetailDialog({ open, onClose, data }) {
               </Typography>
             </Box>
           </Box>
-          { data.status !== 'selesai' && (
+          {/* { data.status !== 'selesai' && (
             <Button
               sx={{
                 mx: 2, mb: 2, fontSize: 12, textTransform: 'capitalize', fontWeight: 800,
@@ -291,7 +291,7 @@ function PurchaseDetailDialog({ open, onClose, data }) {
             >
               cara pembayaran
             </Button>
-          )}
+          )} */}
         </>
       )}
     </Dialog>
@@ -299,21 +299,8 @@ function PurchaseDetailDialog({ open, onClose, data }) {
 }
 
 function ListToko({
-  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus, toko,
+  toko, onOpenReview, onOpenDetail, data, onChangeStatus,
 }) {
-  const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
   return (
     <Box key={toko.toko_name} mb={{ xs: 4, sm: 2 }} display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} flexWrap="wrap">
       <Box maxWidth={500}>
@@ -351,80 +338,42 @@ function ListToko({
           </Box>
         ))}
       </Box>
-      <Box display="flex" gap={2}>
-        <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
-        <Box>
-          <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
-          <Typography fontSize={14} fontWeight={800}>
-            {rp(toko.items.reduce((acc, val) => acc + Number(val.price), 0))}
-          </Typography>
+      <Box flex={1} maxWidth={400} display="flex" justifyContent="space-between" gap={2} flexWrap="wrap">
+        <Box display="flex" gap={2}>
+          <Divider orientation="vertical" sx={{ height: '80%', display: { xs: 'none', sm: 'block' } }} />
+          <Box>
+            <Typography fontSize={12} color="text.secondary" fontWeight={400} textAlign="right">Total Belanja</Typography>
+            <Typography fontSize={14} fontWeight={800}>
+              {rp(toko.items.reduce((acc, val) => acc + Number(val.price), 0))}
+            </Typography>
+          </Box>
         </Box>
-      </Box>
-      <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end" mt={-4}>
-        <IconButton
-          disabled={toko.status !== 'belum dibayar'}
-          onClick={handleClick}
-        >
-          <MoreHoriz />
-        </IconButton>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-          <List disablePadding>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => {
-                handleClose();
-                navigate(`/payment/${data.id_item_order}`);
-              }}
-              >
-                <ListItemText primary="Cara Pembayaran" sx={{ '& span': { fontSize: 14 } }} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => {
-                handleClose();
-                onOpenUpload({
-                  ...toko,
-                  id_item_order: data.id_item_order,
-                });
-              }}
-              >
-                <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => {
-                handleClose();
-                onChangeStatus(
-                  data.id_item_order,
-                  'dibatalkan',
-                  toko.id_umkm,
-                );
-              }}
-              >
-                <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Popover>
-        {toko.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview({ ...toko, created_at: data.created_at, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Beri Ulasan</Button>}
-        {toko.status === 'dikirim' && <Button fullWidth variant="contained" onClick={() => onChangeStatus(data.id_item_order, 'selesai', toko.id_umkm, toko.items.reduce((acc, val) => acc + Number(val.price), 0))} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Selesai</Button>}
-        <Button fullWidth variant="outlined" onClick={() => onOpenDetail({ ...toko, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
+        <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
+          {toko.status === 'selesai' && <Button fullWidth variant="contained" onClick={() => onOpenReview({ ...toko, created_at: data.created_at, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Beri Ulasan</Button>}
+          {toko.status === 'dikirim' && <Button fullWidth variant="contained" onClick={() => onChangeStatus(data.id_item_order, 'selesai', toko.id_umkm, toko.items.reduce((acc, val) => acc + Number(val.price), 0))} sx={{ fontWeight: 800, fontSize: 12, mb: 1 }}>Selesai</Button>}
+          <Button fullWidth variant="outlined" onClick={() => onOpenDetail({ ...toko, id_item_order: data.id_item_order })} sx={{ fontWeight: 800, fontSize: 12 }}>Detail</Button>
+        </Box>
       </Box>
     </Box>
   );
 }
 
 function PurchaseItem({
-  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus,
+  onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus, onChangeAllStatus,
 }) {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
   return (
     <Box boxShadow="0 1px 6px 0 var(--color-shadow,rgba(49,53,59,0.12))" p={2}>
       <Box display="flex" justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection="row">
@@ -434,6 +383,56 @@ function PurchaseItem({
           <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
           <Typography fontSize={12} color="text.secondary">{data.id_item_order}</Typography>
         </Box>
+        { data.toko[0].status === 'belum dibayar' && (
+          <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
+            <IconButton onClick={handleClick}>
+              <MoreHoriz />
+            </IconButton>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <List disablePadding>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => {
+                    handleClose();
+                    navigate(`/payment/${data.id_item_order}`);
+                  }}
+                  >
+                    <ListItemText primary="Cara Pembayaran" sx={{ '& span': { fontSize: 14 } }} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => {
+                    handleClose();
+                    onOpenUpload({
+                      id_item_order: data.id_item_order,
+                      foto_trx: data.toko[0].foto_trx,
+                    });
+                  }}
+                  >
+                    <ListItemText primary="Upload bukti pembayaran" sx={{ '& span': { fontSize: 14 } }} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => {
+                    handleClose();
+                    onChangeAllStatus(data.id_item_order, 'dibatalkan');
+                  }}
+                  >
+                    <ListItemText primary="Batalkan" sx={{ '& span': { fontSize: 14 } }} />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Popover>
+          </Box>
+        )}
       </Box>
       <Box
         display="flex"
@@ -584,6 +583,18 @@ function Purchase() {
     }
   };
 
+  const handleAllStatusTrx = async (idItemPurchase, status) => {
+    try {
+      const trx = await putTrxStatusAll(idItemPurchase, { status });
+      if (trx.status !== 'success') {
+        throw new Error(trx.message);
+      }
+      fetchTrxWithoutLoading();
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
   useEffect(() => {
     fetchTrx();
   }, []);
@@ -656,6 +667,7 @@ function Purchase() {
                   onOpenDetail={handleOpenDetail}
                   onOpenUpload={handleOpenUpload}
                   onChangeStatus={handleStatusTrx}
+                  onChangeAllStatus={handleAllStatusTrx}
                 />
               ))
             }

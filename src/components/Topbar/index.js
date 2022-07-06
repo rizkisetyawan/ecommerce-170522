@@ -294,7 +294,7 @@ function Topbar() {
                         >
                           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                             <Avatar variant="square" src={row.foto} alt={row.name} />
-                            <Box>
+                            <Box maxWidth={400}>
                               <Typography
                                 fontSize={14}
                                 fontWeight={600}

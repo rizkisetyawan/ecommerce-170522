@@ -50,8 +50,7 @@ function DialogUploadStruk({
         folder: '/transaksi',
         fileName: `img-${Date.now()}`,
       });
-      const trx = await putTrxFoto(data.id_item_order, data.items
-        .map((row) => ({ id_item: row.id_item, foto_trx: foto.url })));
+      const trx = await putTrxFoto(data.id_item_order, { foto_trx: foto.url });
       if (trx.status !== 'success') {
         throw new Error(trx.message);
       }
@@ -129,7 +128,12 @@ function DialogUploadStruk({
           </Box>
         )}
         <Box display="flex" justifyContent="flex-end" mt={2}>
-          <Button size="small" onClick={onClose} sx={{ fontSize: 12, fontWeight: 800, mr: 1 }}>
+          <Button
+            size="small"
+            onClick={onClose}
+            disabled={formState.loading}
+            sx={{ fontSize: 12, fontWeight: 800, mr: 1 }}
+          >
             Batal
           </Button>
           <Button
