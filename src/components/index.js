@@ -8,6 +8,7 @@ import DialogCreateProduct from './DialogCreateProduct';
 import DialogCreateCategory from './DialogCreateCategory';
 import DialogUploadStruk from './DialogUploadStruk';
 import Drawer from './Drawer';
+import DialogWithdrawSaldo from './DialogWithdrawSaldo';
 
 export {
   Topbar,
@@ -20,4 +21,5 @@ export {
   DialogCreateProduct,
   DialogCreateCategory,
   DialogUploadStruk,
+  DialogWithdrawSaldo,
 };

@@ -37,6 +37,7 @@ import {
   ShoppingBasket,
   DonutSmall,
   Storefront,
+  AccountBalanceWallet,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateIdentity, removeAuthIdentity } from '../../redux/sliceAuth';
@@ -44,6 +45,7 @@ import { initCart } from '../../redux/sliceCart';
 import Drawer from './Drawer';
 import DialogCreateToko from '../DialogCreateToko';
 import { getIdentity, getCart, rp } from '../../utils';
+import DialogWithdrawSaldo from '../DialogWithdrawSaldo';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -88,6 +90,7 @@ function Topbar() {
   const [userAnchorEl, setUserAnchorEl] = React.useState(null);
   const [tokoAnchorEl, setTokoAnchorEl] = React.useState(null);
   const [dialogTokoState, setDialogTokoState] = React.useState(false);
+  const [dialogWithdraw, setDialogWithdraw] = React.useState({ open: false });
   const [searchState, setSearchState] = React.useState('');
   const openCart = Boolean(cartAnchorEl);
   const openUser = Boolean(userAnchorEl);
@@ -396,6 +399,14 @@ function Topbar() {
                                     },
                                   },
                                   {
+                                    title: 'Penarikan Saldo',
+                                    icon: <AccountBalanceWallet />,
+                                    handleClick: () => {
+                                      handleCloseToko();
+                                      setDialogWithdraw({ ...dialogWithdraw, open: true });
+                                    },
+                                  },
+                                  {
                                     title: 'Statistik',
                                     icon: <DonutSmall />,
                                     handleClick: () => {
@@ -450,6 +461,13 @@ function Topbar() {
                       onClose={handleCloseDialogToko}
                       data={identity.toko}
                     />
+                    { identity.toko && (
+                      <DialogWithdrawSaldo
+                        open={dialogWithdraw.open}
+                        onClose={() => setDialogWithdraw({ ...dialogWithdraw, open: false })}
+                        data={identity.toko}
+                      />
+                    )}
                     <Box display="flex" alignItems="center" gap={1} onClick={handleClickUser} sx={{ cursor: 'pointer' }}>
                       <Avatar src={identity.user.foto} sx={{ width: 30, height: 30 }} />
                       <Typography fontSize={14} color="text.secondary" fontWeight={800}>{identity.user.name}</Typography>

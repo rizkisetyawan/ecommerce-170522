@@ -1,10 +1,12 @@
 /* eslint-disable no-bitwise */
+import 'rsuite/dist/rsuite.min.css';
 import {
   Container, Grid, Box, Typography,
 } from '@mui/material';
 import Chart from 'react-apexcharts';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { DateRangePicker } from 'rsuite';
 import moment from 'moment';
 import { getTrxStatistics } from '../../utils';
 
@@ -15,6 +17,10 @@ function Statistics() {
     data: [],
     message: null,
   });
+  const [dateState, setDateState] = useState([
+    new Date(moment().subtract(7, 'd').format('YYYY-MM-DD')),
+    new Date(moment().format('YYYY-MM-DD')),
+  ]);
 
   const chart = {
     series: [{
@@ -35,10 +41,10 @@ function Statistics() {
       stroke: {
         curve: 'straight',
       },
-      title: {
-        text: 'STATISTIK PENJUALAN BULAN INI',
-        align: 'left',
-      },
+      // title: {
+      //   text: 'STATISTIK PENJUALAN',
+      //   align: 'left',
+      // },
       grid: {
         row: {
           colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
@@ -97,6 +103,17 @@ function Statistics() {
       )}
       { (!statisticsState.loading && statisticsState.data) && (
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <center>
+              <Typography fontWeight={800} gutterBottom>STATISTIK PENJUALAN</Typography>
+              <DateRangePicker
+                value={dateState}
+                onChange={(range) => setDateState(range)}
+                // eslint-disable-next-line no-console
+                onOk={(val) => console.log(val)}
+              />
+            </center>
+          </Grid>
           <Grid item xs={12}>
             <Box>
               <Chart

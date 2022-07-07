@@ -95,6 +95,7 @@ export const getProductsSearch = (name) => GET(`/api/product/search/${name}`);
 export const getCategory = () => GET('/api/product/category');
 export const getCart = () => GET('/api/cart');
 export const getTrx = () => GET('/api/trx');
+export const getWithdrawUmkm = (idUmkm) => GET(`/api/withdraw/umkm/${idUmkm}`);
 export const getTrxStatistics = (day, idUmkm) => GET(`/api/trx/statistics/${day}/${idUmkm}`);
 export const getTrxToko = (idToko) => GET(`/api/trx/toko/${idToko}`);
 export const getUserReviews = () => GET('/api/user/reviews');
@@ -118,6 +119,7 @@ export const postCart = (body) => POST('/api/cart', { body });
 export const postWishlist = (body) => POST('/api/product/wishlist', { body });
 export const postItemStock = (body) => POST('/api/product/stock', { body });
 export const postCategory = (body) => POST('/api/product/category', { body });
+export const postWithdraw = (body) => POST('/api/withdraw', { body });
 
 export const putUserDetail = (body) => PUT('/api/user/detail', { body });
 export const putProduct = (id, body) => PUT(`/api/product/${id}`, { body });

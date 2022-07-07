@@ -26,6 +26,7 @@ import {
   Star,
   ShoppingBag,
   Storefront,
+  AccountBalanceWallet,
 } from '@mui/icons-material';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -33,6 +34,7 @@ import { useNavigate } from 'react-router-dom';
 import { removeAuthIdentity } from '../../redux/sliceAuth';
 import DialogCreateToko from '../DialogCreateToko';
 import { rp } from '../../utils';
+import DialogWithdrawSaldo from '../DialogWithdrawSaldo';
 
 function TabHeadToko() {
   return (
@@ -86,6 +88,9 @@ function BasicTabs({ onClose }) {
   const navigate = useNavigate();
   const identity = useSelector(({ auth }) => auth);
   const [value, setValue] = React.useState(0);
+  const [dialogWithdraw, setDialogWithdraw] = React.useState({
+    open: false,
+  });
   const [dialogTokoState, setDialogTokoState] = React.useState({
     open: false,
     action: 'add',
@@ -266,6 +271,13 @@ function BasicTabs({ onClose }) {
                           },
                         },
                         {
+                          title: 'Penarikan Saldo',
+                          icon: <AccountBalanceWallet />,
+                          handleClick: () => {
+                            setDialogWithdraw({ ...dialogWithdraw, open: true });
+                          },
+                        },
+                        {
                           title: 'Statistik',
                           icon: <DonutSmall />,
                           handleClick: (e) => {
@@ -301,6 +313,13 @@ function BasicTabs({ onClose }) {
                 action={dialogTokoState.action}
                 data={identity.toko}
               />
+              { identity.toko && (
+                <DialogWithdrawSaldo
+                  open={dialogWithdraw.open}
+                  onClose={() => setDialogWithdraw({ ...dialogWithdraw, open: false })}
+                  data={identity.toko}
+                />
+              )}
               <List sx={{ mt: 2 }}>
                 <ListItem disablePadding>
                   <ListItemButton onClick={handleLogout}>
