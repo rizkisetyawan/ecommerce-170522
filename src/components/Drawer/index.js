@@ -16,7 +16,7 @@ import {
   Toolbar,
 } from '@mui/material';
 import {
-  Group, Dashboard, Receipt, ShoppingBag, Menu, Logout,
+  Group, Dashboard, Receipt, ShoppingBag, Menu, Logout, AccountBalance,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
@@ -107,6 +107,14 @@ function ResponsiveDrawer(props) {
             handleClick: () => {
               handleDrawerToggle();
               navigate('/admin/transactions');
+            },
+          },
+          {
+            title: 'Penarikan Saldo',
+            icon: <AccountBalance />,
+            handleClick: () => {
+              handleDrawerToggle();
+              navigate('/admin/withdraw');
             },
           },
           {

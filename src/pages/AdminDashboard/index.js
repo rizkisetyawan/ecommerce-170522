@@ -91,6 +91,7 @@ function CardTopSelling({ data }) {
         </Box>
         {data.map((row) => (
           <Box
+            key={row.name}
             display="flex"
             justifyContent="space-between"
             alignItems="center"

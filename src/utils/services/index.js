@@ -101,6 +101,7 @@ export const getTrxToko = (idToko) => GET(`/api/trx/toko/${idToko}`);
 export const getUserReviews = () => GET('/api/user/reviews');
 export const getAllUsersWithPageLimit = ({ limit, page, search = '' }) => GET(`/api/user/all?limit=${limit}&page=${page}&search=${search}`);
 export const getAllUsers = () => GET('/api/user/all');
+export const getAllWithdraw = () => GET('/api/withdraw/all');
 export const getDashboard = () => GET('/api/user/dashboard');
 export const getAllProduct = () => GET('/api/product/all');
 export const getAllTrx = () => GET('/api/trx/all');
@@ -132,6 +133,7 @@ export const putToko = (idUmkm, body) => PUT(`/api/umkm/${idUmkm}`, { body });
 export const putTrxFoto = (idItemOrder, body) => PUT(`/api/trx/foto-trx/${idItemOrder}`, { body });
 export const putTrxStatus = (idItemOrder, body) => PUT(`/api/trx/status/${idItemOrder}`, { body });
 export const putTrxStatusAll = (idItemOrder, body) => PUT(`/api/trx/status-all/${idItemOrder}`, { body });
+export const putWithrawDone = (idHistory) => PUT(`/api/withdraw/status/${idHistory}`);
 
 export const deleteCart = (idItem) => DELETE(`/api/cart/${idItem}`);
 export const deleteUser = (idUser) => DELETE(`/api/user/${idUser}`);

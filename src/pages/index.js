@@ -19,6 +19,7 @@ import AdminTransaction from './AdminTransaction';
 import AdminDashboard from './AdminDashboard';
 import Toko from './Toko';
 import AdminLogin from './AdminLogin';
+import AdminWithdraw from './AdminWithdraw';
 
 export {
   Home,
@@ -42,4 +43,5 @@ export {
   AdminDashboard,
   AdminProduct,
   AdminTransaction,
+  AdminWithdraw,
 };

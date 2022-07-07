@@ -26,6 +26,7 @@ import {
   AdminDashboard,
   AdminProduct,
   AdminTransaction,
+  AdminWithdraw,
 } from './pages';
 import { Topbar, Drawer, Auth } from './components';
 
@@ -63,6 +64,7 @@ function App() {
               <Route path="users" element={<Auth><AdminUser /></Auth>} />
               <Route path="products" element={<Auth><AdminProduct /></Auth>} />
               <Route path="transactions" element={<Auth><AdminTransaction /></Auth>} />
+              <Route path="withdraw" element={<Auth><AdminWithdraw /></Auth>} />
             </Route>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
