@@ -97,6 +97,7 @@ export const getCart = () => GET('/api/cart');
 export const getTrx = () => GET('/api/trx');
 export const getWithdrawUmkm = (idUmkm) => GET(`/api/withdraw/umkm/${idUmkm}`);
 export const getTrxStatistics = (day, idUmkm) => GET(`/api/trx/statistics/${day}/${idUmkm}`);
+export const getTrxStatistics2 = (idUmkm, startDate, endDate) => GET(`/api/trx/statistics2/${idUmkm}?startDate=${startDate}&endDate=${endDate}`);
 export const getTrxToko = (idToko) => GET(`/api/trx/toko/${idToko}`);
 export const getUserReviews = () => GET('/api/user/reviews');
 export const getAllUsersWithPageLimit = ({ limit, page, search = '' }) => GET(`/api/user/all?limit=${limit}&page=${page}&search=${search}`);

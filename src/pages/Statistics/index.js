@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { DateRangePicker } from 'rsuite';
 import moment from 'moment';
-import { getTrxStatistics } from '../../utils';
+import { getTrxStatistics2 } from '../../utils';
 
 function Statistics() {
   const identity = useSelector(({ auth }) => auth);
@@ -62,12 +62,15 @@ function Statistics() {
     },
   };
 
-  const fetchStatistics = async () => {
+  const fetchStatistics = async (startDate, endDate) => {
     setStatisticsState({ ...statisticsState, loading: true });
     try {
-      const day = +moment().format('D') - 1;
       const idUmkm = identity.toko.id_umkm;
-      const products = await getTrxStatistics(day, idUmkm);
+      const products = await getTrxStatistics2(
+        idUmkm,
+        moment(startDate).format('YYYY-MM-DD'),
+        moment(endDate).format('YYYY-MM-DD'),
+      );
       if (products.status !== 'success') {
         throw new Error(products.message);
       }
@@ -86,35 +89,24 @@ function Statistics() {
   };
 
   useEffect(() => {
-    fetchStatistics();
+    fetchStatistics(dateState[0], dateState[1]);
   }, []);
 
   return (
     <Container>
-      { statisticsState.loading && (
-        <Box py={6} display="flex" justifyContent="center">
-          <Typography color="text.secondary">Loading ...</Typography>
-        </Box>
-      )}
-      { (!statisticsState.loading && statisticsState.message) && (
-        <Box py={6} display="flex" justifyContent="center">
-          <Typography color="text.secondary">{statisticsState.message}</Typography>
-        </Box>
-      )}
-      { (!statisticsState.loading && statisticsState.data) && (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <center>
-              <Typography fontWeight={800} gutterBottom>STATISTIK PENJUALAN</Typography>
-              <DateRangePicker
-                value={dateState}
-                onChange={(range) => setDateState(range)}
-                // eslint-disable-next-line no-console
-                onOk={(val) => console.log(val)}
-              />
-            </center>
-          </Grid>
-          <Grid item xs={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <center>
+            <Typography fontWeight={800} gutterBottom>STATISTIK PENJUALAN</Typography>
+            <DateRangePicker
+              value={dateState}
+              onChange={(range) => setDateState(range)}
+              onOk={(val) => fetchStatistics(val[0], val[1])}
+            />
+          </center>
+        </Grid>
+        <Grid item xs={12}>
+          { (!statisticsState.loading && statisticsState.data) && (
             <Box>
               <Chart
                 options={chart.options}
@@ -124,9 +116,19 @@ function Statistics() {
                 // width="100%"
               />
             </Box>
-          </Grid>
+          )}
+          { statisticsState.loading && (
+            <Box py={6} display="flex" justifyContent="center">
+              <Typography color="text.secondary">Loading ...</Typography>
+            </Box>
+          )}
+          { (!statisticsState.loading && statisticsState.message) && (
+            <Box py={6} display="flex" justifyContent="center">
+              <Typography color="text.secondary">{statisticsState.message}</Typography>
+            </Box>
+          )}
         </Grid>
-      )}
+      </Grid>
     </Container>
   );
 }
