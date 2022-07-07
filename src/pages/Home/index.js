@@ -104,7 +104,7 @@ function Categories() {
                 }}
               >
                 <img src={category.foto} alt="testing" height={80} width={80} style={{ objectFit: 'contain' }} />
-                <Typography variant="subtitle2" textAlign="center" textTransform="capitalize">{category.name}</Typography>
+                <Typography variant="subtitle2" textAlign="center" textTransform="capitalize" mt={2}>{category.name}</Typography>
               </Box>
             </Grid>
           ))}

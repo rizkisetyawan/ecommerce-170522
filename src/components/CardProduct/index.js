@@ -21,7 +21,7 @@ function CardProduct({ data }) {
         />
         <CardContent
           sx={{
-            height: 100,
+            minHeight: 125,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',
