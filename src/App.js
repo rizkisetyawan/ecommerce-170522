@@ -27,6 +27,7 @@ import {
   AdminProduct,
   AdminTransaction,
   AdminWithdraw,
+  Invoice,
 } from './pages';
 import { Topbar, Drawer, Auth } from './components';
 
@@ -59,6 +60,7 @@ function App() {
               <Route path="toko/:idToko" element={<Toko />} />
               <Route path="search/:title" element={<Search />} />
             </Route>
+            <Route path="invoice/:noInvoice" element={<Invoice />} />
             <Route path="/admin" element={<Drawer />}>
               <Route index element={<Auth><AdminDashboard /></Auth>} />
               <Route path="users" element={<Auth><AdminUser /></Auth>} />

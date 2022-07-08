@@ -24,3 +24,9 @@ code {
   transform: translate(-32px, -50%);
   z-index: 1;
 }
+
+@media print{
+  #btn_print{
+    display: none;
+  }
+}

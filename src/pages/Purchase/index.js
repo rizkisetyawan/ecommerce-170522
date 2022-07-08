@@ -195,104 +195,91 @@ function PurchaseDetailDialog({ open, onClose, data }) {
         </Box>
       )}
       { data && (
-        <>
-          <Box p={3}>
-            <Typography fontWeight={800} mb={2}>Detail Transaksi</Typography>
-            <Grid container justifyContent="space-between" spacing={1}>
-              <Grid item xs={4}>
-                <Typography fontSize={12} color="text.secondary">Status</Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography px={1} py={0.2} bgcolor={colorTrx(data.status).bgcolor} fontSize={12} fontWeight={800} display="inline-block" sx={{ color: colorTrx(data.status).color }}>{data.status}</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography fontSize={12} color="text.secondary">No. Invoice</Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography fontSize={12} color="primary" fontWeight={800}>
-                  :
-                  {' '}
-                  {data.id_item_order}
-                </Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography fontSize={12} color="text.secondary">Tanggal Pembelian</Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography fontSize={12} color="text.secondary" fontWeight={800}>
-                  :
-                  {' '}
-                  {moment(data.created_at).format('DD MMM YYYY, HH:mm')}
-                  {' '}
-                  WIB
-                </Typography>
-              </Grid>
-              <Grid item xs={12} my={2}>
-                <Divider />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography fontWeight={800} fontSize={14}>Detail Produk</Typography>
-              </Grid>
-
-              <Grid
-                item
-                xs={12}
-                sx={{
-                  display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end',
-                }}
-              >
-                <Typography fontWeight={800} fontSize={12}>{data.toko_name}</Typography>
-                <ArrowForwardIos sx={{ fontSize: 10 }} />
-              </Grid>
-              <Grid item xs={12}>
-                <Box border={1} borderColor="divider" p={1} mb={0}>
-                  { data.items.map((item, i) => (
-                    <Box key={item.item_name} display="flex" gap={1.2} alignItems="center" mb={data.items.length - 1 !== i ? 1 : 0}>
-                      <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
-                      <Box>
-                        <Typography fontSize={12} fontWeight={800} gutterBottom>
-                          {item.item_name}
-                        </Typography>
-                        <Typography fontSize={12} color="text.secondary" fontWeight={400}>
-                          {item.qty}
-                          {' '}
-                          x
-                          {' '}
-                          {rp(item.price / item.qty)}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  ))}
-                </Box>
-              </Grid>
-
+        <Box p={3}>
+          <Typography fontWeight={800} mb={2}>Detail Transaksi</Typography>
+          <Grid container justifyContent="space-between" spacing={1}>
+            <Grid item xs={4}>
+              <Typography fontSize={12} color="text.secondary">Status</Typography>
             </Grid>
-            <Box
-              display="flex"
-              flexDirection={{ xs: 'column', sm: 'row' }}
-              alignItems={{ xs: 'flex-end', sm: 'center' }}
-              gap={{ xs: 0.5, sm: 2 }}
-              mt={2}
-              justifyContent="flex-end"
-            >
-              <Typography fontSize={14}>Total Harga</Typography>
-              <Typography fontSize={14} fontWeight={800}>
-                {rp(data.items.reduce((acc, val) => acc + Number(val.price), 0))}
+            <Grid item xs={8}>
+              <Typography px={1} py={0.2} bgcolor={colorTrx(data.status).bgcolor} fontSize={12} fontWeight={800} display="inline-block" sx={{ color: colorTrx(data.status).color }}>{data.status}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography fontSize={12} color="text.secondary">No. Invoice</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography fontSize={12} color="primary" fontWeight={800}>
+                :
+                {' '}
+                {data.id_item_order}
               </Typography>
-            </Box>
-          </Box>
-          {/* { data.status !== 'selesai' && (
-            <Button
+            </Grid>
+            <Grid item xs={4}>
+              <Typography fontSize={12} color="text.secondary">Tanggal Pembelian</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography fontSize={12} color="text.secondary" fontWeight={800}>
+                :
+                {' '}
+                {moment(data.created_at).format('DD MMM YYYY, HH:mm')}
+                {' '}
+                WIB
+              </Typography>
+            </Grid>
+            <Grid item xs={12} my={2}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography fontWeight={800} fontSize={14}>Detail Produk</Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
               sx={{
-                mx: 2, mb: 2, fontSize: 12, textTransform: 'capitalize', fontWeight: 800,
+                display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end',
               }}
-              onClick={() => navigate(`/payment/${data.id_item_order}`)}
-              variant="contained"
             >
-              cara pembayaran
-            </Button>
-          )} */}
-        </>
+              <Typography fontWeight={800} fontSize={12}>{data.toko_name}</Typography>
+              <ArrowForwardIos sx={{ fontSize: 10 }} />
+            </Grid>
+            <Grid item xs={12}>
+              <Box border={1} borderColor="divider" p={1} mb={0}>
+                { data.items.map((item, i) => (
+                  <Box key={item.item_name} display="flex" gap={1.2} alignItems="center" mb={data.items.length - 1 !== i ? 1 : 0}>
+                    <Avatar src={item.foto} variant="square" alt="detail-product" sx={{ width: 46, height: 46 }} />
+                    <Box>
+                      <Typography fontSize={12} fontWeight={800} gutterBottom>
+                        {item.item_name}
+                      </Typography>
+                      <Typography fontSize={12} color="text.secondary" fontWeight={400}>
+                        {item.qty}
+                        {' '}
+                        x
+                        {' '}
+                        {rp(item.price / item.qty)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
+
+          </Grid>
+          <Box
+            display="flex"
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            alignItems={{ xs: 'flex-end', sm: 'center' }}
+            gap={{ xs: 0.5, sm: 2 }}
+            mt={2}
+            justifyContent="flex-end"
+          >
+            <Typography fontSize={14}>Total Harga</Typography>
+            <Typography fontSize={14} fontWeight={800}>
+              {rp(data.items.reduce((acc, val) => acc + Number(val.price), 0))}
+            </Typography>
+          </Box>
+        </Box>
       )}
     </Dialog>
   );
@@ -381,7 +368,9 @@ function PurchaseItem({
           <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
           <Typography fontWeight={800} fontSize={12}>Belanja</Typography>
           <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
-          <Typography fontSize={12} color="text.secondary">{data.id_item_order}</Typography>
+          <Typography fontSize={12} color="text.secondary" sx={{ borderBottom: 0.5, cursor: 'pointer' }} onClick={() => navigate(`/invoice/${data.id_item_order}`)}>
+            {data.id_item_order}
+          </Typography>
         </Box>
         { data.toko[0].status === 'belum dibayar' && (
           <Box display="flex" flexDirection="column" width="100%" maxWidth={{ sm: 250 }} alignItems="flex-end">
