@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import {
   Button,
@@ -81,6 +82,7 @@ const totalCount = (data) => data.reduce((partialSum, obj) => partialSum + Numbe
 function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
   const identity = useSelector(({ auth }) => auth);
   const globalCart = useSelector(({ cart }) => cart);
@@ -182,6 +184,12 @@ function Topbar() {
       fetchCart();
     }
   }, []);
+
+  // React.useEffect(() => {
+  //   if (location.pathname !== '/search/test') {
+  //     setSearchState('');
+  //   }
+  // }, [location.pathname]);
 
   if (!identity.user && identity.token) {
     return (
