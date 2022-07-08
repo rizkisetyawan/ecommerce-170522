@@ -62,7 +62,7 @@ function OrderItem({
       <Box display="flex" justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.25} mb={1.8} flexDirection="row">
         <Box display="flex" gap={1.25} alignItems="center" flexWrap="wrap">
           <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
-          <Typography fontWeight={800} fontSize={12}>Pembelian</Typography>
+          <Typography fontWeight={800} fontSize={12}>Penjualan</Typography>
           <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
           <Typography fontSize={12} color="text.secondary">{data.id_item_order}</Typography>
         </Box>

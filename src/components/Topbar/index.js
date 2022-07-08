@@ -185,11 +185,11 @@ function Topbar() {
     }
   }, []);
 
-  // React.useEffect(() => {
-  //   if (location.pathname !== '/search/test') {
-  //     setSearchState('');
-  //   }
-  // }, [location.pathname]);
+  React.useEffect(() => {
+    if (!location.pathname.includes('/search')) {
+      setSearchState('');
+    }
+  }, [location.pathname]);
 
   if (!identity.user && identity.token) {
     return (
