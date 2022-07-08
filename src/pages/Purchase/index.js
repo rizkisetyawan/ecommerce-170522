@@ -348,6 +348,7 @@ function ListToko({
 function PurchaseItem({
   onOpenReview, onOpenDetail, onOpenUpload, data, onChangeStatus, onChangeAllStatus,
 }) {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -368,7 +369,18 @@ function PurchaseItem({
           <ShoppingBag fontSize="small" sx={{ color: 'rgb(3, 172, 14)' }} />
           <Typography fontWeight={800} fontSize={12}>Belanja</Typography>
           <Typography fontSize={12} color="text.secondary">{moment(data.created_at).format('DD MMM YYYY')}</Typography>
-          <Typography fontSize={12} color="text.secondary" sx={{ borderBottom: 0.5, cursor: 'pointer' }} onClick={() => navigate(`/invoice/${data.id_item_order}`)}>
+          <Typography
+            fontSize={12}
+            color="text.secondary"
+            sx={{ borderBottom: 0.5, cursor: 'pointer' }}
+            onClick={() => {
+              if ((data.toko[0].status === 'belum dibayar') || (data.toko[0].status === 'dibatalkan')) {
+                enqueueSnackbar('Invoice belum tersedia', { variant: 'error' });
+              } else {
+                navigate(`/invoice/${data.id_item_order}`);
+              }
+            }}
+          >
             {data.id_item_order}
           </Typography>
         </Box>
